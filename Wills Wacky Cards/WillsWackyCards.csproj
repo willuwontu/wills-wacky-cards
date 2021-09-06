@@ -29,7 +29,7 @@
       <HintPath>Libs\CardChoiceSpawnUniqueCardPatch.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp">
-      <HintPath>..\..\Dependencies\Microsoft.CSharp.dll</HintPath>
+      <HintPath>Libs\Microsoft.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>Libs\MMHOOK_Assembly-CSharp.dll</HintPath>
