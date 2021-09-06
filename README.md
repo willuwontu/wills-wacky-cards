@@ -10,6 +10,13 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Alternate Universe Physics (Common)
 
 ----
+## v 1.0.4
+- Fixed issues where blacklisting was improperly done.
+----
+## v 1.0.3
+- More tweaks to cards
+- Added two new cards
+----
 ## v 1.0.3
 - More tweaks to cards
 - Added two new cards
