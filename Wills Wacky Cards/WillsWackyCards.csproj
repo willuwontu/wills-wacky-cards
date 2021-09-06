@@ -1,0 +1,87 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <RootNamespace>WillsWackyCards</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Libs\**" />
+    <EmbeddedResource Remove="Libs\**" />
+    <None Remove="Libs\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Cards\Template.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>Libs\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>Libs\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="BepInEx">
+      <HintPath>Libs\BepInEx.dll</HintPath>
+    </Reference>
+    <Reference Include="CardChoiceSpawnUniqueCardPatch">
+      <HintPath>Libs\CardChoiceSpawnUniqueCardPatch.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp">
+      <HintPath>..\..\Dependencies\Microsoft.CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="MMHOOK_Assembly-CSharp">
+      <HintPath>Libs\MMHOOK_Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="Photon3Unity3D">
+      <HintPath>Libs\Photon3Unity3D.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonChat">
+      <HintPath>Libs\PhotonChat.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonRealtime">
+      <HintPath>Libs\PhotonRealtime.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonUnityNetworking">
+      <HintPath>Libs\PhotonUnityNetworking.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonUnityNetworking.Demos">
+      <HintPath>Libs\PhotonUnityNetworking.Demos.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonUnityNetworking.Utilities">
+      <HintPath>Libs\PhotonUnityNetworking.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="PhotonWebSocket">
+      <HintPath>Libs\PhotonWebSocket.dll</HintPath>
+    </Reference>
+    <Reference Include="SonigonAudioEngine.Runtime">
+      <HintPath>Libs\SonigonAudioEngine.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="UnboundLib">
+      <HintPath>Libs\UnboundLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>Libs\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>Libs\UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>Libs\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ParticleSystemModule">
+      <HintPath>Libs\UnityEngine.ParticleSystemModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>Libs\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIElementsModule">
+      <HintPath>Libs\UnityEngine.UIElementsModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>Libs\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
