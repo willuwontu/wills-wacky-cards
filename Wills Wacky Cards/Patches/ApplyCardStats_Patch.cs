@@ -2,7 +2,7 @@
 using HarmonyLib;
 using WillsWackyCards.Extensions;
 
-namespace UnboundLib.Patches
+namespace WillsWackyCards.Patches
 {
     [HarmonyPatch(typeof(ApplyCardStats), "ApplyStats")]
     class ApplyCardStats_Patch
