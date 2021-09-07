@@ -9,33 +9,36 @@ namespace WillsWackyCards.Patches
     {
         static void Prefix(Player ___playerToUpgrade, Gun ___myGunStats)
         {
-            var gun = ___playerToUpgrade.GetComponent<Holding>().holdable.GetComponent<Gun>();
+            if (___myGunStats)
+            {
+                var gun = ___playerToUpgrade.GetComponent<Holding>().holdable.GetComponent<Gun>();
 
-            if (___myGunStats.GetAdditionalData().useForcedAttackSpeed)
-            {
-                gun.GetAdditionalData().useForcedAttackSpeed = ___myGunStats.GetAdditionalData().useForcedAttackSpeed;
-                gun.defaultCooldown = ___myGunStats.forceSpecificAttackSpeed;
-            }
+                if (___myGunStats.GetAdditionalData().useForcedAttackSpeed)
+                {
+                    gun.GetAdditionalData().useForcedAttackSpeed = ___myGunStats.GetAdditionalData().useForcedAttackSpeed;
+                    gun.defaultCooldown = ___myGunStats.forceSpecificAttackSpeed;
+                }
 
-            if (___myGunStats.GetAdditionalData().useForcedReloadSpeed)
-            {
-                gun.GetAdditionalData().useForcedReloadSpeed = ___myGunStats.GetAdditionalData().useForcedReloadSpeed;
-                gun.GetAdditionalData().forcedReloadSpeed = ___myGunStats.GetAdditionalData().forcedReloadSpeed;
-            }
-            if (___myGunStats.GetAdditionalData().useAttacksPerAttack)
-            {
-                gun.GetAdditionalData().attacksPerAttack = Mathf.Clamp(___myGunStats.GetAdditionalData().attacksPerAttack,1,10);
-                gun.GetAdditionalData().useAttacksPerAttack = ___myGunStats.GetAdditionalData().useAttacksPerAttack;
-            }
-            gun.GetAdditionalData().speedDamageMultiplier *= ___myGunStats.GetAdditionalData().speedDamageMultiplier;
+                if (___myGunStats.GetAdditionalData().useForcedReloadSpeed)
+                {
+                    gun.GetAdditionalData().useForcedReloadSpeed = ___myGunStats.GetAdditionalData().useForcedReloadSpeed;
+                    gun.GetAdditionalData().forcedReloadSpeed = ___myGunStats.GetAdditionalData().forcedReloadSpeed;
+                }
+                if (___myGunStats.GetAdditionalData().useAttacksPerAttack)
+                {
+                    gun.GetAdditionalData().attacksPerAttack = Mathf.Clamp(___myGunStats.GetAdditionalData().attacksPerAttack, 1, 10);
+                    gun.GetAdditionalData().useAttacksPerAttack = ___myGunStats.GetAdditionalData().useAttacksPerAttack;
+                }
+                gun.GetAdditionalData().speedDamageMultiplier *= ___myGunStats.GetAdditionalData().speedDamageMultiplier;
 
-            if (___myGunStats.GetAdditionalData().minigun)
-            {
-                gun.GetAdditionalData().minigun = ___myGunStats.GetAdditionalData().minigun;
-            }
-            if (___myGunStats.GetAdditionalData().useHeat)
-            {
-                gun.GetAdditionalData().useHeat = ___myGunStats.GetAdditionalData().useHeat;
+                if (___myGunStats.GetAdditionalData().minigun)
+                {
+                    gun.GetAdditionalData().minigun = ___myGunStats.GetAdditionalData().minigun;
+                }
+                if (___myGunStats.GetAdditionalData().useHeat)
+                {
+                    gun.GetAdditionalData().useHeat = ___myGunStats.GetAdditionalData().useHeat;
+                } 
             }
         }
 
