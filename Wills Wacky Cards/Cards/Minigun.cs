@@ -23,11 +23,11 @@ namespace WillsWackyCards.Cards
             gun.GetAdditionalData().useHeat = true;
             gun.GetAdditionalData().heatPerShot = 0.01f;
             gun.spread = 0.15f;
+            gun.GetAdditionalData().minigunDamageMult = 0.05f;
             UnityEngine.Debug.Log("[WWC][Card] Minigun Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            gun.bulletDamageMultiplier *= 0.01f;
             gun.knockback = 0f;
             //throw new NotImplementedException();
         }

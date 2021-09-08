@@ -20,6 +20,7 @@ namespace WillsWackyCards.Extensions
         public bool useHeat;
         public float heatPerShot;
         public bool minigun;
+        public float minigunDamageMult;
 
         public GunAdditionalData()
         {
@@ -33,6 +34,7 @@ namespace WillsWackyCards.Extensions
             useHeat = false;
             heatPerShot = 0f;
             minigun = false;
+            minigunDamageMult = 1f;
         }
     }
     public static class GunExtension
@@ -70,6 +72,7 @@ namespace WillsWackyCards.Extensions
             __instance.GetAdditionalData().heatPerShot = 0f;
             __instance.GetAdditionalData().useHeat = false;
             __instance.GetAdditionalData().minigun = false;
+            __instance.GetAdditionalData().minigunDamageMult = 1f;
         }
     }
 }
