@@ -1,10 +1,12 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using WillsWackyCards.Extensions;
+using WillsWackyCards.MonoBehaviours;
+using UnboundLib;
 
 namespace WillsWackyCards.Patches
 {
-    [HarmonyPatch(typeof(Gun))] // Patching the getShootRotation method in the gun object.
+    [HarmonyPatch(typeof(Gun))] 
     class Gun_Patch
     {
         // Prefix patch is run before the original method is run.
@@ -14,7 +16,7 @@ namespace WillsWackyCards.Patches
         //   ___forceShootDir grabs the forcShootDir field of our triggering instance.
         //   __result is the returned result of the method, AKA how we modify what value is returned.
         [HarmonyPrefix]
-        [HarmonyPatch("getShootRotation")]
+        [HarmonyPatch("getShootRotation")] // Patching the getShootRotation method in the gun object.
         static bool EvenSpread(Gun __instance, int bulletID, int numOfProj, float charge, Vector3 ___forceShootDir, ref Quaternion __result) 
         {
             if ((__instance.spread != 0.0f)&&(__instance.evenSpread != 0.0f)) // If the gun has spread and there's an even spread factor.
@@ -65,8 +67,8 @@ namespace WillsWackyCards.Patches
 
             if (__instance.GetAdditionalData().useHeat)
             {
-                //WeaponHandler weaponHandler = __instance.GetComponentInParent<WeaponHandler>();
-                //Traverse.Create(weaponHandler).Field("heat").SetValue((float)Traverse.Create(weaponHandler).Field("heat").GetValue() + __instance.GetAdditionalData().heatPerShot);
+                WeaponHandler weaponHandler = __instance.GetComponentInParent<WeaponHandler>();
+                //weaponHandler.SetFieldValue("heat",(float)weaponHandler.GetFieldValue("heat")+ __instance.GetAdditionalData().heatPerShot);
             }
         }
 
@@ -77,7 +79,7 @@ namespace WillsWackyCards.Patches
         //    if (__instance.GetAdditionalData().minigun)
         //    {
         //        GunAmmo gunAmmo = __instance.GetComponentInChildren<GunAmmo>();
-        //        Traverse.Create(gunAmmo).Field("currentAmmo").SetValue((int)Traverse.Create(gunAmmo).Field("currentAmmo").GetValue() + 1);
+        //        gunAmmo.SetFieldValue("currentAmmo", (int)gunAmmo.GetFieldValue("currentAmmo") + 1);
         //    }
         //}
 

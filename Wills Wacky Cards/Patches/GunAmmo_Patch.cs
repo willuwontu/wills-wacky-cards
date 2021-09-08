@@ -4,7 +4,7 @@ using WillsWackyCards.Extensions;
 
 namespace WillsWackyCards.Patches
 {
-    [HarmonyPatch(typeof(GunAmmo))] // Patching the getShootRotation method in the gun object.
+    [HarmonyPatch(typeof(GunAmmo))]
     class GunAmmo_Patch
     {
         [HarmonyPrefix]

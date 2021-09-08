@@ -15,19 +15,20 @@ namespace WillsWackyCards.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.attackSpeed = 0.05f;
+            gun.attackSpeed = 1f/2000f;
             gun.timeBetweenBullets = 0.1f;
             gun.projectileSpeed = 3f;
             gun.destroyBulletAfter = 0.15f;
             gun.GetAdditionalData().minigun = true;
             gun.GetAdditionalData().useHeat = true;
-            gun.GetAdditionalData().heatPerShot = 0.02f;
+            gun.GetAdditionalData().heatPerShot = 0.01f;
             gun.spread = 0.15f;
             UnityEngine.Debug.Log("[WWC][Card] Minigun Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             gun.bulletDamageMultiplier *= 0.01f;
+            gun.knockback = 0f;
             //throw new NotImplementedException();
         }
         public override void OnRemoveCard()
