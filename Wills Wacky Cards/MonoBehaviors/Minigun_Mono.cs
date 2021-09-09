@@ -10,7 +10,7 @@ namespace WillsWackyCards.MonoBehaviours
         public float heat = 0.0f;
         public float heatCap = 1.0f;
         private bool overheated = false;
-        public float coolPerSecond = 0.5f;
+        public float coolPerSecond = .75f;
         public float secondsBeforeStartToCool = 0.1f;
         private float cooldownTimeRemaining = 0.1f;
         private bool coroutineStarted;
