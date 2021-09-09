@@ -27,6 +27,7 @@ namespace WillsWackyCards.Cards
             gun.knockback = 0f;
             gun.reloadTime *= 50f;
             gun.reloadTimeAdd += 15f;
+            gun.ammo = 30;
 
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
