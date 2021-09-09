@@ -17,9 +17,6 @@ namespace WillsWackyCards.Extensions
         public float minimumAttackSpeed;
         public float minimumReloadSpeed;
         public float speedDamageMultiplier;
-        public bool useHeat;
-        public float heatPerShot;
-        public bool minigun;
         public bool overHeated = false;
 
         public GunAdditionalData()
@@ -31,9 +28,6 @@ namespace WillsWackyCards.Extensions
             useAttacksPerAttack = false;
             shotgun = false;
             speedDamageMultiplier = 1f;
-            useHeat = false;
-            heatPerShot = 0f;
-            minigun = false;
             overHeated = false;
         }
     }
@@ -69,9 +63,6 @@ namespace WillsWackyCards.Extensions
             __instance.GetAdditionalData().attacksPerAttack = 1;
             __instance.GetAdditionalData().shotgun = false;
             __instance.GetAdditionalData().speedDamageMultiplier = 1f;
-            __instance.GetAdditionalData().heatPerShot = 0f;
-            __instance.GetAdditionalData().useHeat = false;
-            __instance.GetAdditionalData().minigun = false;
             __instance.GetAdditionalData().overHeated = false;
         }
     }

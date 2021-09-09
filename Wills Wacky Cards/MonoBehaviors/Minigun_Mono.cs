@@ -8,14 +8,14 @@ namespace WillsWackyCards.MonoBehaviours
     public class Minigun_Mono : MonoBehaviour
     {
         public float heat = 0.0f;
-        public float heatCap = 1.0f;
+        public float heatCap = 3.0f;
         private bool overheated = false;
-        public float coolPerSecond = .75f;
-        public float secondsBeforeStartToCool = 0.1f;
+        public float coolPerSecond = 2f;
+        public float secondsBeforeStartToCool = 0.0f;
         private float cooldownTimeRemaining = 0.1f;
         private bool coroutineStarted;
         private float minigunDamageM = 0.035f;
-        public float heatPerBullet = 0.02f;
+        public float heatPerBullet = 0.01f;
         private Gun gun;
         private GunAmmo gunAmmo;
         private CharacterData data;
@@ -76,13 +76,13 @@ namespace WillsWackyCards.MonoBehaviours
         private void OnShootProjectileAction(GameObject obj)
         {
             ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
-            UnityEngine.Debug.Log(string.Format("[WWC][Minigun] {0} heat", heat));
+            //UnityEngine.Debug.Log(string.Format("[WWC][Minigun] {0} heat", heat));
             bullet.damage *= minigunDamageM;
             heat += heatPerBullet;
             cooldownTimeRemaining = secondsBeforeStartToCool;
             if (heat < heatCap)
             {
-                gunAmmo.ReloadAmmo(false); 
+                gunAmmo.ReDrawTotalBullets(); 
             }
             else
             {

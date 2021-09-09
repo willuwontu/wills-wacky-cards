@@ -20,14 +20,10 @@ namespace WillsWackyCards.Cards
             gun.timeBetweenBullets = 0.1f;
             gun.projectileSpeed = 3f;
             gun.destroyBulletAfter = 0.15f;
-            gun.GetAdditionalData().minigun = true;
-            gun.GetAdditionalData().useHeat = true;
-            gun.GetAdditionalData().heatPerShot = 0.01f;
             gun.spread = 0.15f;
-            gun.knockback = 0f;
+            gun.knockback = .01f;
             gun.reloadTime *= 50f;
             gun.reloadTimeAdd += 15f;
-            gun.ammo = 30;
 
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };

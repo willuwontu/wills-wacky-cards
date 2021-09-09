@@ -30,15 +30,6 @@ namespace WillsWackyCards.Patches
                     gun.GetAdditionalData().useAttacksPerAttack = ___myGunStats.GetAdditionalData().useAttacksPerAttack;
                 }
                 gun.GetAdditionalData().speedDamageMultiplier *= ___myGunStats.GetAdditionalData().speedDamageMultiplier;
-
-                if (___myGunStats.GetAdditionalData().minigun)
-                {
-                    gun.GetAdditionalData().minigun = ___myGunStats.GetAdditionalData().minigun;
-                }
-                if (___myGunStats.GetAdditionalData().useHeat)
-                {
-                    gun.GetAdditionalData().useHeat = ___myGunStats.GetAdditionalData().useHeat;
-                } 
             }
         }
 
