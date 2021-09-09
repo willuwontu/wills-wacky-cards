@@ -27,14 +27,6 @@ namespace WillsWackyCards.MonoBehaviours
         public Image heatImage;
         public Image whiteImage;
         private float heatTarget;
-        private float whiteTarget;
-        private float heatCurrent;
-        private float whiteCurrent;
-        private float whitedx;
-        private float heatdx;
-        private float drag = 25f;
-        private float spring = 25f;
-        private float sinceHeat = 0f;
         //private HeatBar heatBar;
 
         private void Start()
@@ -45,7 +37,7 @@ namespace WillsWackyCards.MonoBehaviours
             heatBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>().SetAlpha(1);
             heatImage = heatBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>();
             whiteImage = heatBarObj.transform.Find("Canvas/Image/White").GetComponent<Image>();
-            whiteImage.fillAmount = 0f;
+            whiteImage.SetAlpha(0);
         }
 
         private void Update()
@@ -67,23 +59,18 @@ namespace WillsWackyCards.MonoBehaviours
                 coroutineStarted = true;
                 InvokeRepeating(nameof(Cooldown), 0, TimeHandler.deltaTime);
             }
+            UpdateHeatBar();
         }
 
         private void UpdateHeatBar()
         {
             heatTarget = heat / heatCap;
-            //sinceHeat += TimeHandler.deltaTime;
-            //heatdx = FRILerp.Lerp(heatdx, (heatTarget - heatCurrent) * spring, drag);
-            //whitedx = FRILerp.Lerp(whitedx, (whiteTarget - whiteCurrent) * spring, drag);
-            //heatCurrent += heatdx * TimeHandler.deltaTime;
-            //whiteCurrent += whitedx * TimeHandler.deltaTime;
             heatImage.fillAmount = heatTarget;
-            //whiteImage.fillAmount = whiteCurrent;
-            //if (sinceHeat > 0.5)
-            //{
-            //    whiteTarget = heatTarget;
-            //}
-            heatImage.color = new Color(255f, 255f - 255f*(heatTarget)*(2f/3f), 255f - 255f*(heatTarget));
+            whiteImage.fillAmount = heatTarget;
+            if (!overheated)
+            {
+                heatImage.color = new Color(1f, 1f - (heatTarget) * 0.85f, 1f - heatTarget, 1f);
+            }
         }
 
         private void OnShootProjectileAction(GameObject obj)
@@ -93,7 +80,6 @@ namespace WillsWackyCards.MonoBehaviours
             bullet.damage *= minigunDamageM;
             heat += heatPerBullet;
             cooldownTimeRemaining = secondsBeforeStartToCool;
-            sinceHeat = 0;
             if (heat < heatCap)
             {
                 gunAmmo.ReloadAmmo(false); 
@@ -103,19 +89,9 @@ namespace WillsWackyCards.MonoBehaviours
                 overheated = true;
                 gun.GetAdditionalData().overHeated = true;
                 cooldownTimeRemaining += 0.5f;
+                heatImage.color = Color.red;
             }
-            UpdateHeatBar();
         }
-
-        public void SetupRound()
-        {
-            heat = 0f;
-        }
-        public void CleanupRound()
-        {
-            heat = 0f;
-        }
-
         private void Cooldown()
         {
             if (cooldownTimeRemaining > 0)
@@ -132,11 +108,10 @@ namespace WillsWackyCards.MonoBehaviours
                 gun.GetAdditionalData().overHeated = false;
                 gunAmmo.ReloadAmmo(true);
             }
-            UpdateHeatBar();
         }
         private void OnDestroy()
         {
-            //Destroy(armorBarObj);
+            Destroy(heatBarObj);
         }
     }
 }
