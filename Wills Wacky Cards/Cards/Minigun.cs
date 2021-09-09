@@ -24,17 +24,22 @@ namespace WillsWackyCards.Cards
             gun.GetAdditionalData().useHeat = true;
             gun.GetAdditionalData().heatPerShot = 0.01f;
             gun.spread = 0.15f;
-            gun.GetAdditionalData().minigunDamageMult = 0.03f;
-            //gun.knockback = 0f;
-            WillsWackyCards.Debug("[WWC][Card] Minigun Built");
+            gun.knockback = 0f;
+            gun.reloadTime *= 50f;
+            gun.reloadTimeAdd += 15f;
+
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
+            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
+            UnityEngine.Debug.Log("[WWC][Card] Minigun Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            //var heatBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
-            //heatBar.name = "HeatBar";
-            //heatBar.Translate(new Vector3(0.3f, 0, 0));
-            //heatBar.Rotate(0f, 90f, 0f);
-            //var heat = player.gameObject.AddComponent<Minigun_Mono>();
+            var heatBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
+            heatBar.name = "HeatBar";
+            heatBar.Translate(new Vector3(0.9f, -0.35f, 0));
+            heatBar.Rotate(0f, 0f, 90f);
+            heatBar.localScale.Set(0.5f, 1f, 1f);
+            var heat = player.gameObject.AddComponent<Minigun_Mono>();
             //throw new NotImplementedException();
         }
         public override void OnRemoveCard()

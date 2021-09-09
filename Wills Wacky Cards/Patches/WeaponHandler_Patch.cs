@@ -4,15 +4,14 @@ using WillsWackyCards.Extensions;
 
 namespace WillsWackyCards.Patches
 {
-    [HarmonyPatch(typeof(GunAmmo))]
-    class GunAmmo_Patch
+    [HarmonyPatch(typeof(WeaponHandler))]
+    class WeaponHandler_Patch
     {
         [HarmonyPrefix]
-        [HarmonyPatch("Shoot")]
-        static bool MinigunMadness(GunAmmo __instance)
+        [HarmonyPatch("Attack")]
+        static bool MinigunOverheat(WeaponHandler __instance, Gun ___gun)
         {
-            //Gun gun = __instance.GetComponentInParent<Gun>();
-            //if (gun.GetAdditionalData().minigun)
+            //if (___gun.GetAdditionalData().overHeated)
             //{
             //    return false;
             //}

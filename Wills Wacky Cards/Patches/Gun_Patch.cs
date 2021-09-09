@@ -43,12 +43,13 @@ namespace WillsWackyCards.Patches
 
         [HarmonyPrefix]
         [HarmonyPatch("DoAttacks")]
-        static void SetAttacks(Gun __instance, ref int attacks)
+        static bool SetAttacks(Gun __instance, ref int attacks)
         {
             if (__instance.GetAdditionalData().useAttacksPerAttack)
             {
                 attacks = __instance.GetAdditionalData().attacksPerAttack;
             }
+            return true;
         }
 
 
@@ -59,9 +60,9 @@ namespace WillsWackyCards.Patches
             if (__instance.GetAdditionalData().speedDamageMultiplier != 0f)
             {
                 ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
-                float extraDamage = (bullet.damage * (1f + ((___projectileSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f))) * (1f + ((___projectielSimulatonSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)))) - bullet.damage;
+                //float extraDamage = (bullet.damage * (1f + ((___projectileSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f))) * (1f + ((___projectielSimulatonSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)))) - bullet.damage;
                 bullet.damage *= (1f + ((___projectileSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f))) * (1f + ((___projectielSimulatonSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)));
-                WillsWackyCards.Debug(string.Format("[WWC] Bullet fired that deals {0} damage ({1} extra)", bullet.damage, extraDamage)); 
+                //UnityEngine.Debug.Log(string.Format("[WWC] Bullet fired that deals {0} damage ({1} extra)", bullet.damage, extraDamage)); 
             }
 
             if (___reflects > 0)
