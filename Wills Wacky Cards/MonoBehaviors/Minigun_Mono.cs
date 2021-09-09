@@ -41,10 +41,11 @@ namespace WillsWackyCards.MonoBehaviours
         {
             data = GetComponentInParent<CharacterData>();
             heatBarObj = gameObject.transform.Find("WobbleObjects/HeatBar").gameObject;
-            heatBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>().color = Color.red * 0.6f;
+            heatBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>().color = new Color(255,255,255);
             heatBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>().SetAlpha(1);
             heatImage = heatBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>();
             whiteImage = heatBarObj.transform.Find("Canvas/Image/White").GetComponent<Image>();
+            whiteImage.fillAmount = 0f;
         }
 
         private void Update()
@@ -66,26 +67,23 @@ namespace WillsWackyCards.MonoBehaviours
                 coroutineStarted = true;
                 InvokeRepeating(nameof(Cooldown), 0, TimeHandler.deltaTime);
             }
-            if (coroutineStarted)
-            {
-                UpdateHeatBar();
-            }
         }
 
         private void UpdateHeatBar()
         {
             heatTarget = heat / heatCap;
-            sinceHeat += TimeHandler.deltaTime;
-            heatdx = FRILerp.Lerp(heatdx, (heatTarget - heatCurrent) * spring, drag);
-            whitedx = FRILerp.Lerp(whitedx, (whiteTarget - whiteCurrent) * spring, drag);
-            heatCurrent += heatdx * TimeHandler.deltaTime;
-            whiteCurrent += whitedx * TimeHandler.deltaTime;
-            heatImage.fillAmount = heatCurrent;
-            whiteImage.fillAmount = whiteCurrent;
-            if (sinceHeat > 0.5)
-            {
-                whiteTarget = heatTarget;
-            }
+            //sinceHeat += TimeHandler.deltaTime;
+            //heatdx = FRILerp.Lerp(heatdx, (heatTarget - heatCurrent) * spring, drag);
+            //whitedx = FRILerp.Lerp(whitedx, (whiteTarget - whiteCurrent) * spring, drag);
+            //heatCurrent += heatdx * TimeHandler.deltaTime;
+            //whiteCurrent += whitedx * TimeHandler.deltaTime;
+            heatImage.fillAmount = heatTarget;
+            //whiteImage.fillAmount = whiteCurrent;
+            //if (sinceHeat > 0.5)
+            //{
+            //    whiteTarget = heatTarget;
+            //}
+            heatImage.color = new Color(255f, 255f - 255f*(heatTarget)*(2f/3f), 255f - 255f*(heatTarget));
         }
 
         private void OnShootProjectileAction(GameObject obj)
@@ -106,6 +104,7 @@ namespace WillsWackyCards.MonoBehaviours
                 gun.GetAdditionalData().overHeated = true;
                 cooldownTimeRemaining += 0.5f;
             }
+            UpdateHeatBar();
         }
 
         public void SetupRound()
@@ -133,6 +132,7 @@ namespace WillsWackyCards.MonoBehaviours
                 gun.GetAdditionalData().overHeated = false;
                 gunAmmo.ReloadAmmo(true);
             }
+            UpdateHeatBar();
         }
         private void OnDestroy()
         {

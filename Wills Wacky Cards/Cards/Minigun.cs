@@ -36,9 +36,9 @@ namespace WillsWackyCards.Cards
         {
             var heatBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
             heatBar.name = "HeatBar";
-            heatBar.Translate(new Vector3(0.9f, -0.35f, 0));
-            heatBar.Rotate(0f, 0f, 90f);
+            heatBar.Translate(new Vector3(0.9f, -0.5f, 0));
             heatBar.localScale.Set(0.5f, 1f, 1f);
+            heatBar.Rotate(0f, 0f, 90f);
             var heat = player.gameObject.AddComponent<Minigun_Mono>();
             //throw new NotImplementedException();
         }
