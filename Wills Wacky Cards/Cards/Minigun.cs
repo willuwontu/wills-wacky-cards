@@ -7,6 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using UnityEngine;
 using WillsWackyCards.Extensions;
+using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 
 namespace WillsWackyCards.Cards
@@ -23,12 +24,17 @@ namespace WillsWackyCards.Cards
             gun.GetAdditionalData().useHeat = true;
             gun.GetAdditionalData().heatPerShot = 0.01f;
             gun.spread = 0.15f;
-            gun.GetAdditionalData().minigunDamageMult = 0.05f;
-            UnityEngine.Debug.Log("[WWC][Card] Minigun Built");
+            gun.GetAdditionalData().minigunDamageMult = 0.03f;
+            //gun.knockback = 0f;
+            WillsWackyCards.Debug("[WWC][Card] Minigun Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            gun.knockback = 0f;
+            //var heatBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
+            //heatBar.name = "HeatBar";
+            //heatBar.Translate(new Vector3(0.3f, 0, 0));
+            //heatBar.Rotate(0f, 90f, 0f);
+            //var heat = player.gameObject.AddComponent<Minigun_Mono>();
             //throw new NotImplementedException();
         }
         public override void OnRemoveCard()

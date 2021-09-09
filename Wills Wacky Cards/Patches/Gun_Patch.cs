@@ -56,21 +56,32 @@ namespace WillsWackyCards.Patches
         [HarmonyPatch("ApplyProjectileStats")]
         static void SpeedDamageIncrease(Gun __instance, ref GameObject obj, float ___projectileSpeed, int ___reflects, float ___projectielSimulatonSpeed)
         {
-            ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
-            bullet.damage *= (1f + ((___projectileSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f))) * (1f + ((___projectielSimulatonSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)));
+            if (__instance.GetAdditionalData().speedDamageMultiplier != 0f)
+            {
+                ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
+                float extraDamage = (bullet.damage * (1f + ((___projectileSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f))) * (1f + ((___projectielSimulatonSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)))) - bullet.damage;
+                bullet.damage *= (1f + ((___projectileSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f))) * (1f + ((___projectielSimulatonSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)));
+                WillsWackyCards.Debug(string.Format("[WWC] Bullet fired that deals {0} damage ({1} extra)", bullet.damage, extraDamage)); 
+            }
 
             if (___reflects > 0)
             {
                 RayHitReflect rayHitReflect = obj.GetComponent<RayHitReflect>();
                 rayHitReflect.dmgM *= (1f + ((rayHitReflect.speedM - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)));
             }
-
-            if (__instance.GetAdditionalData().useHeat)
-            {
-                WeaponHandler weaponHandler = __instance.GetComponentInParent<WeaponHandler>();
-                //weaponHandler.SetFieldValue("heat",(float)weaponHandler.GetFieldValue("heat")+ __instance.GetAdditionalData().heatPerShot);
-            }
         }
+
+        //[HarmonyPostfix]
+        //[HarmonyPatch("ApplyProjectileStats")]
+        //static void MinigunHeat(Gun __instance)
+        //{
+        //    if (__instance.GetAdditionalData().useHeat)
+        //    {
+        //        WeaponHandler weaponHandler = __instance.GetComponentInParent<WeaponHandler>();
+        //        Player player = __instance.player;
+        //        //weaponHandler.SetFieldValue("heat",(float)weaponHandler.GetFieldValue("heat")+ __instance.GetAdditionalData().heatPerShot);
+        //    }
+        //}
 
         //[HarmonyPrefix]
         //[HarmonyPatch("BulletInit")]

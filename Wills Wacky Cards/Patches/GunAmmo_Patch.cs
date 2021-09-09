@@ -11,11 +11,11 @@ namespace WillsWackyCards.Patches
         [HarmonyPatch("Shoot")]
         static bool MinigunMadness(GunAmmo __instance)
         {
-            Gun gun = __instance.GetComponentInParent<Gun>();
-            if (gun.GetAdditionalData().minigun)
-            {
-                return false;
-            }
+            //Gun gun = __instance.GetComponentInParent<Gun>();
+            //if (gun.GetAdditionalData().minigun)
+            //{
+            //    return false;
+            //}
             return true;
         }
 

@@ -34,8 +34,6 @@ namespace WillsWackyCards.Patches
                 if (___myGunStats.GetAdditionalData().minigun)
                 {
                     gun.GetAdditionalData().minigun = ___myGunStats.GetAdditionalData().minigun;
-                    gun.damage /= gun.GetAdditionalData().minigunDamageMult;
-                    gun.GetAdditionalData().minigunDamageMult *= ___myGunStats.GetAdditionalData().minigunDamageMult;
                 }
                 if (___myGunStats.GetAdditionalData().useHeat)
                 {
@@ -83,11 +81,6 @@ namespace WillsWackyCards.Patches
             if (characterStatModifiers.GetAdditionalData().Vampire)
             {
                 healthHandler.regeneration = 0f;
-            }
-
-            if (gun.GetAdditionalData().minigun)
-            {
-                gun.damage *= gun.GetAdditionalData().minigunDamageMult;
             }
         }
     }
