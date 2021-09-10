@@ -8,7 +8,12 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Shotgun (Uncommon)
 - Basic Physics (Common)
 - Alternate Universe Physics (Common)
+- Minigun (Rare)
 
+----
+## v 1.0.6
+- New Card
+- More cards blacklisted by Shotgun and Minigun
 ----
 ## v 1.0.5
 - Fixed an isue where sometimes regular cards would not be added to a player after selecting them.

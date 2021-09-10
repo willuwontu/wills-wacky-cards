@@ -17,11 +17,11 @@ namespace WillsWackyCards.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             gun.attackSpeed = 1f/2000f;
-            gun.timeBetweenBullets = 0.1f;
+            gun.timeBetweenBullets = 0.05f;
             gun.projectileSpeed = 3f;
-            gun.destroyBulletAfter = 0.15f;
+            gun.destroyBulletAfter = 0.2f;
             gun.spread = 0.15f;
-            gun.knockback = .01f;
+            gun.knockback = .05f;
             gun.reloadTime *= 50f;
             gun.reloadTimeAdd += 15f;
 
@@ -33,9 +33,9 @@ namespace WillsWackyCards.Cards
         {
             var heatBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
             heatBar.name = "HeatBar";
-            heatBar.Translate(new Vector3(0.9f, -1f, 0));
+            heatBar.Translate(new Vector3(.95f, -1.2f, 0));
             heatBar.localScale.Set(0.5f, 1f, 1f);
-            heatBar.localScale = new Vector3(0.6f, 1.25f, 1f);
+            heatBar.localScale = new Vector3(0.7f, 1.35f, 1f);
             heatBar.Rotate(0f, 0f, 90f);
             var heat = player.gameObject.AddComponent<Minigun_Mono>();
             //throw new NotImplementedException();
@@ -71,6 +71,34 @@ namespace WillsWackyCards.Cards
                     stat = "Ammo",
                     amount = "Infinite",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Attack Speed",
+                    amount = "+2000%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Bullet Speed",
+                    amount = "+200%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Damage",
+                    amount = "-97%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Decreased",
+                    amount = "Range",
+                    simepleAmount = CardInfoStat.SimpleAmount.lower
                 }
             };
         }

@@ -8,14 +8,15 @@ namespace WillsWackyCards.MonoBehaviours
     public class Minigun_Mono : MonoBehaviour
     {
         public float heat = 0.0f;
-        public float heatCap = 3.0f;
+        public float heatCap = 3f;
         private bool overheated = false;
-        public float coolPerSecond = 2f;
-        public float secondsBeforeStartToCool = 0.0f;
+        public float coolPerSecond = 2.0f;
+        public float secondsBeforeStartToCool = 0.1f;
         private float cooldownTimeRemaining = 0.1f;
+        public float overheatBonusCooldownTime = 0.5f;
         private bool coroutineStarted;
         private float minigunDamageM = 0.035f;
-        public float heatPerBullet = 0.01f;
+        public float heatPerBullet = 0.02f;
         private Gun gun;
         private GunAmmo gunAmmo;
         private CharacterData data;
@@ -23,6 +24,7 @@ namespace WillsWackyCards.MonoBehaviours
         private Player player;
 
         // Heat Bar stuff, god bless Boss Sloth
+        public Image overheatImage;
         private GameObject heatBarObj;
         public Image heatImage;
         public Image whiteImage;
@@ -51,6 +53,7 @@ namespace WillsWackyCards.MonoBehaviours
                     gun = weaponHandler.gun;
                     gunAmmo = gun.GetComponentInChildren<GunAmmo>();
                     gun.ShootPojectileAction += OnShootProjectileAction;
+                    overheatImage = gunAmmo.reloadAnim.GetComponent<Image>();
                 }
             }
 
@@ -70,6 +73,11 @@ namespace WillsWackyCards.MonoBehaviours
             if (!overheated)
             {
                 heatImage.color = new Color(1f, 1f - (heatTarget) * 0.85f, 1f - heatTarget, 1f);
+                gunAmmo.ReDrawTotalBullets();
+            }
+            if (overheated)
+            {
+                overheatImage.fillAmount = heatTarget;
             }
         }
 
@@ -88,7 +96,7 @@ namespace WillsWackyCards.MonoBehaviours
             {
                 overheated = true;
                 gun.GetAdditionalData().overHeated = true;
-                cooldownTimeRemaining += 0.5f;
+                cooldownTimeRemaining += overheatBonusCooldownTime;
                 heatImage.color = Color.red;
             }
         }

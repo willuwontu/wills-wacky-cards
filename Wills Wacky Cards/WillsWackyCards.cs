@@ -26,7 +26,7 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.card";
         private const string ModName = "Wills Wacky Cards";
-        public const string Version = "1.0.7"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.0.6"; // What version are we on (major.minor.patch)?
 
         void Awake()
         {
