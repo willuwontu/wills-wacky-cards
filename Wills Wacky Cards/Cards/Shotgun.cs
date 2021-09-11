@@ -34,6 +34,7 @@ namespace WillsWackyCards.Cards
 
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
             UnityEngine.Debug.Log("[WWC][Card] Shotgun Built");
         }

@@ -20,12 +20,14 @@ namespace WillsWackyCards.Cards
             gun.timeBetweenBullets = 0.05f;
             gun.projectileSpeed = 3f;
             gun.destroyBulletAfter = 0.2f;
-            gun.spread = 0.15f;
+            gun.spread = 0.2f;
             gun.knockback = .05f;
             gun.reloadTime *= 50f;
             gun.reloadTimeAdd += 15f;
 
+            cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
             UnityEngine.Debug.Log("[WWC][Card] Minigun Built");
         }
@@ -33,12 +35,11 @@ namespace WillsWackyCards.Cards
         {
             var heatBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
             heatBar.name = "HeatBar";
-            heatBar.Translate(new Vector3(.95f, -1.2f, 0));
+            heatBar.Translate(new Vector3(.95f, -1.1f, 0));
             heatBar.localScale.Set(0.5f, 1f, 1f);
-            heatBar.localScale = new Vector3(0.7f, 1.35f, 1f);
+            heatBar.localScale = new Vector3(0.6f, 1.4f, 1f);
             heatBar.Rotate(0f, 0f, 90f);
             var heat = player.gameObject.AddComponent<Minigun_Mono>();
-            //throw new NotImplementedException();
         }
         public override void OnRemoveCard()
         {
@@ -104,7 +105,7 @@ namespace WillsWackyCards.Cards
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.DestructiveRed;
+            return CardThemeColor.CardThemeColorType.FirepowerYellow;
         }
 
         public override string GetModName()

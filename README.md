@@ -11,6 +11,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Minigun (Rare)
 
 ----
+## v 1.0.7
+- Balance Changes
+- More cards blacklisted by Shotgun and Minigun
+----
 ## v 1.0.6
 - New Card
 - More cards blacklisted by Shotgun and Minigun

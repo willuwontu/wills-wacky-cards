@@ -10,7 +10,7 @@ namespace WillsWackyCards.MonoBehaviours
         public float heat = 0.0f;
         public float heatCap = 3f;
         private bool overheated = false;
-        public float coolPerSecond = 2.0f;
+        public float coolPerSecond = 1.875f;
         public float secondsBeforeStartToCool = 0.1f;
         private float cooldownTimeRemaining = 0.1f;
         public float overheatBonusCooldownTime = 0.5f;
@@ -102,6 +102,10 @@ namespace WillsWackyCards.MonoBehaviours
         }
         private void Cooldown()
         {
+            if (gun.spread < 0.15f)
+            {
+                gun.spread = 0.15f;
+            }
             if (cooldownTimeRemaining > 0)
             {
                 cooldownTimeRemaining -= TimeHandler.deltaTime;
