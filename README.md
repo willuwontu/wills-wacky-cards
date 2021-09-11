@@ -9,6 +9,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Basic Physics (Common)
 - Alternate Universe Physics (Common)
 - Minigun (Rare)
+- Wild Aim (Common)
 
 ----
 ## v 1.0.7
