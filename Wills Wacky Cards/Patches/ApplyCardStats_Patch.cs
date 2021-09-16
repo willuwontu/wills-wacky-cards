@@ -1,18 +1,19 @@
 ﻿using UnityEngine;
 using HarmonyLib;
 using WillsWackyCards.Extensions;
+using UnboundLib;
 
 namespace WillsWackyCards.Patches
 {
     [HarmonyPatch(typeof(ApplyCardStats), "ApplyStats")]
     class ApplyCardStats_Patch
     {
-        static void Prefix(Player ___playerToUpgrade, Gun ___myGunStats)
+        static void Prefix(Player ___playerToUpgrade, Gun ___myGunStats, CharacterStatModifiers ___myPlayerStats)
         {
+            var gun = ___playerToUpgrade.GetComponent<Holding>().holdable.GetComponent<Gun>();
+            var statModifiers = ___playerToUpgrade.GetComponent<CharacterStatModifiers>();
             if (___myGunStats)
             {
-                var gun = ___playerToUpgrade.GetComponent<Holding>().holdable.GetComponent<Gun>();
-
                 if (___myGunStats.GetAdditionalData().useForcedAttackSpeed)
                 {
                     gun.GetAdditionalData().useForcedAttackSpeed = ___myGunStats.GetAdditionalData().useForcedAttackSpeed;
@@ -31,6 +32,13 @@ namespace WillsWackyCards.Patches
                 }
                 gun.GetAdditionalData().speedDamageMultiplier *= ___myGunStats.GetAdditionalData().speedDamageMultiplier;
             }
+            if (___myPlayerStats)
+            {
+                if (___myPlayerStats.GetAdditionalData().MassModifier != 1)
+                {
+                    statModifiers.GetAdditionalData().MassModifier *= ___myPlayerStats.GetAdditionalData().MassModifier;
+                }
+            }
         }
 
         static void Postfix(Player ___playerToUpgrade)
@@ -40,6 +48,7 @@ namespace WillsWackyCards.Patches
             var gunAmmo = gun.GetComponentInChildren<GunAmmo>();
             var healthHandler = ___playerToUpgrade.GetComponent<HealthHandler>();
             var characterStatModifiers = player.GetComponent<CharacterStatModifiers>();
+            var characterData = ___playerToUpgrade.GetComponent<CharacterData>();
 
             if (((gun.attackSpeed * gun.attackSpeedMultiplier) < gun.GetAdditionalData().minimumAttackSpeed) && !gun.GetAdditionalData().useForcedAttackSpeed)
             {
@@ -72,6 +81,14 @@ namespace WillsWackyCards.Patches
             if (characterStatModifiers.GetAdditionalData().Vampire)
             {
                 healthHandler.regeneration = 0f;
+            }
+            if (characterStatModifiers.GetAdditionalData().MassModifier != 1f)
+            {
+                float massCurr = (float)characterData.playerVel.GetFieldValue("mass");
+                float massMod = characterStatModifiers.GetAdditionalData().MassModifier;
+                float massTarg = massCurr * massMod;
+                characterData.playerVel.SetFieldValue("mass", massTarg);
+                UnityEngine.Debug.Log(string.Format("[WWC] Setting Mass to {0:F2} (was {1:F2}, modified by {2:F2})", massTarg, massCurr, massMod));
             }
         }
     }

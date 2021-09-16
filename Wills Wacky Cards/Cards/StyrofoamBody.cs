@@ -5,23 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using WillsWackyCards.Extensions;
 using UnityEngine;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 
 namespace WillsWackyCards.Cards
 {
-    class RunningShoes : CustomCard
+    class StyrofoamBody : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.movementSpeed = 1.45f;
-            statModifiers.jump = .85f;
-            gun.spread = 0.05f;
-
-            cardInfo.allowMultiple = true;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Running Shoes") };
-            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Jumping Shoes") };
-            UnityEngine.Debug.Log("[WWC][Card] Running Shoes Built");
+            //statModifiers.sizeMultiplier = 5f;
+            statModifiers.GetAdditionalData().MassModifier = 1f / 5f;
+            UnityEngine.Debug.Log("[WWC][Card] Styrofoam Body Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -34,11 +29,11 @@ namespace WillsWackyCards.Cards
 
         protected override string GetTitle()
         {
-            return "Running Shoes";
+            return "Styrofoam Body";
         }
         protected override string GetDescription()
         {
-            return "Don't sniff them.";
+            return "Big, and useless.";
         }
         protected override GameObject GetCardArt()
         {
@@ -55,23 +50,9 @@ namespace WillsWackyCards.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Move Speed",
-                    amount = "+45%",
-                    simepleAmount = CardInfoStat.SimpleAmount.Some
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Jump Height",
-                    amount = "-15%",
-                    simepleAmount = CardInfoStat.SimpleAmount.Some
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Spread",
-                    amount = "+5%",
-                    simepleAmount = CardInfoStat.SimpleAmount.Some
+                    stat = "Effect",
+                    amount = "No",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }

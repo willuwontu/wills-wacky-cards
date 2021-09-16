@@ -13,15 +13,15 @@ namespace WillsWackyCards.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            UnityEngine.Debug.Log("[WWC][Card] xxxx Built");
+            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            //throw new NotImplementedException();
+            // Edits values on player when card is selected
         }
         public override void OnRemoveCard()
         {
-            //throw new NotImplementedException();
+            //Drives me crazy
         }
 
         protected override string GetTitle()

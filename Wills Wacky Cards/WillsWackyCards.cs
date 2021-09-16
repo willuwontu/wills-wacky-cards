@@ -47,6 +47,7 @@ namespace WillsWackyCards
             CustomCard.BuildCard<WildAim>();
             CustomCard.BuildCard<RunningShoes>();
             CustomCard.BuildCard<JumpingShoes>();
+            CustomCard.BuildCard<StyrofoamBody>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
 
             this.ExecuteAfterSeconds(0.4f, ChangeCards);
@@ -116,6 +117,34 @@ namespace WillsWackyCards
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") }; 
                             }
                             UnityEngine.Debug.Log("[WWC] Modified Flamethrower");
+                            break;
+                        }
+                    case "FIRE HYDRANT":
+                        {
+                            UnityEngine.Debug.Log("[WWC] Found Fire Hydrant");
+                            if (info.cardInfo.categories != null)
+                            {
+                                categories = new List<CardCategory>();
+                                for (int i = 0; i < info.cardInfo.categories.Length; i++)
+                                {
+                                    categories.Add(info.cardInfo.categories[i]);
+                                }
+                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                info.cardInfo.categories = categories.ToArray();
+                                categories = new List<CardCategory>();
+                                for (int i = 0; i < info.cardInfo.blacklistedCategories.Length; i++)
+                                {
+                                    categories.Add(info.cardInfo.blacklistedCategories[i]);
+                                }
+                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                info.cardInfo.blacklistedCategories = categories.ToArray();
+                            }
+                            else
+                            {
+                                info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
+                                info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
+                            }
+                            UnityEngine.Debug.Log("[WWC] Modified Fire Hydrant");
                             break;
                         }
                     case "PONG":

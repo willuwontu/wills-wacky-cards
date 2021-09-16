@@ -9,10 +9,12 @@ namespace WillsWackyCards.Extensions
     public class CharacterStatModifiersAdditionalData
     {
         public bool Vampire;
+        public float MassModifier;
 
         public CharacterStatModifiersAdditionalData()
         {
             Vampire = false;
+            MassModifier = 1f;
         }
     }
     public static class CharacterStatModifiersExtension
@@ -40,6 +42,7 @@ namespace WillsWackyCards.Extensions
         private static void Prefix(CharacterStatModifiers __instance)
         {
             __instance.GetAdditionalData().Vampire = false;
+            __instance.GetAdditionalData().MassModifier = 1f;
         }
     }
 }

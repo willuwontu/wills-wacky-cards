@@ -16,6 +16,7 @@ namespace WillsWackyCards.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
+            var block = cardInfo.gameObject.GetOrAddComponent<Block>();
             gun.attackSpeed = 1f/2000f;
             gun.timeBetweenBullets = 0.05f;
             gun.projectileSpeed = 3f;
@@ -28,7 +29,9 @@ namespace WillsWackyCards.Cards
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("No Minigun") };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
+            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("No Minigun") };
             UnityEngine.Debug.Log("[WWC][Card] Minigun Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
