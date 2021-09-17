@@ -47,7 +47,7 @@ namespace WillsWackyCards
             CustomCard.BuildCard<WildAim>();
             CustomCard.BuildCard<RunningShoes>();
             CustomCard.BuildCard<JumpingShoes>();
-            CustomCard.BuildCard<StyrofoamBody>();
+            //CustomCard.BuildCard<StyrofoamBody>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
 
             this.ExecuteAfterSeconds(0.4f, ChangeCards);

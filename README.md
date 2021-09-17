@@ -10,7 +10,13 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Alternate Universe Physics (Common)
 - Minigun (Rare)
 - Wild Aim (Common)
+- Boots of Leaping (Common)
+- Running Shoes (Common)
 
+----
+## v 1.0.8
+- Code logic patched.
+- New Cards
 ----
 ## v 1.0.7
 - Balance Changes

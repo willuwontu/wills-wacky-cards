@@ -15,7 +15,7 @@ namespace WillsWackyCards.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             statModifiers.movementSpeed = .85f;
-            statModifiers.jump = 1.3f;
+            statModifiers.jump = 1.45f;
             gun.spread = 0.05f;
 
             cardInfo.allowMultiple = true;
@@ -56,7 +56,7 @@ namespace WillsWackyCards.Cards
                 {
                     positive = true,
                     stat = "Jump Height",
-                    amount = "+30%",
+                    amount = "+45%",
                     simepleAmount = CardInfoStat.SimpleAmount.Some
                 },
                 new CardInfoStat()
