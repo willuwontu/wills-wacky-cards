@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnboundLib;
 using WillsWackyCards.Extensions;
+using System;
 
 namespace WillsWackyCards.MonoBehaviours
 {
@@ -17,6 +18,7 @@ namespace WillsWackyCards.MonoBehaviours
         private bool coroutineStarted;
         private float minigunDamageM = 0.035f;
         public float heatPerBullet = 0.02f;
+        private Action<GameObject> shootAction;
         private Gun gun;
         private GunAmmo gunAmmo;
         private CharacterData data;
@@ -52,7 +54,8 @@ namespace WillsWackyCards.MonoBehaviours
                     weaponHandler = data.weaponHandler;
                     gun = weaponHandler.gun;
                     gunAmmo = gun.GetComponentInChildren<GunAmmo>();
-                    gun.ShootPojectileAction += OnShootProjectileAction;
+                    shootAction = new Action<GameObject>(this.OnShootProjectileAction);
+                    gun.ShootPojectileAction = (Action<GameObject>)Delegate.Combine(gun.ShootPojectileAction, shootAction);
                     overheatImage = gunAmmo.reloadAnim.GetComponent<Image>();
                 }
             }
@@ -123,6 +126,7 @@ namespace WillsWackyCards.MonoBehaviours
         }
         private void OnDestroy()
         {
+            gun.ShootPojectileAction = (Action<GameObject>)Delegate.Remove(gun.ShootPojectileAction, shootAction);
             Destroy(heatBarObj);
         }
 
