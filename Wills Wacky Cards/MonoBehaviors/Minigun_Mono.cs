@@ -125,5 +125,10 @@ namespace WillsWackyCards.MonoBehaviours
         {
             Destroy(heatBarObj);
         }
+
+        public void Destroy()
+        {
+            UnityEngine.Object.Destroy(this);
+        }
     }
 }

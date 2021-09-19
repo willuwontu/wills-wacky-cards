@@ -7,12 +7,14 @@ using UnboundLib;
 using UnboundLib.Cards;
 using UnityEngine;
 using WillsWackyCards.Extensions;
+using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 
 namespace WillsWackyCards.Cards
 {
     class Vampirism : CustomCard
     {
+        private Vampirism_Mono vampirism;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             statModifiers.gravity = 0.7f;
@@ -30,13 +32,14 @@ namespace WillsWackyCards.Cards
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var LifeDrain = new GameObject("LifeDrain");
-            var vampirism = LifeDrain.gameObject.AddComponent<MonoBehaviours.Vampirism_Mono>();
+            vampirism = LifeDrain.gameObject.AddComponent<Vampirism_Mono>();
             statModifiers.AddObjectToPlayer = LifeDrain;
             statModifiers.GetAdditionalData().Vampire = true;
             //throw new NotImplementedException();
         }
         public override void OnRemoveCard()
         {
+            Destroy(this.vampirism);
             //throw new NotImplementedException();
         }
 

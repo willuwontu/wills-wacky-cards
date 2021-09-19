@@ -14,6 +14,7 @@ namespace WillsWackyCards.Cards
 {
     class Minigun : CustomCard
     {
+        private Minigun_Mono minigun;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             var block = cardInfo.gameObject.GetOrAddComponent<Block>();
@@ -42,10 +43,11 @@ namespace WillsWackyCards.Cards
             heatBar.localScale.Set(0.5f, 1f, 1f);
             heatBar.localScale = new Vector3(0.6f, 1.4f, 1f);
             heatBar.Rotate(0f, 0f, 90f);
-            var heat = player.gameObject.AddComponent<Minigun_Mono>();
+            minigun = player.gameObject.AddComponent<Minigun_Mono>();
         }
         public override void OnRemoveCard()
         {
+            Destroy(this.minigun);
             //throw new NotImplementedException();
         }
 

@@ -36,5 +36,9 @@ namespace WillsWackyCards.MonoBehaviours
             damage = target.data.maxHealth * percentLifeDrain;
             target.data.healthHandler.TakeDamageOverTime(damage * Vector2.up, transform.position, 1f, 0.25f, Color.black, null, data.player, true);
         }
+        public void Destroy()
+        {
+            UnityEngine.Object.Destroy(this);
+        }
     }
 }

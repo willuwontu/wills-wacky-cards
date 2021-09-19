@@ -13,6 +13,7 @@ using UnboundLib.GameModes;
 using UnboundLib.Cards;
 using UnboundLib.Utils;
 using WillsWackyCards.Cards;
+using WillsWackyCards.MonoBehaviours;
 using HarmonyLib;
 using Photon.Pun;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
@@ -51,6 +52,24 @@ namespace WillsWackyCards
             UnityEngine.Debug.Log("[WWC] Cards Built");
 
             this.ExecuteAfterSeconds(0.4f, ChangeCards);
+
+            GameModeManager.AddHook(GameModeHooks.HookGameEnd, ResetEffects);
+        }
+
+        IEnumerator ResetEffects(IGameModeHandler gm)
+        {
+            DestroyAll<Minigun_Mono>();
+            DestroyAll<Vampirism_Mono>();
+            yield break;
+        }
+        void DestroyAll<T>() where T : UnityEngine.Object
+        {
+            var objects = GameObject.FindObjectsOfType<T>();
+            for (int i = objects.Length - 1; i >= 0; i--)
+            {
+                UnityEngine.Debug.Log($"Attempting to Destroy {objects[i].GetType().Name} number {i}");
+                UnityEngine.Object.Destroy(objects[i]);
+            }
         }
 
         private static void ChangeCards()
