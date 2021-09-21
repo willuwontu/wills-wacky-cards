@@ -70,13 +70,14 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void UpdateHeatBar()
         {
+            
             heatTarget = heat / heatCap;
             heatImage.fillAmount = heatTarget;
             whiteImage.fillAmount = heatTarget;
             if (!overheated)
             {
                 heatImage.color = new Color(heatTarget, 1f - (heatTarget) * 0.85f, Mathf.Clamp(0.5f - heatTarget,0f,1f), 1f);
-                gunAmmo.ReDrawTotalBullets();
+                gunAmmo.ReloadAmmo();
             }
             if (overheated)
             {
