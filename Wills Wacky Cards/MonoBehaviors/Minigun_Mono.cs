@@ -18,7 +18,6 @@ namespace WillsWackyCards.MonoBehaviours
         private bool coroutineStarted;
         private float minigunDamageM = 0.035f;
         public float heatPerBullet = 0.02f;
-        private Action<GameObject> shootAction;
         private Gun gun;
         private GunAmmo gunAmmo;
         private CharacterData data;
@@ -54,8 +53,7 @@ namespace WillsWackyCards.MonoBehaviours
                     weaponHandler = data.weaponHandler;
                     gun = weaponHandler.gun;
                     gunAmmo = gun.GetComponentInChildren<GunAmmo>();
-                    shootAction = new Action<GameObject>(this.OnShootProjectileAction);
-                    gun.ShootPojectileAction = (Action<GameObject>)Delegate.Combine(gun.ShootPojectileAction, shootAction);
+                    gun.ShootPojectileAction += OnShootProjectileAction;
                     overheatImage = gunAmmo.reloadAnim.GetComponent<Image>();
                 }
             }
@@ -64,7 +62,9 @@ namespace WillsWackyCards.MonoBehaviours
             {
                 coroutineStarted = true;
                 InvokeRepeating(nameof(Cooldown), 0, TimeHandler.deltaTime);
+                InvokeRepeating(nameof(CheckIfValid), 0, 1f);
             }
+
             UpdateHeatBar();
         }
 
@@ -125,15 +125,40 @@ namespace WillsWackyCards.MonoBehaviours
                 gunAmmo.ReloadAmmo(true);
             }
         }
+
+        private void CheckIfValid()
+        {
+            var haveMinigun = false;
+            for (int i = 0; i < player.data.currentCards.Count; i++)
+            {
+                if (player.data.currentCards[i].cardName == "Minigun")
+                {
+                    haveMinigun = true;
+                }
+            }
+
+            if (!haveMinigun)
+            {
+                Destroy(heatBarObj);
+                gun.ShootPojectileAction -= OnShootProjectileAction;
+                Destroy(this);
+            }
+        }
+
         private void OnDestroy()
         {
-            gun.ShootPojectileAction = (Action<GameObject>)Delegate.Remove(gun.ShootPojectileAction, shootAction);
+            gun.ShootPojectileAction -= OnShootProjectileAction;
             Destroy(heatBarObj);
         }
 
         public void Destroy()
         {
             UnityEngine.Object.Destroy(this);
+        }
+
+        public void OnRemove()
+        {
+            UnityEngine.Debug.Log("Minigun Removed");
         }
     }
 }
