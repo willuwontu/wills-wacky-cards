@@ -6,37 +6,44 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
+using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Hidden
+namespace WillsWackyCards.Cards
 {
-    class NeedleBullets : CustomCard
+    class Gatling : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.projectileSize = 0.5f;
-            gun.spread = 0.3f;
-            gun.evenSpread = -0.1f;
-            gun.reflects = -1;
+            gun.ammo = 20;
+            gun.spread = 0.35f;
+            gun.reloadTimeAdd = 0.5f;
+            gun.attackSpeed = 1.25f;
 
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
+            cardInfo.allowMultiple = false;
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
+            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
+            UnityEngine.Debug.Log("[WWC][Card] Gatling Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            characterStats.GetAdditionalData().Bleed += 0.5f;
+            var gatling = player.gameObject.GetOrAddComponent<Gatling_Mono>();
+            gatling.rampUp *= 0.7f;
         }
         public override void OnRemoveCard()
         {
+            //Drives me crazy
         }
 
         protected override string GetTitle()
         {
-            return "Needle Bullets";
+            return "Gatling Gun";
         }
         protected override string GetDescription()
         {
-            return "Hard to see, a pain to control, and likely to get lost in a haystack.";
+            return "Wrrrrr";
         }
         protected override GameObject GetCardArt()
         {
@@ -52,9 +59,16 @@ namespace WillsWackyCards.Cards.Hidden
             {
                 new CardInfoStat()
                 {
-                    positive = false,
-                    stat = "Bullets",
-                    amount = "Smaller",
+                    positive = true,
+                    stat = "Ramping Attack Speed",
+                    amount = "+30%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Ammo",
+                    amount = "+20",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -62,28 +76,28 @@ namespace WillsWackyCards.Cards.Hidden
                     positive = false,
                     stat = "Spread",
                     amount = "+30%",
-                    simepleAmount = CardInfoStat.SimpleAmount.Some
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Bounces",
-                    amount = "-1",
-                    simepleAmount = CardInfoStat.SimpleAmount.slightlyLower
+                    stat = "Reload Time",
+                    amount = "+0.5s",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.EvilPurple;
+            return CardThemeColor.CardThemeColorType.ColdBlue;
         }
         public override string GetModName()
         {
-            return "Curse";
+            return "WWC";
         }
         public override bool GetEnabled()
         {
-            return false;
+            return true;
         }
     }
 }

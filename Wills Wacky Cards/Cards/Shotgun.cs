@@ -23,7 +23,7 @@ namespace WillsWackyCards.Cards
             gun.spread = .2f;
             gun.evenSpread = .5f;
             gun.recoilMuiltiplier = 5f;
-            gun.destroyBulletAfter = 1.5f;
+            gun.destroyBulletAfter = 1.15f;
             gun.timeBetweenBullets = 0.25f;
             gun.GetAdditionalData().useMinimumReloadSpeed = true;
             gun.GetAdditionalData().minimumReloadSpeed = 5.0f;
@@ -61,7 +61,7 @@ namespace WillsWackyCards.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Rare;
         }
         protected override CardInfoStat[] GetStats()
         {

@@ -60,7 +60,7 @@ namespace WillsWackyCards.Cards.Hidden
         }
         public override string GetModName()
         {
-            return "WWC";
+            return "Curse";
         }
         public override bool GetEnabled()
         {

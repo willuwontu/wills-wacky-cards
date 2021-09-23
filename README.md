@@ -12,9 +12,25 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Wild Aim (Common)
 - Boots of Leaping (Common)
 - Running Shoes (Common)
+- Hex (Uncommon)
+  - Bleeding Wounds (Curse)
+  - Cheap Magazines (Curse)
+  - Crooked Legs (Curse)
+  - Driven to Earth (Curse)
+  - Easy Target (Curse)
+  - Misfire (Curse)
+  - Needle Bullets (Curse)
+  - Pasta Shells (Curse)
+  - Slow Reflexes (Curse)
+- Gatling Gun (Rare)
 
 ----
-## v 1.1.0
+## v 1.1.2
+- Shotgun is now a rare.
+- New Card (Gatling)
+- Fixes
+----
+## v 1.1.1
 - Shotgun was changed to have a minimum reload time and had other stat changes made as well.
 ----
 ## v 1.1.0

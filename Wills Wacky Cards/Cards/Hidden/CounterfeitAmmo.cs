@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace WillsWackyCards.Cards.Hidden
 {
-    class CheapMagazines : CustomCard
+    class CounterfeitAmmo : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
@@ -30,11 +30,11 @@ namespace WillsWackyCards.Cards.Hidden
 
         protected override string GetTitle()
         {
-            return "Cheap Magazines";
+            return "Counterfeit Ammo";
         }
         protected override string GetDescription()
         {
-            return "Bim bung, you're now aware of your tongue.";
+            return "Should've bought it from a reputable source.";
         }
         protected override GameObject GetCardArt()
         {
@@ -84,7 +84,7 @@ namespace WillsWackyCards.Cards.Hidden
         }
         public override string GetModName()
         {
-            return "WWC";
+            return "Curse";
         }
         public override bool GetEnabled()
         {

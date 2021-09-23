@@ -55,13 +55,13 @@ namespace WillsWackyCards.Patches
             var characterStatModifiers = player.GetComponent<CharacterStatModifiers>();
             var characterData = ___playerToUpgrade.GetComponent<CharacterData>();
 
-            if (((gun.attackSpeed * gun.attackSpeedMultiplier) < gun.GetAdditionalData().minimumAttackSpeed) && !gun.GetAdditionalData().useForcedAttackSpeed)
+            if (((gun.attackSpeed * gun.attackSpeedMultiplier) < gun.GetAdditionalData().minimumAttackSpeed) && gun.GetAdditionalData().useMinimumAttackSpeed && !gun.GetAdditionalData().useForcedAttackSpeed)
             {
                 gun.attackSpeed = gun.GetAdditionalData().minimumAttackSpeed;
                 gun.attackSpeedMultiplier = 1f;
             }
 
-            if (((gunAmmo.reloadTime + gunAmmo.reloadTimeAdd) * gunAmmo.reloadTimeMultiplier < gun.GetAdditionalData().minimumReloadSpeed) && !gun.GetAdditionalData().useForcedReloadSpeed)
+            if (((gunAmmo.reloadTime + gunAmmo.reloadTimeAdd) * gunAmmo.reloadTimeMultiplier < gun.GetAdditionalData().minimumReloadSpeed) && gun.GetAdditionalData().useMinimumReloadSpeed && !gun.GetAdditionalData().useForcedReloadSpeed)
             {
                 gun.reloadTime = 1f;
                 gun.reloadTimeAdd = 0.0f;

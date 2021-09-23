@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnboundLib.Cards;
 using UnityEngine;
 
@@ -13,7 +14,8 @@ namespace WillsWackyCards.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("cardManipulation") };
+            UnityEngine.Debug.Log("[WWC][Card] Hex Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

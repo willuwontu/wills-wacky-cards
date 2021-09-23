@@ -29,7 +29,7 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.card";
         private const string ModName = "Wills Wacky Cards";
-        public const string Version = "1.1.1"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.1.2"; // What version are we on (major.minor.patch)?
 
         internal static List<CardInfo> curses = new List<CardInfo>();
         private static System.Random random = new System.Random();
@@ -63,10 +63,11 @@ namespace WillsWackyCards
             CustomCard.BuildCard<Earthbound>(cardInfo => curses.Add(cardInfo));
             CustomCard.BuildCard<Misfire>(cardInfo => curses.Add(cardInfo));
             CustomCard.BuildCard<SlowReflexes>(cardInfo => curses.Add(cardInfo));
-            CustomCard.BuildCard<CheapMagazines>(cardInfo => curses.Add(cardInfo));
+            CustomCard.BuildCard<CounterfeitAmmo>(cardInfo => curses.Add(cardInfo));
             CustomCard.BuildCard<NeedleBullets>(cardInfo => curses.Add(cardInfo));
             CustomCard.BuildCard<EasyTarget>(cardInfo => curses.Add(cardInfo));
             CustomCard.BuildCard<Hex>();
+            CustomCard.BuildCard<Gatling>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
@@ -79,6 +80,8 @@ namespace WillsWackyCards
         {
             DestroyAll<Minigun_Mono>();
             DestroyAll<Vampirism_Mono>();
+            DestroyAll<Gatling_Mono>();
+            DestroyAll<Misfire_Mono>();
             yield break;
         }
         void DestroyAll<T>() where T : UnityEngine.Object
