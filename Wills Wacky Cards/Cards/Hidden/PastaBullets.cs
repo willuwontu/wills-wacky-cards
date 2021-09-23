@@ -5,16 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WillsWackyCards.Cards.Hidden
 {
-    class WimpyBlows : CustomCard
+    class PastaBullets : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             gun.damage = 0.5f;
             gun.drag = 30f;
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -27,7 +29,7 @@ namespace WillsWackyCards.Cards.Hidden
 
         protected override string GetTitle()
         {
-            return "Lacking Blows";
+            return "Pasta Shells";
         }
         protected override string GetDescription()
         {

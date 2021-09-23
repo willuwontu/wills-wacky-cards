@@ -25,8 +25,8 @@ namespace WillsWackyCards.Cards
             statModifiers.health = 0.8f;
 
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
-            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CharacterCurse") };
+            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CharacterCurse") };
             UnityEngine.Debug.Log("[WWC][Card] Vampirism Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

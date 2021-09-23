@@ -20,13 +20,14 @@ namespace WillsWackyCards.Cards
             if (WillsWackyCards.curses.Count > 0)
             {
                 UnityEngine.Debug.Log("[WWC][Hex] Cursing Enemies");
-                var curse = WillsWackyCards.GetRandomCurse();
+                CardInfo curse;
 
                 foreach (var item in PlayerManager.instance.players)
                 {
                     if (player.teamID != item.teamID)
                     {
-                        ModdingUtils.Utils.Cards.instance.AddCardToPlayer(item, curse, false, "", 0, 0, true);
+                        curse = WillsWackyCards.GetRandomCurse();
+                        ModdingUtils.Utils.Cards.instance.AddCardToPlayer(item, curse, false, "", 2f, 0, true);
                     }
                 }
             }

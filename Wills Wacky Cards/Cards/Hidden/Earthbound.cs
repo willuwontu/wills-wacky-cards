@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WillsWackyCards.Cards.Hidden
@@ -15,6 +16,7 @@ namespace WillsWackyCards.Cards.Hidden
         {
             statModifiers.gravity = 5f;
             statModifiers.jump = 0.5f;
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

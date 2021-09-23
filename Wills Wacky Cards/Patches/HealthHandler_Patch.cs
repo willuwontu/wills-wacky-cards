@@ -13,9 +13,10 @@ namespace WillsWackyCards.Patches
         [HarmonyPatch("CallTakeDamage")]
         static void BleedEffect(HealthHandler __instance, Vector2 damage, Vector2 position, Player damagingPlayer, Player ___player)
         {
-            if (___player.data.stats.GetAdditionalData().Bleed > 0f)
+            var bleed = ___player.data.stats.GetAdditionalData().Bleed;
+            if (bleed > 0f)
             {
-                __instance.TakeDamageOverTime(damage * ___player.data.stats.GetAdditionalData().Bleed, position, 3f, 0.25f, Color.red, null, damagingPlayer, true);
+                __instance.TakeDamageOverTime(damage * bleed, position, 3f - 0.5f/4f + bleed/4f, 0.25f, Color.red, null, damagingPlayer, true);
             }
         }
 
