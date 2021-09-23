@@ -5,35 +5,36 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using WillsWackyCards.Extensions;
+using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WillsWackyCards.Cards.Hidden
 {
-    class Earthbound : CustomCard
+    class Misfire : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.gravity = 2.5f;
-            statModifiers.jump = 0.6f;
+            gun.reloadTime = 2f;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
+            var misfire = player.gameObject.GetOrAddComponent<Misfire_Mono>();
+            misfire.misfireChance += 5;
         }
         public override void OnRemoveCard()
         {
-            //Drives me crazy
         }
 
         protected override string GetTitle()
         {
-            return "Driven to Earth";
+            return "Misfire";
         }
         protected override string GetDescription()
         {
-            return "Birds, bats, fleas and flies, chase this fool from my skies.";
+            return "Bippity boop, your gun can no longer shoot.";
         }
         protected override GameObject GetCardArt()
         {
@@ -50,22 +51,22 @@ namespace WillsWackyCards.Cards.Hidden
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Jump Height",
-                    amount = "-40%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                    stat = "Misfire Rate",
+                    amount = "+5%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLittleBitOf
                 },
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Gravity",
-                    amount = "+150%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aHugeAmountOf
+                    stat = "Reload Time",
+                    amount = "+100%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.PoisonGreen;
+            return CardThemeColor.CardThemeColorType.DestructiveRed;
         }
         public override string GetModName()
         {

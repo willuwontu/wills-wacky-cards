@@ -134,6 +134,7 @@ namespace WillsWackyCards.MonoBehaviours
                 if (player.data.currentCards[i].cardName == "Minigun")
                 {
                     haveMinigun = true;
+                    break;
                 }
             }
 
