@@ -155,10 +155,5 @@ namespace WillsWackyCards.MonoBehaviours
         {
             UnityEngine.Object.Destroy(this);
         }
-
-        public void OnRemove()
-        {
-            UnityEngine.Debug.Log("Minigun Removed");
-        }
     }
 }
