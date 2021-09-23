@@ -57,7 +57,6 @@ namespace WillsWackyCards
             CustomCard.BuildCard<WildAim>();
             CustomCard.BuildCard<RunningShoes>();
             CustomCard.BuildCard<JumpingShoes>();
-            //CustomCard.BuildCard<StyrofoamBody>();
             CustomCard.BuildCard<PastaBullets>(cardInfo => curses.Add(cardInfo));
             CustomCard.BuildCard<CrookedLegs>(cardInfo => curses.Add(cardInfo));
             CustomCard.BuildCard<Bleed>(cardInfo => curses.Add(cardInfo));
