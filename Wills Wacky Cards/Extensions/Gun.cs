@@ -20,6 +20,8 @@ namespace WillsWackyCards.Extensions
         public float speedDamageMultiplier;
         public bool overHeated;
         public Minigun_Mono minigun;
+        public bool useMinimumReloadSpeed;
+        public bool useMinimumAttackSpeed;
 
         public GunAdditionalData()
         {
@@ -32,6 +34,10 @@ namespace WillsWackyCards.Extensions
             speedDamageMultiplier = 1f;
             overHeated = false;
             minigun = null;
+            useMinimumAttackSpeed = false;
+            useMinimumReloadSpeed = false;
+            minimumAttackSpeed = 1f;
+            minimumReloadSpeed = 1f;
         }
     }
     public static class GunExtension
@@ -68,6 +74,10 @@ namespace WillsWackyCards.Extensions
             __instance.GetAdditionalData().speedDamageMultiplier = 1f;
             __instance.GetAdditionalData().overHeated = false;
             __instance.GetAdditionalData().minigun = null;
+            __instance.GetAdditionalData().useMinimumReloadSpeed = false;
+            __instance.GetAdditionalData().useMinimumAttackSpeed = false;
+            __instance.GetAdditionalData().minimumAttackSpeed = 1f;
+            __instance.GetAdditionalData().minimumReloadSpeed = 1f;
         }
     }
 }

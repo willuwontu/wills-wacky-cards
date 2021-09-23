@@ -28,6 +28,7 @@ namespace WillsWackyCards.Cards
                     {
                         curse = WillsWackyCards.GetRandomCurse();
                         ModdingUtils.Utils.Cards.instance.AddCardToPlayer(item, curse, false, "", 2f, 0, true);
+                        UnityEngine.Debug.Log("[WWC][Hex] Player Cursed");
                     }
                 }
             }

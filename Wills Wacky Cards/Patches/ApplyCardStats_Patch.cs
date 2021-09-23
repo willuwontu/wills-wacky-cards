@@ -14,6 +14,11 @@ namespace WillsWackyCards.Patches
             var statModifiers = ___playerToUpgrade.GetComponent<CharacterStatModifiers>();
             if (___myGunStats)
             {
+                if (___myGunStats.GetAdditionalData().useMinimumReloadSpeed)
+                {
+                    gun.GetAdditionalData().useMinimumReloadSpeed = ___myGunStats.GetAdditionalData().useMinimumReloadSpeed;
+                    gun.GetAdditionalData().minimumReloadSpeed = ___myGunStats.GetAdditionalData().minimumReloadSpeed;
+                }
                 if (___myGunStats.GetAdditionalData().useForcedAttackSpeed)
                 {
                     gun.GetAdditionalData().useForcedAttackSpeed = ___myGunStats.GetAdditionalData().useForcedAttackSpeed;
@@ -56,26 +61,19 @@ namespace WillsWackyCards.Patches
                 gun.attackSpeedMultiplier = 1f;
             }
 
-            if (((gun.reloadTime + gun.reloadTimeAdd) < gun.GetAdditionalData().minimumReloadSpeed) && !gun.GetAdditionalData().useForcedReloadSpeed)
+            if (((gunAmmo.reloadTime + gunAmmo.reloadTimeAdd) * gunAmmo.reloadTimeMultiplier < gun.GetAdditionalData().minimumReloadSpeed) && !gun.GetAdditionalData().useForcedReloadSpeed)
             {
-                gun.reloadTime = gun.GetAdditionalData().minimumReloadSpeed;
+                gun.reloadTime = 1f;
                 gun.reloadTimeAdd = 0.0f;
                 gunAmmo.reloadTimeMultiplier = 1.0f;
                 gunAmmo.reloadTimeAdd = 0f;
+                gunAmmo.reloadTime = gun.GetAdditionalData().minimumReloadSpeed;
             }
 
             if (gun.GetAdditionalData().useForcedAttackSpeed)
             {
                 gun.attackSpeed = gun.defaultCooldown;
                 gun.attackSpeedMultiplier = 1f;
-            }
-
-            if (gun.GetAdditionalData().useForcedReloadSpeed)
-            {
-                gunAmmo.reloadTimeMultiplier = 1.0f;
-                gunAmmo.reloadTimeAdd = 0f;
-                gun.reloadTime = gun.GetAdditionalData().forcedReloadSpeed;
-                gun.reloadTimeAdd = 0.0f;
             }
 
             if (characterStatModifiers.GetAdditionalData().Vampire)

@@ -19,18 +19,18 @@ namespace WillsWackyCards.Cards
             gun.gravity = 0.5f;
             gun.numberOfProjectiles = 4;
             gun.projectileSpeed = 1.5f;
-            gun.damage = 0.8f;
+            gun.damage = 0.7f;
             gun.spread = .2f;
             gun.evenSpread = .5f;
             gun.recoilMuiltiplier = 5f;
             gun.destroyBulletAfter = 1.5f;
             gun.timeBetweenBullets = 0.25f;
-            gun.GetAdditionalData().useForcedReloadSpeed = true;
-            gun.GetAdditionalData().forcedReloadSpeed = 5.0f;
+            gun.GetAdditionalData().useMinimumReloadSpeed = true;
+            gun.GetAdditionalData().minimumReloadSpeed = 5.0f;
             gun.GetAdditionalData().attacksPerAttack = 2;
             gun.GetAdditionalData().useAttacksPerAttack = true;
             gun.GetAdditionalData().useForcedAttackSpeed = true;
-            gun.forceSpecificAttackSpeed = 1f;
+            gun.forceSpecificAttackSpeed = 1.15f;
 
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
@@ -91,7 +91,7 @@ namespace WillsWackyCards.Cards
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Forced Reload Time",
+                    stat = "Minimum Reload Time",
                     amount = "5s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
@@ -99,14 +99,14 @@ namespace WillsWackyCards.Cards
                 {
                     positive = false,
                     stat = "Forced Attack Speed",
-                    amount = "1s",
+                    amount = "1.15s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = false,
                     stat = "Damage",
-                    amount = "-20%",
+                    amount = "-30%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

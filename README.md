@@ -15,7 +15,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 
 ----
 ## v 1.1.0
-- Minigun Persisting after being stolen and between rounds is fixed.
+- Shotgun was changed to have a minimum reload time and had other stat changes made as well.
+----
+## v 1.1.0
+- Minigun persisting after being stolen and between rounds is fixed.
 - New cards
 ----
 ## v 1.0.8
