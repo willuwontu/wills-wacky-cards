@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
+using WillsWackyCards.MonoBehaviours;
 
 namespace WillsWackyCards.Extensions
 {
@@ -17,7 +18,8 @@ namespace WillsWackyCards.Extensions
         public float minimumAttackSpeed;
         public float minimumReloadSpeed;
         public float speedDamageMultiplier;
-        public bool overHeated = false;
+        public bool overHeated;
+        public Minigun_Mono minigun;
 
         public GunAdditionalData()
         {
@@ -29,6 +31,7 @@ namespace WillsWackyCards.Extensions
             shotgun = false;
             speedDamageMultiplier = 1f;
             overHeated = false;
+            minigun = null;
         }
     }
     public static class GunExtension
@@ -64,6 +67,7 @@ namespace WillsWackyCards.Extensions
             __instance.GetAdditionalData().shotgun = false;
             __instance.GetAdditionalData().speedDamageMultiplier = 1f;
             __instance.GetAdditionalData().overHeated = false;
+            __instance.GetAdditionalData().minigun = null;
         }
     }
 }

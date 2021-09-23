@@ -13,6 +13,7 @@ using UnboundLib.GameModes;
 using UnboundLib.Cards;
 using UnboundLib.Utils;
 using WillsWackyCards.Cards;
+using WillsWackyCards.Cards.Hidden;
 using WillsWackyCards.MonoBehaviours;
 using HarmonyLib;
 using Photon.Pun;
@@ -28,7 +29,15 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.card";
         private const string ModName = "Wills Wacky Cards";
-        public const string Version = "1.0.6"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.0.9"; // What version are we on (major.minor.patch)?
+
+        internal static List<CardInfo> curses = new List<CardInfo>();
+        private static System.Random random = new System.Random();
+
+        internal static CardInfo GetRandomCurse()
+        {
+            return curses.ToArray()[random.Next(1, curses.Count)-1];
+        }
 
         void Awake()
         {
@@ -48,8 +57,14 @@ namespace WillsWackyCards
             CustomCard.BuildCard<WildAim>();
             CustomCard.BuildCard<RunningShoes>();
             CustomCard.BuildCard<JumpingShoes>();
-            //CustomCard.BuildCard<StyrofoamBody>();
+            CustomCard.BuildCard<StyrofoamBody>();
+            CustomCard.BuildCard<WimpyBlows>(cardInfo => curses.Add(cardInfo));
+            CustomCard.BuildCard<CrookedLegs>(cardInfo => curses.Add(cardInfo));
+            CustomCard.BuildCard<Bleed>(cardInfo => curses.Add(cardInfo));
+            CustomCard.BuildCard<Earthbound>(cardInfo => curses.Add(cardInfo));
+            CustomCard.BuildCard<Hex>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
+            
 
             this.ExecuteAfterSeconds(0.4f, ChangeCards);
 

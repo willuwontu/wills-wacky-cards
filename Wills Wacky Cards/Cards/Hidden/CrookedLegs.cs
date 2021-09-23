@@ -7,13 +7,14 @@ using UnboundLib;
 using UnboundLib.Cards;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards
+namespace WillsWackyCards.Cards.Hidden
 {
-    class Template : CustomCard
+    class CrookedLegs : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
+            statModifiers.movementSpeed = 0.7f;
+            statModifiers.jump = 0.7f;
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -26,11 +27,11 @@ namespace WillsWackyCards.Cards
 
         protected override string GetTitle()
         {
-            return "CardName";
+            return "Crooked Legs";
         }
         protected override string GetDescription()
         {
-            return "CardDescription";
+            return "Knibbly knobbly, your knee's all wobbly.";
         }
         protected override GameObject GetCardArt()
         {
@@ -46,10 +47,17 @@ namespace WillsWackyCards.Cards
             {
                 new CardInfoStat()
                 {
-                    positive = true,
-                    stat = "Effect",
-                    amount = "No",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                    positive = false,
+                    stat = "Move Speed",
+                    amount = "-30%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Jump Height",
+                    amount = "-30%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
                 }
             };
         }
@@ -63,7 +71,7 @@ namespace WillsWackyCards.Cards
         }
         public override bool GetEnabled()
         {
-            return true;
+            return false;
         }
     }
 }

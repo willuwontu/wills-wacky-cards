@@ -14,6 +14,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Running Shoes (Common)
 
 ----
+## v 1.0.9
+- Minigun Persisting after being stolen and between rounds is fixed.
+- New cards
+----
 ## v 1.0.8
 - Code logic patched.
 - New Cards

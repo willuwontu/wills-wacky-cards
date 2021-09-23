@@ -14,7 +14,7 @@ namespace WillsWackyCards.Cards
 {
     class Minigun : CustomCard
     {
-        Minigun_Mono minigun;
+        private static Minigun_Mono minigun;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             var block = cardInfo.gameObject.GetOrAddComponent<Block>();
@@ -47,6 +47,7 @@ namespace WillsWackyCards.Cards
         }
         public override void OnRemoveCard()
         {
+
         }
 
         protected override string GetTitle()

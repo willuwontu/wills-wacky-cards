@@ -15,6 +15,8 @@ namespace WillsWackyCards.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             //statModifiers.sizeMultiplier = 5f;
+            statModifiers.sizeMultiplier = 1.5f;
+            statModifiers.health = 1.25f;
             statModifiers.GetAdditionalData().MassModifier = 1f / 5f;
             UnityEngine.Debug.Log("[WWC][Card] Styrofoam Body Built");
         }

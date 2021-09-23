@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace WillsWackyCards.Cards
 {
-    class Template : CustomCard
+    class Hex : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
@@ -17,7 +17,19 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
+            if (WillsWackyCards.curses.Count > 0)
+            {
+                UnityEngine.Debug.Log("[WWC][Hex] Cursing Enemies");
+                var curse = WillsWackyCards.GetRandomCurse();
+
+                foreach (var item in PlayerManager.instance.players)
+                {
+                    if (player.teamID != item.teamID)
+                    {
+                        ModdingUtils.Utils.Cards.instance.AddCardToPlayer(item, curse, false, "", 0, 0, true);
+                    }
+                }
+            }
         }
         public override void OnRemoveCard()
         {
@@ -26,11 +38,11 @@ namespace WillsWackyCards.Cards
 
         protected override string GetTitle()
         {
-            return "CardName";
+            return "Hex";
         }
         protected override string GetDescription()
         {
-            return "CardDescription";
+            return "Double, double toil and trouble, fire burn and caldron bubble.";
         }
         protected override GameObject GetCardArt()
         {
@@ -38,7 +50,7 @@ namespace WillsWackyCards.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return CardInfo.Rarity.Uncommon;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -47,8 +59,8 @@ namespace WillsWackyCards.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Effect",
-                    amount = "No",
+                    stat = "Your Foes",
+                    amount = "Curse",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

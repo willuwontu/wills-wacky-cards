@@ -5,32 +5,31 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using WillsWackyCards.Extensions;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards
+namespace WillsWackyCards.Cards.Hidden
 {
-    class Template : CustomCard
+    class Bleed : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
+            characterStats.GetAdditionalData().Bleed += 0.5f;
         }
         public override void OnRemoveCard()
         {
-            //Drives me crazy
         }
 
         protected override string GetTitle()
         {
-            return "CardName";
+            return "Bleeding Wounds";
         }
         protected override string GetDescription()
         {
-            return "CardDescription";
+            return "By bracken and bone, your blood shall leave home.";
         }
         protected override GameObject GetCardArt()
         {
@@ -46,10 +45,10 @@ namespace WillsWackyCards.Cards
             {
                 new CardInfoStat()
                 {
-                    positive = true,
-                    stat = "Effect",
-                    amount = "No",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                    positive = false,
+                    stat = "Bleed Damage",
+                    amount = "+50%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
                 }
             };
         }
@@ -63,7 +62,7 @@ namespace WillsWackyCards.Cards
         }
         public override bool GetEnabled()
         {
-            return true;
+            return false;
         }
     }
 }
