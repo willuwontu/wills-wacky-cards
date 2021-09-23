@@ -25,9 +25,12 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Gatling Gun (Rare)
 
 ----
+## v 1.1.3
+- Gatling Gun is actually a rare now.
+----
 ## v 1.1.2
 - Shotgun is now a rare.
-- New Card (Gatling)
+- New Card (Gatling Gun)
 - Fixes
 ----
 ## v 1.1.1
