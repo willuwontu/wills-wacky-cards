@@ -14,8 +14,8 @@ namespace WillsWackyCards.Cards.Hidden
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.gravity = 5f;
-            statModifiers.jump = 0.5f;
+            statModifiers.gravity = 2.5f;
+            statModifiers.jump = 0.6f;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -51,14 +51,14 @@ namespace WillsWackyCards.Cards.Hidden
                 {
                     positive = false,
                     stat = "Jump Height",
-                    amount = "-50%",
+                    amount = "-40%",
                     simepleAmount = CardInfoStat.SimpleAmount.aLotLower
                 },
                 new CardInfoStat()
                 {
                     positive = false,
                     stat = "Gravity",
-                    amount = "+500%",
+                    amount = "+150%",
                     simepleAmount = CardInfoStat.SimpleAmount.aHugeAmountOf
                 }
             };
