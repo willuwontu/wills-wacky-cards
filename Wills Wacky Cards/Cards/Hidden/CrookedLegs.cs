@@ -17,6 +17,7 @@ namespace WillsWackyCards.Cards.Hidden
             statModifiers.movementSpeed = 0.7f;
             statModifiers.jump = 0.7f;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
+            UnityEngine.Debug.Log("[WWC][Curse] Crooked Legs Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

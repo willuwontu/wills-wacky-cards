@@ -8,6 +8,8 @@ using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using TMPro;
+using UnityEngine.UI;
 
 namespace WillsWackyCards.Cards
 {
@@ -15,26 +17,32 @@ namespace WillsWackyCards.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            MomentumTracker.stacks += 1;
-            UnityEngine.Debug.Log($"[WWC][Card] {MomentumTracker.stacks} Momentum Stacks built up");
-            gun.ammo = MomentumTracker.stacks;
-            gun.attackSpeed = (float) Math.Pow(1.05f, (double) MomentumTracker.stacks);
-            gun.projectileSpeed = (float) Math.Pow(1.05f, (double)MomentumTracker.stacks);
-            gun.reflects = MomentumTracker.stacks;
-            gun.damage = (float) Math.Pow(1.05f, (double) MomentumTracker.stacks);
-            gun.bursts = MomentumTracker.stacks / 10;
-            gun.numberOfProjectiles = MomentumTracker.stacks / 5;
+            var tracker = this.gameObject.GetOrAddComponent<MomentumTracker_Mono>();
+            tracker.card = cardInfo;
 
-            statModifiers.movementSpeed = (float) Math.Pow(1.05f, (double)MomentumTracker.stacks); ;
-            statModifiers.lifeSteal = (float) Math.Pow(1.05f, (double)MomentumTracker.stacks); ;
+            var stacks = Math.Max(MomentumTracker.stacks, 1);
+
+            MomentumTracker.stacks += 1;
+            UnityEngine.Debug.Log($"[WWC][Card] {stacks} Momentum Stacks built up");
+            gun.ammo = stacks;
+            gun.attackSpeed = (float) Math.Pow(.95f, (double) stacks);
+            gun.projectileSpeed = (float) Math.Pow(1.05f, stacks);
+            gun.reflects = stacks / 2;
+            gun.damage = (float) Math.Pow(1.05f, stacks);
+            gun.bursts = stacks / 10;
+            gun.numberOfProjectiles = stacks / 5;
 
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CardManipulation") };
 
-            cardInfo.cardStats = MomentumTracker.GetMomentumStats();
+            cardInfo.cardStats = MomentumTracker.GetMomentumStats(stacks);
+            tracker.updated = true;
+
             UnityEngine.Debug.Log("[WWC][Card] Momentum Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            gun.timeBetweenBullets = 0.1f;
+            gun.spread = Mathf.Clamp(gun.spread, 0.1f, 1);
             if (MomentumTracker.playerStacks.TryGetValue(player, out var stacks))
             {
                 stacks += MomentumTracker.stacks;
@@ -44,7 +52,7 @@ namespace WillsWackyCards.Cards
                 MomentumTracker.playerStacks.Add(player, MomentumTracker.stacks);
             }
 
-            //MomentumTracker.stacks = 0;
+            MomentumTracker.stacks = 0;
         }
         public override void OnRemoveCard()
         {
@@ -69,7 +77,7 @@ namespace WillsWackyCards.Cards
         }
         protected override CardInfoStat[] GetStats()
         {
-            return MomentumTracker.GetMomentumStats();
+            return MomentumTracker.GetMomentumStats(MomentumTracker.stacks);
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
@@ -83,14 +91,97 @@ namespace WillsWackyCards.Cards
         {
             return true;
         }
+        private class MomentumTracker_Mono : MonoBehaviour
+        {
+            private TextMeshProUGUI description;
+            private TextMeshProUGUI cardName;
+            public CardInfo card;
+            public bool updated = false;
+
+            private StatHolder[] stats = new StatHolder[] { };
+
+            private class StatHolder
+            {
+                public TextMeshProUGUI stat;
+                public TextMeshProUGUI value;
+            }
+
+            private void Awake()
+            {
+
+            }
+            private void Start()
+            {
+                TextMeshProUGUI[] allChildrenRecursive = this.gameObject.GetComponentsInChildren<TextMeshProUGUI>();
+                GameObject effectText = allChildrenRecursive.Where(obj => obj.gameObject.name == "EffectText").FirstOrDefault().gameObject;
+                GameObject titleText = allChildrenRecursive.Where(obj => obj.gameObject.name == "Text_Name").FirstOrDefault().gameObject;
+
+                LayoutElement[] statHolders = this.gameObject.GetComponentsInChildren<LayoutElement>().Where(obj => obj.gameObject.name == "StatObject(Clone)").ToArray();
+                List<StatHolder> temp = new List<StatHolder>();
+
+                foreach (var item in statHolders)
+                {
+                    StatHolder stat = new StatHolder();
+                    stat.stat = item.gameObject.GetComponentsInChildren<TextMeshProUGUI>().Where(obj => obj.gameObject.name == "Stat").FirstOrDefault();
+                    stat.value = item.gameObject.GetComponentsInChildren<TextMeshProUGUI>().Where(obj => obj.gameObject.name == "Value").FirstOrDefault();
+
+                    temp.Add(stat);
+                }
+
+                stats = temp.ToArray();
+
+                //TextMeshProUGUI[] stats = allChildrenRecursive.Where(obj => obj.gameObject.name == "Stat").ToArray();
+                TextMeshProUGUI[] values = allChildrenRecursive.Where(obj => obj.gameObject.name == "Value").ToArray();
+
+                this.description = effectText.GetComponent<TextMeshProUGUI>();
+                this.cardName = titleText.GetComponent<TextMeshProUGUI>();
+            }
+            private void Update()
+            {
+                if (updated)
+                {
+                    foreach (var statInfo in card.cardStats)
+                    {
+                        foreach (var stat in stats)
+                        {
+                            //UnityEngine.Debug.Log($"Comparing {statInfo.stat} and {stat.stat.text}");
+                            if (statInfo.stat == stat.stat.text)
+                            {
+                                stat.value.text = statInfo.amount;
+                                break;
+                            }
+                        }
+                    }
+                    updated = false;
+                }
+            }
+        }
     }
+
+    public class Momentum_Mono
+    {
+
+
+        private void UpdateIndecesOnRemove(Player player, CardInfo card, int index)
+        {
+
+        }
+
+        private void Start()
+        {
+
+
+            ModdingUtils.Utils.Cards.instance.AddOnRemoveCallback(UpdateIndecesOnRemove);
+        }
+    }
+
     public class MomentumTracker
     {
         public static int stacks = 0;
         public static Dictionary<Player, int> playerStacks = new Dictionary<Player, int>();
         public static Dictionary<Player, bool> trackRemoval = new Dictionary<Player, bool>();
 
-        public static CardInfoStat[] GetMomentumStats()
+        public static CardInfoStat[] GetMomentumStats(int stacks)
         {
             return new CardInfoStat[]
             {
@@ -98,56 +189,49 @@ namespace WillsWackyCards.Cards
                 {
                     positive = true,
                     stat = "Ammo",
-                    amount = $"+{MomentumTracker.stacks}",
+                    amount = $"+{stacks}",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Attack Speed",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, (double) MomentumTracker.stacks) -1f)* 100f),
+                    amount = string.Format("+{0:F0}%",(1f - (float) Math.Pow(.95f, stacks)) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Bullet Speed",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, (double) MomentumTracker.stacks) -1f)* 100f),
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, stacks) -1f) * 100f),
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Damage",
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, stacks) -1f) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Bounces",
-                    amount = $"+{MomentumTracker.stacks}",
+                    amount = $"+{stacks/2}",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Bursts",
-                    amount = $"+{MomentumTracker.stacks/10}",
+                    amount = $"+{stacks/10}",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Bullets",
-                    amount = $"+{MomentumTracker.stacks/5}",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Move Speed",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, (double) MomentumTracker.stacks) -1f)* 100f),
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Life Steal",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, (double) MomentumTracker.stacks) -1f)* 100f),
+                    amount = $"+{stacks/5}",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

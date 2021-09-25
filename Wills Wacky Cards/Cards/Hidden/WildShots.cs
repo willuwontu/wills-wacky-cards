@@ -17,6 +17,7 @@ namespace WillsWackyCards.Cards.Hidden
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
+            UnityEngine.Debug.Log("[WWC][Curse] Wild Shots Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
