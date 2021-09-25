@@ -6,24 +6,22 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
+using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WillsWackyCards.Cards.Hidden
 {
-    class NeedleBullets : CustomCard
+    class WildShots : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.projectileSize = 0.5f;
-            gun.spread = 0.3f;
-            gun.evenSpread = -0.1f;
-            gun.reflects = -1;
-
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            var backwards = player.gameObject.GetOrAddComponent<Backwards_Mono>();
+            backwards.backwardsChance += 10;
         }
         public override void OnRemoveCard()
         {
@@ -31,11 +29,11 @@ namespace WillsWackyCards.Cards.Hidden
 
         protected override string GetTitle()
         {
-            return "Needle Bullets";
+            return "Wild Shots";
         }
         protected override string GetDescription()
         {
-            return "Hard to see, a pain to control, and likely to get lost in a haystack.";
+            return "Which way was the enemy again?";
         }
         protected override GameObject GetCardArt()
         {
@@ -52,23 +50,9 @@ namespace WillsWackyCards.Cards.Hidden
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Bullets",
-                    amount = "Smaller",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Spread",
-                    amount = "+30%",
-                    simepleAmount = CardInfoStat.SimpleAmount.Some
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Bounces",
-                    amount = "-1",
-                    simepleAmount = CardInfoStat.SimpleAmount.slightlyLower
+                    stat = "Wild Shots",
+                    amount = "+10%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
                 }
             };
         }

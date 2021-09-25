@@ -29,7 +29,7 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.card";
         private const string ModName = "Wills Wacky Cards";
-        public const string Version = "1.1.3"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.1.6"; // What version are we on (major.minor.patch)?
 
         internal static List<CardInfo> curses = new List<CardInfo>();
         private static System.Random random = new System.Random();
@@ -57,17 +57,21 @@ namespace WillsWackyCards
             CustomCard.BuildCard<WildAim>();
             CustomCard.BuildCard<RunningShoes>();
             CustomCard.BuildCard<JumpingShoes>();
-            CustomCard.BuildCard<PastaBullets>(cardInfo => curses.Add(cardInfo));
-            CustomCard.BuildCard<CrookedLegs>(cardInfo => curses.Add(cardInfo));
-            CustomCard.BuildCard<Bleed>(cardInfo => curses.Add(cardInfo));
-            CustomCard.BuildCard<Earthbound>(cardInfo => curses.Add(cardInfo));
-            CustomCard.BuildCard<Misfire>(cardInfo => curses.Add(cardInfo));
-            CustomCard.BuildCard<SlowReflexes>(cardInfo => curses.Add(cardInfo));
-            CustomCard.BuildCard<CounterfeitAmmo>(cardInfo => curses.Add(cardInfo));
-            CustomCard.BuildCard<NeedleBullets>(cardInfo => curses.Add(cardInfo));
-            CustomCard.BuildCard<EasyTarget>(cardInfo => curses.Add(cardInfo));
+            CustomCard.BuildCard<PastaBullets>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<CrookedLegs>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<Bleed>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<Earthbound>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<Misfire>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<SlowReflexes>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<CounterfeitAmmo>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<NeedleBullets>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<EasyTarget>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<WildShots>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
             CustomCard.BuildCard<Hex>();
             CustomCard.BuildCard<Gatling>();
+            CustomCard.BuildCard<PlasmaRifle>();
+            CustomCard.BuildCard<PlasmaShotgun>();
+            //CustomCard.BuildCard<Momentum>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
@@ -149,7 +153,7 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("WWC Gun Type"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
@@ -177,7 +181,7 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("WWC Gun Type"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
@@ -205,7 +209,7 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("WWC Gun Type"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
@@ -233,7 +237,7 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("WWC Gun Type"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
@@ -254,20 +258,20 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.categories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("No Minigun"));
                                 info.cardInfo.categories = categories.ToArray();
                                 categories = new List<CardCategory>();
                                 for (int i = 0; i < info.cardInfo.blacklistedCategories.Length; i++)
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("No Minigun"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
                             {
-                                info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
-                                info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
+                                info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("No Minigun") };
+                                info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("No Minigun") };
                             }
                             UnityEngine.Debug.Log("[WWC] Modified Star");
                             break;
@@ -289,7 +293,7 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("WWC Gun Type"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
@@ -317,7 +321,7 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("WWC Gun Type"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
@@ -345,7 +349,7 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("WWC Gun Type"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
@@ -373,7 +377,7 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("WWC Gun Type"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
@@ -401,7 +405,7 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("WWC Gun Type"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
@@ -422,20 +426,20 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.categories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("No Minigun"));
                                 info.cardInfo.categories = categories.ToArray();
                                 categories = new List<CardCategory>();
                                 for (int i = 0; i < info.cardInfo.blacklistedCategories.Length; i++)
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("No Minigun"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else
                             {
-                                info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
-                                info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
+                                info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("No Minigun") };
+                                info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("No Minigun") };
                             }
                             UnityEngine.Debug.Log("[WWC] Modified Splitting Rounds");
                             break;
@@ -457,7 +461,7 @@ namespace WillsWackyCards
                                 {
                                     categories.Add(info.cardInfo.blacklistedCategories[i]);
                                 }
-                                categories.Add(CustomCardCategories.instance.CardCategory("GunType"));
+                                categories.Add(CustomCardCategories.instance.CardCategory("WWC Gun Type"));
                                 info.cardInfo.blacklistedCategories = categories.ToArray();
                             }
                             else

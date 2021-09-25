@@ -3,13 +3,15 @@ using UnityEngine.UI;
 using UnboundLib;
 using WillsWackyCards.Extensions;
 using System;
+using System.Collections.Generic;
+using Sonigon;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    public class Misfire_Mono : MonoBehaviour
+    public class PlasmaWeapon_Mono : MonoBehaviour
     {
-        public int misfireChance = 0;
-        private static System.Random random = new System.Random();
+        public float chargeToUse = 0f;
+
         private bool coroutineStarted;
         private Gun gun;
         private GunAmmo gunAmmo;
@@ -17,9 +19,22 @@ namespace WillsWackyCards.MonoBehaviours
         private WeaponHandler weaponHandler;
         private Player player;
 
+        // Heat Bar stuff, god bless Boss Sloth
+        private GameObject chargeBarObj;
+        public Image chargeImage;
+        public Image whiteImage;
+        private float chargeTarget;
+        //private HeatBar heatBar;
+
         private void Start()
         {
             data = GetComponentInParent<CharacterData>();
+            chargeBarObj = gameObject.transform.Find("WobbleObjects/ChargeBar").gameObject;
+            chargeBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>().color = new Color(255,255,255);
+            chargeBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>().SetAlpha(1);
+            chargeImage = chargeBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>();
+            whiteImage = chargeBarObj.transform.Find("Canvas/Image/White").GetComponent<Image>();
+            whiteImage.SetAlpha(0);
         }
 
         private void Update()
@@ -41,32 +56,40 @@ namespace WillsWackyCards.MonoBehaviours
                 coroutineStarted = true;
                 InvokeRepeating(nameof(CheckIfValid), 0, 1f);
             }
+
+            UpdateChargeBar();
         }
 
+        private void UpdateChargeBar()
+        {
+            chargeTarget = gun.currentCharge;
+            chargeImage.fillAmount = chargeTarget;
+            whiteImage.fillAmount = chargeTarget;
+            chargeImage.color = new Color(Mathf.Clamp(0.5f - chargeTarget, 0f, 1f), 1f - (chargeTarget) * 0.85f, chargeTarget, 1f);
+        }
 
         private void OnShootProjectileAction(GameObject obj)
         {
-            var roll = random.Next(100);
-            if (roll < misfireChance)
-            {
-                UnityEngine.Debug.Log($"[WWC][Hex] Player {player.teamID} Misfire Curse activated with a roll of {roll} and a chance of {misfireChance}%.");
-                gunAmmo.SetFieldValue("currentAmmo", 0);
-            }
+            ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
+            MoveTransform move = obj.GetComponent<MoveTransform>();
+            move.localForce *= 1 + chargeToUse * gun.chargeSpeedTo;
         }
+
         private void CheckIfValid()
         {
-            var haveMisfire = false;
+            var haveCard = false;
             for (int i = 0; i < player.data.currentCards.Count; i++)
             {
-                if (player.data.currentCards[i].cardName == "Misfire")
+                if (player.data.currentCards[i].cardName == "Plasma Rifle" || player.data.currentCards[i].cardName == "Plasma Shotgun")
                 {
-                    haveMisfire = true;
+                    haveCard = true;
                     break;
                 }
             }
 
-            if (!haveMisfire)
+            if (!haveCard)
             {
+                Destroy(chargeBarObj);
                 gun.ShootPojectileAction -= OnShootProjectileAction;
                 Destroy(this);
             }
@@ -75,6 +98,7 @@ namespace WillsWackyCards.MonoBehaviours
         private void OnDestroy()
         {
             gun.ShootPojectileAction -= OnShootProjectileAction;
+            Destroy(chargeBarObj);
         }
 
         public void Destroy()

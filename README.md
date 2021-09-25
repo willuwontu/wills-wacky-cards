@@ -22,8 +22,21 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Needle Bullets (Curse)
   - Pasta Shells (Curse)
   - Slow Reflexes (Curse)
+  - Wild Shots (Curse)
 - Gatling Gun (Rare)
+- Plasma Rifle (Rare)
+- Plasma Shotgun (Rare)
 
+----
+## v 1.1.6
+- New Cards (Plasma Rifle, Plasma Shotgun)
+----
+## v 1.1.5
+- Small fixes and some debugging tools added.
+----
+## v 1.1.4
+- New Curse
+- Fixes for Hex
 ----
 ## v 1.1.3
 - Gatling Gun is actually a rare now.

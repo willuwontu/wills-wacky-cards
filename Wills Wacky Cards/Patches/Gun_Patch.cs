@@ -32,7 +32,7 @@ namespace WillsWackyCards.Patches
                 // New Code start
                 var even = bulletID * ((__instance.spread * 2) / (numOfProj - 1)) - __instance.spread; // Direction the bullet would point in, if the shots were spread evenly.
                 even /= (1f + __instance.projectileSpeed * 0.5f) * 0.5f; // Modify by the same factor that spread is modified by
-                num = even + (1.0f - Mathf.Clamp(__instance.evenSpread, 0.0f, 1.0f)) * (num - even); // Use evenness factor to determine how much we align with the random vs even spread.
+                num = even + (1.0f - Mathf.Clamp(__instance.evenSpread * (1f + __instance.chargeEvenSpreadTo * charge), 0.0f, 1.0f)) * (num - even); // Use evenness factor to determine how much we align with the random vs even spread.
                 // New Code end
                 vector += Vector3.Cross(vector, Vector3.forward) * num * d;
                 __result = Quaternion.LookRotation(__instance.lockGunToDefault ? __instance.shootPosition.forward : vector);

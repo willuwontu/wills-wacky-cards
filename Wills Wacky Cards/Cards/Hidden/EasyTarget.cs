@@ -21,7 +21,6 @@ namespace WillsWackyCards.Cards.Hidden
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            characterStats.GetAdditionalData().Bleed += 0.5f;
         }
         public override void OnRemoveCard()
         {

@@ -22,6 +22,8 @@ namespace WillsWackyCards.Extensions
         public Minigun_Mono minigun;
         public bool useMinimumReloadSpeed;
         public bool useMinimumAttackSpeed;
+        public float chargeTime;
+        public bool beginCharge;
 
         public GunAdditionalData()
         {
@@ -38,6 +40,8 @@ namespace WillsWackyCards.Extensions
             useMinimumReloadSpeed = false;
             minimumAttackSpeed = 1f;
             minimumReloadSpeed = 1f;
+            chargeTime = 1f;
+            beginCharge = false;
         }
     }
     public static class GunExtension
@@ -78,6 +82,8 @@ namespace WillsWackyCards.Extensions
             __instance.GetAdditionalData().useMinimumAttackSpeed = false;
             __instance.GetAdditionalData().minimumAttackSpeed = 1f;
             __instance.GetAdditionalData().minimumReloadSpeed = 1f;
+            __instance.GetAdditionalData().chargeTime = 1f;
+            __instance.GetAdditionalData().beginCharge = false;
         }
     }
 }

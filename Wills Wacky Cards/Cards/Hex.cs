@@ -14,24 +14,21 @@ namespace WillsWackyCards.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("cardManipulation") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CardManipulation") };
             UnityEngine.Debug.Log("[WWC][Card] Hex Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             if (WillsWackyCards.curses.Count > 0)
             {
-                UnityEngine.Debug.Log("[WWC][Hex] Cursing Enemies");
+                UnityEngine.Debug.Log($"[WWC][Hex] Player {player.teamID} Cursing Enemies");
                 CardInfo curse;
 
-                foreach (var item in PlayerManager.instance.players)
+                foreach (var item in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
                 {
-                    if (player.teamID != item.teamID)
-                    {
-                        curse = WillsWackyCards.GetRandomCurse();
-                        ModdingUtils.Utils.Cards.instance.AddCardToPlayer(item, curse, false, "", 2f, 0, true);
-                        UnityEngine.Debug.Log("[WWC][Hex] Player Cursed");
-                    }
+                    curse = WillsWackyCards.GetRandomCurse();
+                    ModdingUtils.Utils.Cards.instance.AddCardToPlayer(item, curse, false, "", 2f, 0, true);
+                    UnityEngine.Debug.Log($"[WWC][Hex] Player {item.teamID} cursed with {curse.cardName}.");
                 }
             }
         }
