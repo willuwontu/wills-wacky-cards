@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,21 +34,24 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var index = player.data.currentCards.Count;
+            StartCoroutine(WaitForBuild(player));
 
-            if (MomentumTracker.playerIndices.TryGetValue(player, out var list))
-            {
-                list.Add(index);
-            }
-            else
-            {
-                MomentumTracker.playerIndices.Add(player, new List<int> { index });
-            }
+            var cleaner = player.gameObject.GetOrAddComponent<MomentumCleanup_Mono>();
 
+            cleaner.CleanUp();
+        }
+
+        public IEnumerator WaitForBuild(Player player)
+        {
+            UnityEngine.Debug.Log("Waiting for building to be false");
+            yield return new WaitWhile(() => MomentumTracker.building == true);
+            UnityEngine.Debug.Log("Building false, time to move on.");
+            MomentumTracker.building = true;
             if (MomentumTracker.createdOffenseCards.TryGetValue(MomentumTracker.stacks, out var cardInfo))
             {
                 UnityEngine.Debug.Log($"[WWC][Momentum]{cardInfo.cardName} found.");
                 ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardInfo, false, "", 2f, 2f, true);
+                MomentumTracker.building = false;
             }
             else
             {
@@ -55,6 +59,7 @@ namespace WillsWackyCards.Cards
                 CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.AddOffenseCard(cardInfo, player); });
             }
         }
+
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             //Drives me crazy
@@ -104,7 +109,7 @@ namespace WillsWackyCards.Cards
             {
                 tracker.card = cardInfo;
                 tracker.title = "Unstoppable Force";
-                tracker.stacks = MomentumTracker.stacks;
+                tracker.stacks = Math.Max(MomentumTracker.stacks, 1);
                 tracker.builtCard = true;
             }
             stacks = tracker.stacks;
@@ -124,7 +129,10 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            MomentumTracker.stacks = 0;
+            if (!(GM_Test.instance != null && GM_Test.instance.gameObject.activeInHierarchy))
+            {
+                MomentumTracker.stacks = 0;
+            }
         }
         protected override string GetTitle()
         {
@@ -202,12 +210,19 @@ namespace WillsWackyCards.Cards
             }
         }
     }
+    public class MomentumCleanup_Mono : MonoBehaviour
+    {
+        public void CleanUp()
+        {
+            this.ExecuteAfterFrames(10, MomentumTracker.RemoveBaseCards);
+        }
+    }
 
     public class MomentumTracker
     {
         public static int stacks = 0;
         public static Dictionary<int, CardInfo> createdOffenseCards = new Dictionary<int, CardInfo>();
-        public static Dictionary<Player, List<int>> playerIndices = new Dictionary<Player, List<int>>();
+        public static bool building = false;
 
         public static void AddOffenseCard(CardInfo cardInfo, Player player)
         {
@@ -215,6 +230,7 @@ namespace WillsWackyCards.Cards
             ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);
 
             ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardInfo, false, "", 2f, 2f, true);
+            building = false;
         }
 
         public static void RemoveBaseCards()
@@ -230,6 +246,7 @@ namespace WillsWackyCards.Cards
                         if (player.data.currentCards[i].cardName == "Unstoppable Force")
                         {
                             ModdingUtils.Utils.Cards.instance.RemoveCardFromPlayer(player, i);
+                            break;
                         }
                     }
                 }
@@ -240,13 +257,6 @@ namespace WillsWackyCards.Cards
         {
             return new CardInfoStat[]
             {
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Momentum",
-                    amount = $"Building",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
                 new CardInfoStat()
                 {
                     positive = true,
