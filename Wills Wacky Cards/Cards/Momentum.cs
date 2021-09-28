@@ -19,10 +19,9 @@ namespace WillsWackyCards.Cards
         {
             var tracker = this.gameObject.GetOrAddComponent<MomentumTracker_Mono>();
             tracker.card = cardInfo;
-
-            var stacks = Math.Max(MomentumTracker.stacks, 1);
-
             MomentumTracker.stacks += 1;
+            var stacks = MomentumTracker.stacks = Math.Max(MomentumTracker.stacks, 1);
+
             UnityEngine.Debug.Log($"[WWC][Card] {stacks} Momentum Stacks built up");
             gun.ammo = stacks;
             gun.attackSpeed = (float) Math.Pow(.95f, (double) stacks);
@@ -41,6 +40,11 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            UnityEngine.Debug.Log($"[WWC] Player {player.teamID} has {data.currentCards.Count} Cards");
+            var mono = player.gameObject.GetOrAddComponent<Momentum_Mono>();
+            mono.cards.Add(new Momentum_Mono.CardStack { cardIndex = player.data.currentCards.Count, stacks = MomentumTracker.stacks });
+            UnityEngine.Debug.Log($"[WWC] Player {player.teamID} has {mono.cards[mono.cards.Count-1].cardIndex} Cards");
+
             gun.timeBetweenBullets = 0.1f;
             gun.spread = Mathf.Clamp(gun.spread, 0.1f, 1);
             if (MomentumTracker.playerStacks.TryGetValue(player, out var stacks))
@@ -54,7 +58,7 @@ namespace WillsWackyCards.Cards
 
             MomentumTracker.stacks = 0;
         }
-        public override void OnRemoveCard()
+        public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             //Drives me crazy
         }
@@ -130,9 +134,6 @@ namespace WillsWackyCards.Cards
 
                 stats = temp.ToArray();
 
-                //TextMeshProUGUI[] stats = allChildrenRecursive.Where(obj => obj.gameObject.name == "Stat").ToArray();
-                TextMeshProUGUI[] values = allChildrenRecursive.Where(obj => obj.gameObject.name == "Value").ToArray();
-
                 this.description = effectText.GetComponent<TextMeshProUGUI>();
                 this.cardName = titleText.GetComponent<TextMeshProUGUI>();
             }
@@ -158,9 +159,16 @@ namespace WillsWackyCards.Cards
         }
     }
 
-    public class Momentum_Mono
+    public class Momentum_Mono : MonoBehaviour
     {
+        public Player player;
+        public List<CardStack> cards = new List<CardStack>();
 
+        public class CardStack
+        {
+            public int cardIndex;
+            public int stacks;
+        }
 
         private void UpdateIndecesOnRemove(Player player, CardInfo card, int index)
         {
@@ -171,7 +179,7 @@ namespace WillsWackyCards.Cards
         {
 
 
-            ModdingUtils.Utils.Cards.instance.AddOnRemoveCallback(UpdateIndecesOnRemove);
+            //ModdingUtils.Utils.Cards.instance.AddOnRemoveCallback(UpdateIndecesOnRemove);
         }
     }
 
