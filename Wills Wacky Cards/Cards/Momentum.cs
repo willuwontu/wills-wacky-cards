@@ -23,6 +23,11 @@ namespace WillsWackyCards.Cards
             tracker.title = "Unstoppable Force";
 
             MomentumTracker.stacks += 1;
+
+            if (!MomentumTracker.createdOffenseCards.TryGetValue(MomentumTracker.stacks, out var cardData))
+            {
+                CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.createdOffenseCards.Add(MomentumTracker.stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            }
             var stacks = MomentumTracker.stacks = Math.Max(MomentumTracker.stacks, 1);
 
             UnityEngine.Debug.Log($"[WWC][Card] {stacks} Momentum Stacks built up");
@@ -34,32 +39,23 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            StartCoroutine(WaitForBuild(player));
-
             var cleaner = player.gameObject.GetOrAddComponent<MomentumCleanup_Mono>();
 
-            cleaner.CleanUp();
-        }
-
-        public IEnumerator WaitForBuild(Player player)
-        {
-            UnityEngine.Debug.Log("Waiting for building to be false");
-            yield return new WaitWhile(() => MomentumTracker.building == true);
-            UnityEngine.Debug.Log("Building false, time to move on.");
-            MomentumTracker.building = true;
             if (MomentumTracker.createdOffenseCards.TryGetValue(MomentumTracker.stacks, out var cardInfo))
             {
+                MomentumTracker.building = false;
                 UnityEngine.Debug.Log($"[WWC][Momentum]{cardInfo.cardName} found.");
                 ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardInfo, false, "", 2f, 2f, true);
-                MomentumTracker.building = false;
             }
             else
             {
                 UnityEngine.Debug.Log($"[WWC][Momentum] No Card Found, creating new one.");
                 CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.AddOffenseCard(cardInfo, player); });
             }
-        }
 
+            cleaner.CleanUp();
+        }
+                
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             //Drives me crazy
@@ -129,7 +125,7 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            if (!(GM_Test.instance != null && GM_Test.instance.gameObject.activeInHierarchy))
+            //if (!(GM_Test.instance != null && GM_Test.instance.gameObject.activeInHierarchy))
             {
                 MomentumTracker.stacks = 0;
             }
@@ -212,6 +208,7 @@ namespace WillsWackyCards.Cards
     }
     public class MomentumCleanup_Mono : MonoBehaviour
     {
+        public Player player;
         public void CleanUp()
         {
             this.ExecuteAfterFrames(10, MomentumTracker.RemoveBaseCards);
@@ -228,9 +225,9 @@ namespace WillsWackyCards.Cards
         {
             createdOffenseCards.Add(MomentumTracker.stacks, cardInfo); 
             ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);
-
-            ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardInfo, false, "", 2f, 2f, true);
             building = false;
+            ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardInfo, false, "", 2f, 2f, true);
+            
         }
 
         public static void RemoveBaseCards()
