@@ -21,7 +21,7 @@ namespace WillsWackyCards.Cards
             cardInfo.allowMultiple = true;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Running Shoes") };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Jumping Shoes") };
-            UnityEngine.Debug.Log("[WWC][Card] Running Shoes Built");
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

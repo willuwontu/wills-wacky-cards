@@ -16,7 +16,7 @@ namespace WillsWackyCards.Cards
         {
             gun.GetAdditionalData().speedDamageMultiplier -= 0.15f;
             gun.reloadTimeAdd = 0.15f;
-            UnityEngine.Debug.Log("[WWC][Card] Alternate Universe Physics Built");
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

@@ -30,7 +30,7 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.card";
         private const string ModName = "Wills Wacky Cards";
-        public const string Version = "1.1.7"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.2.0"; // What version are we on (major.minor.patch)?
 
         internal static List<CardInfo> curses = new List<CardInfo>();
         private static System.Random random = new System.Random();
@@ -61,7 +61,7 @@ namespace WillsWackyCards
             CustomCard.BuildCard<PastaShells>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
             CustomCard.BuildCard<CrookedLegs>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
             CustomCard.BuildCard<Bleed>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            CustomCard.BuildCard<Earthbound>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<DrivenToEarth>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
             CustomCard.BuildCard<Misfire>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
             CustomCard.BuildCard<SlowReflexes>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
             CustomCard.BuildCard<CounterfeitAmmo>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
@@ -73,15 +73,32 @@ namespace WillsWackyCards
             CustomCard.BuildCard<PlasmaRifle>();
             CustomCard.BuildCard<PlasmaShotgun>();
             CustomCard.BuildCard<UnstoppableForce>();
+            CustomCard.BuildCard<ImmovableObject>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
             this.ExecuteAfterSeconds(0.4f, ChangeCards);
 
-            GameModeManager.AddHook(GameModeHooks.HookGameEnd, ResetEffects);
+            GameModeManager.AddHook(GameModeHooks.HookGameEnd, GameEnd);
+            GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
+            GameModeManager.AddHook(GameModeHooks.HookBattleStart, BattleStart);
         }
 
-        IEnumerator ResetEffects(IGameModeHandler gm)
+        IEnumerator BattleStart(IGameModeHandler gm)
+        {
+            foreach (var player in PlayerManager.instance.players)
+            {
+                player.data.weaponHandler.gun.currentCharge = 0f;
+            }
+            yield break;
+        }
+        IEnumerator GameStart(IGameModeHandler gm)
+        {
+            MomentumTracker.stacks = 0;
+            yield break;
+        }
+
+        IEnumerator GameEnd(IGameModeHandler gm)
         {
             DestroyAll<Minigun_Mono>();
             DestroyAll<Vampirism_Mono>();

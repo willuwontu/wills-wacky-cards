@@ -26,7 +26,12 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
+- Unstoppable Force (Common)
+- Immovable Object (Common)
 
+----
+## v 1.2.0
+- New Cards (Unstoppable Force, Immovable Object)
 ----
 ## v 1.1.6
 - New Cards (Plasma Rifle, Plasma Shotgun)

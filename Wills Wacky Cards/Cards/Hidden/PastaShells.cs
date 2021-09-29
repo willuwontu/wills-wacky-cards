@@ -17,7 +17,7 @@ namespace WillsWackyCards.Cards.Hidden
             gun.damage = 0.5f;
             gun.drag = 5f;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
-            UnityEngine.Debug.Log("[WWC][Curse] Pasta Shells Built");
+            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

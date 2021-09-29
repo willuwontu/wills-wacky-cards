@@ -21,7 +21,7 @@ namespace WillsWackyCards.Cards
             cardInfo.allowMultiple = true;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Jumping Shoes") };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Running Shoes") };
-            UnityEngine.Debug.Log("[WWC][Card] Boots of Leaping Built");
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

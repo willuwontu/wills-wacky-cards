@@ -10,14 +10,14 @@ using UnityEngine;
 
 namespace WillsWackyCards.Cards.Hidden
 {
-    class Earthbound : CustomCard
+    class DrivenToEarth : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             statModifiers.gravity = 2.5f;
             statModifiers.jump = 0.6f;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
-            UnityEngine.Debug.Log("[WWC][Curse] Driven to Earth Built");
+            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
