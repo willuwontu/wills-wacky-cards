@@ -16,7 +16,7 @@ namespace WillsWackyCards.Cards.Hidden
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.reloadTime = 2f;
+            gun.reloadTime = 1.5f;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
@@ -61,7 +61,7 @@ namespace WillsWackyCards.Cards.Hidden
                 {
                     positive = false,
                     stat = "Reload Time",
-                    amount = "+100%",
+                    amount = "+50%",
                     simepleAmount = CardInfoStat.SimpleAmount.aLotOf
                 }
             };

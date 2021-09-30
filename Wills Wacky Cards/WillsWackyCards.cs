@@ -72,8 +72,8 @@ namespace WillsWackyCards
             CustomCard.BuildCard<Gatling>();
             CustomCard.BuildCard<PlasmaRifle>();
             CustomCard.BuildCard<PlasmaShotgun>();
-            CustomCard.BuildCard<UnstoppableForce>();
-            CustomCard.BuildCard<ImmovableObject>();
+            //CustomCard.BuildCard<UnstoppableForce>();
+            //CustomCard.BuildCard<ImmovableObject>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 

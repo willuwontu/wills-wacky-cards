@@ -30,6 +30,9 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Immovable Object (Common)
 
 ----
+## v 1.2.1
+- Disabled Unstoppable Force, and Immovable Object while they're being fixed.
+----
 ## v 1.2.0
 - New Cards (Unstoppable Force, Immovable Object)
 ----
