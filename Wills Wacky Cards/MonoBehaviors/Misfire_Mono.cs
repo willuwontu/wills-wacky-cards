@@ -3,11 +3,10 @@ using UnityEngine.UI;
 using UnboundLib;
 using WillsWackyCards.Extensions;
 using System;
-using Photon.Pun;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    public class Misfire_Mono : MonoBehaviourPun
+    public class Misfire_Mono : MonoBehaviour
     {
         public int misfireChance = 0;
         private static System.Random random = new System.Random();
@@ -50,17 +49,10 @@ namespace WillsWackyCards.MonoBehaviours
             var roll = random.Next(100);
             if (roll < misfireChance)
             {
-                this.photonView.RPC("RPCA_Misfire", RpcTarget.All, new object[] { roll });
+                UnityEngine.Debug.Log($"[WWC][Hex] Player {player.teamID} Misfire Curse activated with a roll of {roll} and a chance of {misfireChance}%.");
+                gunAmmo.SetFieldValue("currentAmmo", 0);
             }
         }
-
-        [PunRPC]
-        private void RPCA_Misfire(int roll)
-        {
-            UnityEngine.Debug.Log($"[WWC][Hex] Player {player.playerID} Misfire Curse activated with a roll of {roll} and a chance of {misfireChance}%.");
-            gunAmmo.SetFieldValue("currentAmmo", 0);
-        }
-
         private void CheckIfValid()
         {
             var haveMisfire = false;

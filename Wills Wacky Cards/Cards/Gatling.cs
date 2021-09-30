@@ -30,12 +30,12 @@ namespace WillsWackyCards.Cards
         {
             var gatling = player.gameObject.GetOrAddComponent<Gatling_Mono>();
             gatling.rampUp *= 0.7f;
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
-        public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
+        public override void OnRemoveCard()
         {
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
+            //Drives me crazy
         }
+
         protected override string GetTitle()
         {
             return "Gatling Gun";

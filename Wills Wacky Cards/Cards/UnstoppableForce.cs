@@ -42,7 +42,6 @@ namespace WillsWackyCards.Cards
             cleaner.player = player;
 
             cleaner.CleanUp();
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
                 
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

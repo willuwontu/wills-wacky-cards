@@ -3,12 +3,10 @@ using UnityEngine.UI;
 using UnboundLib;
 using WillsWackyCards.Extensions;
 using System;
-using Photon.Pun;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    [DisallowMultipleComponent]
-    public class Minigun_Mono : MonoBehaviourPun
+    public class Minigun_Mono : MonoBehaviour
     {
         public float heat = 0.0f;
         public float heatCap = 3f;
@@ -72,18 +70,13 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void UpdateHeatBar()
         {
-            this.photonView.RPC("RPCA_UpdateHeatBar", RpcTarget.All, new object[] { heat, heatCap });
-        }
-
-        [PunRPC]
-        private void RPCA_UpdateHeatBar(float heat, float heatCap)
-        {
+            
             heatTarget = heat / heatCap;
             heatImage.fillAmount = heatTarget;
             whiteImage.fillAmount = heatTarget;
             if (!overheated)
             {
-                heatImage.color = new Color(heatTarget, 1f - (heatTarget) * 0.85f, Mathf.Clamp(0.5f - heatTarget, 0f, 1f), 1f);
+                heatImage.color = new Color(heatTarget, 1f - (heatTarget) * 0.85f, Mathf.Clamp(0.5f - heatTarget,0f,1f), 1f);
                 gunAmmo.ReloadAmmo();
             }
             if (overheated)

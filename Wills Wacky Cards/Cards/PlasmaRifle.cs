@@ -41,17 +41,12 @@ namespace WillsWackyCards.Cards
             chargeBar.localScale = new Vector3(0.6f, 1.4f, 1f);
             chargeBar.Rotate(0f, 0f, 90f);
             var plasmaRifle = player.gameObject.AddComponent<PlasmaWeapon_Mono>();
-
-            var nameLabel = chargeBar.transform.Find("Canvas/PlayerName").gameObject;
-            var crown = chargeBar.transform.Find("Canvas/CrownPos").gameObject;
-            Destroy(nameLabel);
-            Destroy(crown);
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
-        public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
+        public override void OnRemoveCard()
         {
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
+            //Drives me crazy
         }
+
         protected override string GetTitle()
         {
             return "Plasma Rifle";
