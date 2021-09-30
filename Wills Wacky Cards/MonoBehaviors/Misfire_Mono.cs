@@ -7,7 +7,6 @@ using Photon.Pun;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    [DisallowMultipleComponent]
     public class Misfire_Mono : MonoBehaviourPun
     {
         public int misfireChance = 0;

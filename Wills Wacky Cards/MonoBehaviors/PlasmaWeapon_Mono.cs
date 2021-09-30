@@ -87,7 +87,7 @@ namespace WillsWackyCards.MonoBehaviours
             ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
             MoveTransform move = obj.GetComponent<MoveTransform>();
             move.localForce *= 1 + charge * chargeSpeed;
-            UnityEngine.Debug.Log($"[WWC][PlasmaMono][Photon] {info.Sender} {info.photonView} {info.SentServerTime} Increasing bullet velocity by {string.Format("{0:F0}", charge * chargeSpeed * 100)}%.");
+            UnityEngine.Debug.Log($"[WWC][PlasmaMono][Photon] {info.Sender} {info.photonView} {info.SentServerTime} Adjusting bullet velocity.");
         }
 
         private void CheckIfValid()
