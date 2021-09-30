@@ -30,7 +30,7 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.card";
         private const string ModName = "Wills Wacky Cards";
-        public const string Version = "1.2.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.2.1"; // What version are we on (major.minor.patch)?
 
         internal static List<CardInfo> curses = new List<CardInfo>();
         private static System.Random random = new System.Random();
@@ -72,8 +72,8 @@ namespace WillsWackyCards
             CustomCard.BuildCard<Gatling>();
             CustomCard.BuildCard<PlasmaRifle>();
             CustomCard.BuildCard<PlasmaShotgun>();
-            CustomCard.BuildCard<UnstoppableForce>();
-            CustomCard.BuildCard<ImmovableObject>();
+            //CustomCard.BuildCard<UnstoppableForce>();
+            //CustomCard.BuildCard<ImmovableObject>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
