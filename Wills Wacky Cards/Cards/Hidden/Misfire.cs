@@ -23,7 +23,7 @@ namespace WillsWackyCards.Cards.Hidden
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var misfire = player.gameObject.GetOrAddComponent<Misfire_Mono>();
-            misfire.misfireChance += 7;
+            misfire.misfireChance += 5;
         }
         public override void OnRemoveCard()
         {
