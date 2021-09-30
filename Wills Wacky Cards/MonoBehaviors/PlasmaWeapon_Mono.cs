@@ -5,10 +5,12 @@ using WillsWackyCards.Extensions;
 using System;
 using System.Collections.Generic;
 using Sonigon;
+using Photon.Pun;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    public class PlasmaWeapon_Mono : MonoBehaviour
+    [DisallowMultipleComponent]
+    public class PlasmaWeapon_Mono : MonoBehaviourPun
     {
         public float chargeToUse = 0f;
 
@@ -23,7 +25,7 @@ namespace WillsWackyCards.MonoBehaviours
         private GameObject chargeBarObj;
         public Image chargeImage;
         public Image whiteImage;
-        private float chargeTarget;
+        //private float chargeTarget;
         //private HeatBar heatBar;
 
         private void Start()
@@ -62,7 +64,13 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void UpdateChargeBar()
         {
-            chargeTarget = gun.currentCharge;
+            this.photonView.RPC("RPCA_UpdateChargeBar", RpcTarget.All, new object[] { gun.currentCharge, chargeImage, whiteImage });
+        }
+
+        [PunRPC]
+        private void RPCA_UpdateChargeBar(float charge, Image chargeImage, Image whiteImage)
+        {
+            var chargeTarget = charge;
             chargeImage.fillAmount = chargeTarget;
             whiteImage.fillAmount = chargeTarget;
             chargeImage.color = new Color(Mathf.Clamp(0.5f - chargeTarget, 0f, 1f), 1f - (chargeTarget) * 0.85f, chargeTarget, 1f);
@@ -70,9 +78,16 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void OnShootProjectileAction(GameObject obj)
         {
+            this.photonView.RPC("RPCA_ApplyChargeVel", RpcTarget.All, new object[] { obj, chargeToUse, gun.chargeSpeedTo });
+        }
+
+        [PunRPC]
+        private void RPCA_ApplyChargeVel(GameObject obj, float charge, float chargeSpeed, PhotonMessageInfo info)
+        {
             ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
             MoveTransform move = obj.GetComponent<MoveTransform>();
-            move.localForce *= 1 + chargeToUse * gun.chargeSpeedTo;
+            move.localForce *= 1 + charge * chargeSpeed;
+            UnityEngine.Debug.Log($"[WWC][PlasmaMono][Photon] {info.Sender} {info.photonView} {info.SentServerTime} Adjusting bullet velocity.");
         }
 
         private void CheckIfValid()

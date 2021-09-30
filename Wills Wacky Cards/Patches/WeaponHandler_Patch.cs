@@ -4,6 +4,7 @@ using WillsWackyCards.Extensions;
 using WillsWackyCards.MonoBehaviours;
 using Sonigon;
 using UnboundLib;
+using Photon.Pun;
 
 namespace WillsWackyCards.Patches
 {
@@ -82,7 +83,7 @@ namespace WillsWackyCards.Patches
                         plasmaWeapon.chargeToUse = gun.currentCharge;
                         weaponHandler.gun.Attack(gun.currentCharge, false, gun.currentCharge * gun.chargeDamageMultiplier, 1f, true);
                         gun.currentCharge = 0f;
-                        gun.GetAdditionalData().beginCharge = false; 
+                        gun.GetAdditionalData().beginCharge = false;
                     }
                 }
                 return false;

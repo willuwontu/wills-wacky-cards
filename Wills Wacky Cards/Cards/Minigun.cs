@@ -40,12 +40,18 @@ namespace WillsWackyCards.Cards
             heatBar.localScale = new Vector3(0.6f, 1.4f, 1f);
             heatBar.Rotate(0f, 0f, 90f);
             var minigun = player.gameObject.AddComponent<Minigun_Mono>();
+
+            var nameLabel = heatBar.transform.Find("Canvas/PlayerName").gameObject;
+            var crown = heatBar.transform.Find("Canvas/CrownPos").gameObject;
+            Destroy(nameLabel);
+            Destroy(crown);
+
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} added to Player {player.playerID}");
         }
-        public override void OnRemoveCard()
+        public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
-
         protected override string GetTitle()
         {
             return "Minigun";

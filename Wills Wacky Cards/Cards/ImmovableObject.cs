@@ -14,7 +14,7 @@ namespace WillsWackyCards.Cards
 {
     class ImmovableObject : CustomCard
     {
-        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
+        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             var tracker = this.gameObject.GetOrAddComponent<MomentumCard_Mono>();
             tracker.card = cardInfo;
@@ -42,6 +42,7 @@ namespace WillsWackyCards.Cards
             cleaner.player = player;
 
             cleaner.CleanUp();
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
                 
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -85,7 +86,7 @@ namespace WillsWackyCards.Cards
 
     class BuildImmovableObject : ImmovableObject
     {
-        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
+        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             var tracker = this.gameObject.GetOrAddComponent<MomentumCard_Mono>();
             int stacks;
@@ -104,7 +105,6 @@ namespace WillsWackyCards.Cards
             statModifiers.numberOfJumps = stacks / 3;
             statModifiers.gravity = (float)Math.Pow(.95f, stacks);
             statModifiers.lifeSteal = (float)Math.Pow(1.05f, stacks);
-            var block = this.gameObject.GetOrAddComponent<Block>();
             block.additionalBlocks = stacks / 7;
 
             cardInfo.cardStats = MomentumTracker.GetDefensiveMomentumStats(stacks);
