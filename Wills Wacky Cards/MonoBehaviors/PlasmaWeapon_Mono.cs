@@ -20,23 +20,19 @@ namespace WillsWackyCards.MonoBehaviours
         private CharacterData data;
         private WeaponHandler weaponHandler;
         private Player player;
+        private static PhotonView view;
 
         // Heat Bar stuff, god bless Boss Sloth
         private GameObject chargeBarObj;
         public Image chargeImage;
         public Image whiteImage;
-        //private float chargeTarget;
+        private float chargeTarget;
         //private HeatBar heatBar;
 
         private void Start()
         {
             data = GetComponentInParent<CharacterData>();
             chargeBarObj = gameObject.transform.Find("WobbleObjects/ChargeBar").gameObject;
-            chargeBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>().color = new Color(255,255,255);
-            chargeBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>().SetAlpha(1);
-            chargeImage = chargeBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>();
-            whiteImage = chargeBarObj.transform.Find("Canvas/Image/White").GetComponent<Image>();
-            whiteImage.SetAlpha(0);
         }
 
         private void Update()
@@ -50,6 +46,7 @@ namespace WillsWackyCards.MonoBehaviours
                     gun = weaponHandler.gun;
                     gunAmmo = gun.GetComponentInChildren<GunAmmo>();
                     gun.ShootPojectileAction += OnShootProjectileAction;
+                    view = this.photonView;
                 }
             }
 
@@ -64,28 +61,51 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void UpdateChargeBar()
         {
-            this.photonView.RPC("RPCA_UpdateChargeBar", RpcTarget.All, new object[] { gun.currentCharge, chargeImage, whiteImage });
-        }
-
-        [PunRPC]
-        private void RPCA_UpdateChargeBar(float charge, Image chargeImage, Image whiteImage)
-        {
-            var chargeTarget = charge;
+            
+            chargeTarget = gun.currentCharge;
             chargeImage.fillAmount = chargeTarget;
             whiteImage.fillAmount = chargeTarget;
             chargeImage.color = new Color(Mathf.Clamp(0.5f - chargeTarget, 0f, 1f), 1f - (chargeTarget) * 0.85f, chargeTarget, 1f);
         }
 
-        private void OnShootProjectileAction(GameObject obj)
+        public static void ChargeGun()
         {
-            this.photonView.RPC("RPCA_ApplyChargeVel", RpcTarget.All, new object[] { obj, chargeToUse, gun.chargeSpeedTo });
+            view.RPC("RPCA_ChargeGun", RpcTarget.All);
+            //gun.currentCharge = Mathf.Clamp(gun.currentCharge + TimeHandler.fixedDeltaTime / gun.GetAdditionalData().chargeTime, 0f, 1f);
         }
 
         [PunRPC]
-        private void RPCA_ApplyChargeVel(GameObject obj, float charge, float chargeSpeed, PhotonMessageInfo info)
+        private void RPCA_ChargeGun()
+        {
+            gun.currentCharge = Mathf.Clamp(gun.currentCharge + TimeHandler.fixedDeltaTime / gun.GetAdditionalData().chargeTime, 0f, 1f);
+        }
+
+        public static void FirePlasmaGun()
+        {
+            view.RPC("RPCA_FirePlasmaGun", RpcTarget.All);
+        }
+
+        [PunRPC]
+        private void RPCA_FirePlasmaGun()
+        {
+            UnityEngine.Debug.Log(string.Format("[WWC][Plasma Weapon] Charged shot was fired at {0:F1}% charge.", gun.currentCharge * 100f));
+            chargeToUse = gun.currentCharge;
+            weaponHandler.gun.Attack(gun.currentCharge, false, gun.currentCharge * gun.chargeDamageMultiplier, 1f, true);
+            gun.currentCharge = 0f;
+            gun.GetAdditionalData().beginCharge = false;
+        }
+
+        private void OnShootProjectileAction(GameObject obj)
         {
             ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
             MoveTransform move = obj.GetComponent<MoveTransform>();
+            move.localForce *= 1 + chargeToUse * gun.chargeSpeedTo;
+            //this.photonView.RPC("RPCA_ApplyChargeVel", RpcTarget.All, move, chargeToUse, gun.chargeSpeedTo);
+        }
+
+        [PunRPC]
+        private void RPCA_ApplyChargeVel(MoveTransform move, float charge, float chargeSpeed, PhotonMessageInfo info)
+        {
             move.localForce *= 1 + charge * chargeSpeed;
             UnityEngine.Debug.Log($"[WWC][PlasmaMono][Photon] {info.Sender} {info.photonView} {info.SentServerTime} Increasing bullet velocity by {string.Format("{0:F0}", charge * chargeSpeed * 100)}%.");
         }

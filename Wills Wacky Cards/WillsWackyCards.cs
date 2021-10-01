@@ -12,6 +12,7 @@ using UnboundLib;
 using UnboundLib.GameModes;
 using UnboundLib.Cards;
 using UnboundLib.Utils;
+using UnboundLib.Networking;
 using WillsWackyCards.Cards;
 using WillsWackyCards.Cards.Hidden;
 using WillsWackyCards.MonoBehaviours;
@@ -34,6 +35,8 @@ namespace WillsWackyCards
 
         internal static List<CardInfo> curses = new List<CardInfo>();
         private static System.Random random = new System.Random();
+        private static GameObject host;
+        public static CardRemover remover;
 
         internal static CardInfo GetRandomCurse()
         {
@@ -72,16 +75,69 @@ namespace WillsWackyCards
             CustomCard.BuildCard<Gatling>();
             CustomCard.BuildCard<PlasmaRifle>();
             CustomCard.BuildCard<PlasmaShotgun>();
-            //CustomCard.BuildCard<UnstoppableForce>();
-            //CustomCard.BuildCard<ImmovableObject>();
+            CustomCard.BuildCard<UnstoppableForce>();
+            CustomCard.BuildCard<ImmovableObject>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
             this.ExecuteAfterSeconds(0.4f, ChangeCards);
 
+            StartCoroutine(BuildMomentumCards());
+
             GameModeManager.AddHook(GameModeHooks.HookGameEnd, GameEnd);
             GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
             GameModeManager.AddHook(GameModeHooks.HookBattleStart, BattleStart);
+
+            host = gameObject;
+            host.name = "WillsWackyCards";
+            remover = host.GetOrAddComponent<CardRemover>();
+
+            var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
+            networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
+            networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
+        }
+
+        private void OnJoinedRoomAction()
+        {
+
+        }
+
+        private void OnLeftRoomAction()
+        {
+
+        }
+
+        IEnumerator BuildMomentumCards()
+        {
+            var stacks = 0;
+            while (stacks <= 20)
+            {
+                yield return StartCoroutine(WaitFor.Frames(7));
+                MomentumTracker.stacks = stacks;
+                //UnityEngine.Debug.Log($"[WWC][Debugging] {cardInfo.cardName} assigned to slot {MomentumTracker.stacks}"); 
+                CustomCard.BuildCard<BuildImmovableObject>(cardInfo => { MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+                CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.createdOffenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+                stacks++;
+            }
+            yield return StartCoroutine(WaitFor.Frames(7));
+            MomentumTracker.stacks = 0;
+        }
+
+        public static class WaitFor
+        {
+            public static IEnumerator Frames(int frameCount)
+            {
+                if (frameCount <= 0)
+                {
+                    throw new ArgumentOutOfRangeException("frameCount", "Cannot wait for less that 1 frame");
+                }
+
+                while (frameCount > 0)
+                {
+                    frameCount--;
+                    yield return null;
+                }
+            }
         }
 
         IEnumerator BattleStart(IGameModeHandler gm)
@@ -494,6 +550,27 @@ namespace WillsWackyCards
 
             }
             UnityEngine.Debug.Log("[WWC] Cards Modified");
+        }
+        public class CardRemover : MonoBehaviour
+        {
+            public void DelayedRemoveCard(Player player, string cardName, int frames = 10)
+            {
+                StartCoroutine(RemoveCard(player, cardName, frames));
+            }
+
+            IEnumerator RemoveCard(Player player, string cardName, int frames = 10)
+            {
+                yield return StartCoroutine(WaitFor.Frames(frames));
+
+                for (int i = player.data.currentCards.Count - 1; i >= 0; i--)
+                {
+                    if (player.data.currentCards[i].cardName == cardName)
+                    {
+                        ModdingUtils.Utils.Cards.instance.RemoveCardFromPlayer(player, i);
+                        break;
+                    }
+                }
+            }
         }
     }
 }

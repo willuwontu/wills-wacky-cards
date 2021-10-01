@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using UnityEngine;
+using UnityEngine.UI;
 using WillsWackyCards.Extensions;
 using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
@@ -33,23 +34,34 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var heatBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
-            heatBar.name = "HeatBar";
-            heatBar.Translate(new Vector3(.95f, -1.1f, 0));
-            heatBar.localScale.Set(0.5f, 1f, 1f);
-            heatBar.localScale = new Vector3(0.6f, 1.4f, 1f);
-            heatBar.Rotate(0f, 0f, 90f);
-            var minigun = player.gameObject.AddComponent<Minigun_Mono>();
+            if (!player.GetComponent<Minigun_Mono>())
+            {
+                var heatBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
+                heatBar.name = "HeatBar";
+                heatBar.Translate(new Vector3(.95f, -1.1f, 0));
+                heatBar.localScale.Set(0.5f, 1f, 1f);
+                heatBar.localScale = new Vector3(0.6f, 1.4f, 1f);
+                heatBar.Rotate(0f, 0f, 90f);
+                var minigun = player.gameObject.GetOrAddComponent<Minigun_Mono>();
 
-            var nameLabel = heatBar.transform.Find("Canvas/PlayerName").gameObject;
-            var crown = heatBar.transform.Find("Canvas/CrownPos").gameObject;
-            Destroy(nameLabel);
-            Destroy(crown);
+                var nameLabel = heatBar.transform.Find("Canvas/PlayerName").gameObject;
+                var crown = heatBar.transform.Find("Canvas/CrownPos").gameObject;
+                minigun.heatImage = heatBar.transform.Find("Canvas/Image/Health").GetComponent<Image>();
+                minigun.whiteImage = heatBar.transform.Find("Canvas/Image/White").GetComponent<Image>();
+                minigun.whiteImage.SetAlpha(0);
+                minigun.whiteImage.name = "Charge";
+                minigun.heatImage.color = new Color(255, 255, 255);
+                minigun.heatImage.SetAlpha(1);
+                Destroy(nameLabel);
+                Destroy(crown); 
+            }
 
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            var minigun = player.gameObject.GetOrAddComponent<Minigun_Mono>();
+            Destroy(minigun);
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
         protected override string GetTitle()

@@ -24,11 +24,6 @@ namespace WillsWackyCards.Cards
 
             var stacks = MomentumTracker.stacks = Math.Max(MomentumTracker.stacks, 1);
 
-            if (!MomentumTracker.createdDefenseCards.TryGetValue(stacks, out var cardData))
-            {
-                CustomCard.BuildCard<BuildImmovableObject>(cardInfo => { MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            }
-
             UnityEngine.Debug.Log($"[WWC][Card] {stacks} Momentum Stacks built up");
 
             cardInfo.cardStats = MomentumTracker.GetDefensiveMomentumStats(stacks);
@@ -38,10 +33,26 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var cleaner = player.gameObject.GetOrAddComponent<ImmovableObjectCleanup_Mono>();
-            cleaner.player = player;
+            var stacks = MomentumTracker.stacks;
+            if (!MomentumTracker.createdDefenseCards.TryGetValue(stacks, out var cardData))
+            {
+                CustomCard.BuildCard<BuildImmovableObject>(cardInfo => { 
+                    MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); 
+                    ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);
+                    ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardInfo, false, "", 2f, 2f, true);
+                });
+            }
+            else
+            {
+                ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardData, false, "", 2f, 2f, true);
+            }
 
-            cleaner.CleanUp();
+            WillsWackyCards.remover.DelayedRemoveCard(player, GetTitle(), 20);
+
+            //var cleaner = player.gameObject.GetOrAddComponent<ImmovableObjectCleanup_Mono>();
+            //cleaner.player = player;
+
+            //cleaner.CleanUp();
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
                 
@@ -146,16 +157,6 @@ namespace WillsWackyCards.Cards
 
         private void AddCard()
         {
-            if (MomentumTracker.createdDefenseCards.TryGetValue(MomentumTracker.stacks, out var cardInfo))
-            {
-                UnityEngine.Debug.Log($"[WWC][Momentum]{cardInfo.cardName} found.");
-                ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardInfo, false, "", 2f, 2f, true);
-            }
-            else
-            {
-                UnityEngine.Debug.Log($"[WWC][Momentum] No Card Found, creating new one.");
-                CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.AddDefenseCard(cardInfo, player); });
-            }
             this.ExecuteAfterFrames(6, Clean);
         }
 

@@ -51,7 +51,7 @@ namespace WillsWackyCards.MonoBehaviours
             var roll = random.Next(100);
             if (roll < misfireChance)
             {
-                this.photonView.RPC("RPCA_Misfire", RpcTarget.All, new object[] { roll });
+                this.photonView.RPC("RPCA_Misfire", RpcTarget.All, roll );
             }
         }
 

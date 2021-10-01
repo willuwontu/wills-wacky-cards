@@ -9,6 +9,7 @@ using WillsWackyCards.Extensions;
 using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace WillsWackyCards.Cards
 {
@@ -39,18 +40,28 @@ namespace WillsWackyCards.Cards
             gun.chargeDamageMultiplier *= 1f;
             gun.GetAdditionalData().chargeTime = 1f;
 
-            var chargeBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
-            chargeBar.name = "ChargeBar";
-            chargeBar.Translate(new Vector3(.95f, -1.1f, 0));
-            chargeBar.localScale.Set(0.5f, 1f, 1f);
-            chargeBar.localScale = new Vector3(0.6f, 1.4f, 1f);
-            chargeBar.Rotate(0f, 0f, 90f);
-            var plasmaShotgun = player.gameObject.AddComponent<PlasmaWeapon_Mono>();
+            if (!player.GetComponent<PlasmaWeapon_Mono>())
+            {
+                var chargeBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
+                chargeBar.name = "ChargeBar";
+                chargeBar.Translate(new Vector3(.95f, -1.1f, 0));
+                chargeBar.localScale.Set(0.5f, 1f, 1f);
+                chargeBar.localScale = new Vector3(0.6f, 1.4f, 1f);
+                chargeBar.Rotate(0f, 0f, 90f);
+                var plasmaShotgun = player.gameObject.GetOrAddComponent<PlasmaWeapon_Mono>();
+                var nameLabel = chargeBar.transform.Find("Canvas/PlayerName").gameObject;
+                var crown = chargeBar.transform.Find("Canvas/CrownPos").gameObject;
 
-            var nameLabel = chargeBar.transform.Find("Canvas/PlayerName").gameObject;
-            var crown = chargeBar.transform.Find("Canvas/CrownPos").gameObject;
-            Destroy(nameLabel);
-            Destroy(crown);
+                plasmaShotgun.chargeImage = chargeBar.transform.Find("Canvas/Image/Health").GetComponent<Image>();
+                plasmaShotgun.whiteImage = chargeBar.transform.Find("Canvas/Image/White").GetComponent<Image>();
+                plasmaShotgun.whiteImage.SetAlpha(0);
+                plasmaShotgun.whiteImage.name = "Charge";
+                plasmaShotgun.chargeImage.color = new Color(255, 255, 255);
+                plasmaShotgun.chargeImage.SetAlpha(1);
+                Destroy(nameLabel);
+                Destroy(crown);
+            }
+
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

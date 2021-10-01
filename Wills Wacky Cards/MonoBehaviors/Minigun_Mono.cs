@@ -3,6 +3,8 @@ using UnityEngine.UI;
 using UnboundLib;
 using WillsWackyCards.Extensions;
 using System;
+using System.Collections;
+using System.Collections.Generic;
 using Photon.Pun;
 
 namespace WillsWackyCards.MonoBehaviours
@@ -38,11 +40,6 @@ namespace WillsWackyCards.MonoBehaviours
         {
             data = GetComponentInParent<CharacterData>();
             heatBarObj = gameObject.transform.Find("WobbleObjects/HeatBar").gameObject;
-            heatBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>().color = new Color(255,255,255);
-            heatBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>().SetAlpha(1);
-            heatImage = heatBarObj.transform.Find("Canvas/Image/Health").GetComponent<Image>();
-            whiteImage = heatBarObj.transform.Find("Canvas/Image/White").GetComponent<Image>();
-            whiteImage.SetAlpha(0);
         }
 
         private void Update()
@@ -63,20 +60,42 @@ namespace WillsWackyCards.MonoBehaviours
             if (!(player is null) && player.gameObject.activeInHierarchy && !coroutineStarted)
             {
                 coroutineStarted = true;
-                InvokeRepeating(nameof(Cooldown), 0, TimeHandler.deltaTime);
+                StartCoroutine(Cooldown());
                 InvokeRepeating(nameof(CheckIfValid), 0, 1f);
             }
+            if (!(player is null))
+            {
+                UpdateHeatBar();
+            }
+        }
 
-            UpdateHeatBar();
+        private IEnumerator Cooldown()
+        {
+            while (true)
+            {
+                yield return new WaitForSecondsRealtime(TimeHandler.fixedDeltaTime);
+                if (gun.spread < 0.15f)
+                {
+                    gun.spread = 0.15f;
+                }
+                if (cooldownTimeRemaining > 0)
+                {
+                    cooldownTimeRemaining -= TimeHandler.fixedDeltaTime;
+                }
+                if ((cooldownTimeRemaining <= 0) && (heat > 0f))
+                {
+                    heat -= coolPerSecond * TimeHandler.fixedDeltaTime;
+                }
+                if (overheated && (heat <= 0f))
+                {
+                    overheated = false;
+                    gun.GetAdditionalData().overHeated = false;
+                    gunAmmo.ReloadAmmo(true);
+                } 
+            }
         }
 
         private void UpdateHeatBar()
-        {
-            this.photonView.RPC("RPCA_UpdateHeatBar", RpcTarget.All, new object[] { heat, heatCap });
-        }
-
-        [PunRPC]
-        private void RPCA_UpdateHeatBar(float heat, float heatCap)
         {
             heatTarget = heat / heatCap;
             heatImage.fillAmount = heatTarget;
@@ -109,27 +128,6 @@ namespace WillsWackyCards.MonoBehaviours
                 gun.GetAdditionalData().overHeated = true;
                 cooldownTimeRemaining += overheatBonusCooldownTime;
                 heatImage.color = Color.red;
-            }
-        }
-        private void Cooldown()
-        {
-            if (gun.spread < 0.15f)
-            {
-                gun.spread = 0.15f;
-            }
-            if (cooldownTimeRemaining > 0)
-            {
-                cooldownTimeRemaining -= TimeHandler.deltaTime;
-            }
-            if ((cooldownTimeRemaining <= 0) && (heat > 0f))
-            {
-                heat -= coolPerSecond * TimeHandler.deltaTime;
-            }
-            if (overheated && (heat <= 0f))
-            {
-                overheated = false;
-                gun.GetAdditionalData().overHeated = false;
-                gunAmmo.ReloadAmmo(true);
             }
         }
 

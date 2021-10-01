@@ -80,14 +80,14 @@ namespace WillsWackyCards.MonoBehaviours
         public static Dictionary<int, CardInfo> createdOffenseCards = new Dictionary<int, CardInfo>();
         public static Dictionary<int, CardInfo> createdDefenseCards = new Dictionary<int, CardInfo>();
 
-        public static void AddOffenseCard(CardInfo cardInfo, Player player)
+        public static void AddOfffenseCard(CardInfo cardInfo, Player player)
         {
             createdOffenseCards.Add(MomentumTracker.stacks, cardInfo);
             ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);
             ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardInfo, false, "", 2f, 2f, true);
 
         }
-        public static void AddDefenseCard(CardInfo cardInfo, Player player)
+        public static void AddDeffenseCard(CardInfo cardInfo, Player player)
         {
             createdOffenseCards.Add(MomentumTracker.stacks, cardInfo);
             ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);

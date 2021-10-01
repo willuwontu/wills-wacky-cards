@@ -71,7 +71,7 @@ namespace WillsWackyCards.Patches
                 {
                     if (gun.GetAdditionalData().beginCharge && gun.currentCharge < 1f)
                     {
-                        gun.currentCharge = Mathf.Clamp(gun.currentCharge + TimeHandler.deltaTime / gun.GetAdditionalData().chargeTime, 0f, 1f);
+                        PlasmaWeapon_Mono.ChargeGun();
                         //UnityEngine.Debug.Log(string.Format("[WWC][Plasma Rifle] Gun is currently {0:F1}% charged.", gun.currentCharge * 100f)); 
                     }
                 }

@@ -65,7 +65,7 @@ namespace WillsWackyCards.MonoBehaviours
             {
                 UnityEngine.Debug.Log($"[WWC][Hex] Player {player.teamID} Backwards Curse activated with a roll of {roll} and a chance of {backwardsChance}%.");
                 var component = obj.GetComponent<ProjectileHit>();
-                var gameObject = UnityEngine.Object.Instantiate<GameObject>(bulletMono,component.transform.position, component.transform.rotation, component.transform);
+                var gameObject = UnityEngine.Object.Instantiate<GameObject>(bulletMono, component.transform.position, component.transform.rotation, component.transform);
             }
         }
         private void CheckIfValid()
