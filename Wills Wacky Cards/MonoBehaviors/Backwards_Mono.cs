@@ -16,7 +16,6 @@ namespace WillsWackyCards.MonoBehaviours
             Destroy(this);
         }
     }
-    [DisallowMultipleComponent]
     public class Backwards_Mono : MonoBehaviour
     {
         private GameObject bulletMono = new GameObject("Backwards", typeof(BackwardsBullet_Mono));

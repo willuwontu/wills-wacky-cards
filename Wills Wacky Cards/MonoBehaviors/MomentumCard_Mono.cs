@@ -7,7 +7,6 @@ using UnityEngine.UI;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    [DisallowMultipleComponent]
     public class MomentumCard_Mono : MonoBehaviour
     {
         private TextMeshProUGUI description;

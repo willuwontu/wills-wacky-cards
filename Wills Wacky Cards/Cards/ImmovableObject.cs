@@ -14,7 +14,7 @@ namespace WillsWackyCards.Cards
 {
     class ImmovableObject : CustomCard
     {
-        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
+        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             var tracker = this.gameObject.GetOrAddComponent<MomentumCard_Mono>();
             tracker.card = cardInfo;
@@ -97,7 +97,7 @@ namespace WillsWackyCards.Cards
 
     class BuildImmovableObject : ImmovableObject
     {
-        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
+        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             var tracker = this.gameObject.GetOrAddComponent<MomentumCard_Mono>();
             int stacks;
@@ -116,6 +116,7 @@ namespace WillsWackyCards.Cards
             statModifiers.numberOfJumps = stacks / 3;
             statModifiers.gravity = (float)Math.Pow(.95f, stacks);
             statModifiers.lifeSteal = (float)Math.Pow(1.05f, stacks);
+            var block = this.gameObject.GetOrAddComponent<Block>();
             block.additionalBlocks = stacks / 7;
 
             cardInfo.cardStats = MomentumTracker.GetDefensiveMomentumStats(stacks);

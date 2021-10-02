@@ -6,7 +6,6 @@ using System;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    [DisallowMultipleComponent]
     public class Gatling_Mono : MonoBehaviour
     {
         private int stacks = 0;

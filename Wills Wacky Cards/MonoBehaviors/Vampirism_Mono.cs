@@ -3,7 +3,6 @@ using WillsWackyCards.Extensions;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    [DisallowMultipleComponent]
     public class Vampirism_Mono : MonoBehaviour
     {
         public float percentLifeDrain = 1f/16.5f;
