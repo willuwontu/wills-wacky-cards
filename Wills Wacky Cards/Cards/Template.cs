@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace WillsWackyCards.Cards
 {
-    class Template : CustomCard
+    class HotPotato : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
@@ -31,11 +31,11 @@ namespace WillsWackyCards.Cards
 
         protected override string GetTitle()
         {
-            return "CardName";
+            return "Hot Potato";
         }
         protected override string GetDescription()
         {
-            return "CardDescription";
+            return "Pass along a curse to a \"Friend\".";
         }
         protected override GameObject GetCardArt()
         {
@@ -43,7 +43,7 @@ namespace WillsWackyCards.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return CardInfo.Rarity.Uncommon;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -52,15 +52,15 @@ namespace WillsWackyCards.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Effect",
-                    amount = "No",
+                    stat = "Curse",
+                    amount = "-1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.ColdBlue;
+            return CardThemeColor.CardThemeColorType.EvilPurple;
         }
         public override string GetModName()
         {

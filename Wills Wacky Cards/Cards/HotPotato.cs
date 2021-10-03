@@ -5,37 +5,38 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using WillsWackyCards.Extensions;
 using WillsWackyCards.Utils;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Curses
+namespace WillsWackyCards.Cards
 {
-    class PastaShells : CustomCard
+    class Template : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.damage = 0.5f;
-            gun.drag = 5f;
-            cardInfo.categories = new CardCategory[] { CurseManager.curseCategory };
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
+            cardInfo.categories = new CardCategory[] { CurseManager.curseInteractionCategory };
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
+            // Edits values on player when card is selected
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
+            //Drives me crazy
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Pasta Shells";
+            return "CardName";
         }
         protected override string GetDescription()
         {
-            return "Abracadoodle, your bullets are now a noodle.";
+            return "CardDescription";
         }
         protected override GameObject GetCardArt()
         {
@@ -52,19 +53,19 @@ namespace WillsWackyCards.Cards.Curses
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Damage",
-                    amount = "-50%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                    stat = "Effect",
+                    amount = "No",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.MagicPink;
+            return CardThemeColor.CardThemeColorType.ColdBlue;
         }
         public override string GetModName()
         {
-            return "Curse";
+            return "WWC";
         }
         public override bool GetEnabled()
         {

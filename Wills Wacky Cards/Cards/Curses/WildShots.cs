@@ -24,9 +24,11 @@ namespace WillsWackyCards.Cards.Curses
         {
             var backwards = player.gameObject.GetOrAddComponent<Backwards_Mono>();
             backwards.backwardsChance += 10;
+            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
         }
-        public override void OnRemoveCard()
+        public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()

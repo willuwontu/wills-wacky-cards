@@ -102,5 +102,15 @@ namespace WillsWackyCards.Utils
 
             return result;
         }
+
+        /// <summary>
+        /// Checks to see if a card is a curse or not.
+        /// </summary>
+        /// <param name="cardInfo">The card to check.</param>
+        /// <returns>Returns true if the card is a registered curse.</returns>
+        public static bool IsCurse(CardInfo cardInfo)
+        {
+            return curses.Contains(cardInfo);
+        }
     }
 }

@@ -81,6 +81,7 @@ namespace WillsWackyCards
             GameModeManager.AddHook(GameModeHooks.HookGameEnd, GameEnd);
             GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
             GameModeManager.AddHook(GameModeHooks.HookBattleStart, BattleStart);
+            GameModeManager.AddHook(GameModeHooks.HookPlayerPickStart, PlayerPickStart);
 
             host = gameObject;
             host.name = "WillsWackyCards";
@@ -142,6 +143,11 @@ namespace WillsWackyCards
                     yield return null;
                 }
             }
+        }
+
+        IEnumerator PlayerPickStart(IGameModeHandler gm)
+        {
+            yield break;
         }
 
         IEnumerator BattleStart(IGameModeHandler gm)

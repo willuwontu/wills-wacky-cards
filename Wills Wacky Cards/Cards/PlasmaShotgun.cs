@@ -64,9 +64,11 @@ namespace WillsWackyCards.Cards
 
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
-        public override void OnRemoveCard()
+        public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            //Drives me crazy
+            var plasmaShotgun = player.gameObject.GetOrAddComponent<PlasmaWeapon_Mono>();
+            Destroy(plasmaShotgun);
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
