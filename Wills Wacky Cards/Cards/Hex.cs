@@ -20,7 +20,7 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            if (CurseManager.curses.Count > 0)
+            if (CurseManager.GetRaw().Count() > 0)
             {
                 UnityEngine.Debug.Log($"[WWC][Hex] Player {player.teamID} Cursing Enemies");
                 CardInfo curse;

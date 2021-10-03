@@ -15,7 +15,7 @@ namespace WillsWackyCards.MonoBehaviours
         public float heat = 0.0f;
         public float heatCap = 3f;
         private bool overheated = false;
-        public float coolPerSecond = 1.875f;
+        public float coolPerSecond = 1.5f;
         public float secondsBeforeStartToCool = 0.1f;
         private float cooldownTimeRemaining = 0.1f;
         public float overheatBonusCooldownTime = 0.5f;
@@ -88,11 +88,24 @@ namespace WillsWackyCards.MonoBehaviours
                 }
                 if (overheated && (heat <= 0f))
                 {
-                    overheated = false;
-                    gun.GetAdditionalData().overHeated = false;
+                    this.photonView.RPC(nameof(RPCA_UpdateOverheat), RpcTarget.All, false);
                     gunAmmo.ReloadAmmo(true);
                 } 
             }
+        }
+
+        [PunRPC]
+        private void RPCA_UpdateOverheat(bool status)
+        {
+            overheated = status;
+            gun.GetAdditionalData().overHeated = status;
+            if (status)
+            {
+                cooldownTimeRemaining += overheatBonusCooldownTime;
+                heatImage.color = Color.red;
+                gunAmmo.SetFieldValue("currentAmmo", 0);
+            }
+            UnityEngine.Debug.Log($"[WWC][Minigun] Player {player.playerID}'s minigun is {(status ? "" : "no longer " )}overheated.");
         }
 
         private void UpdateHeatBar()
@@ -124,10 +137,7 @@ namespace WillsWackyCards.MonoBehaviours
             }
             else
             {
-                overheated = true;
-                gun.GetAdditionalData().overHeated = true;
-                cooldownTimeRemaining += overheatBonusCooldownTime;
-                heatImage.color = Color.red;
+                this.photonView.RPC(nameof(RPCA_UpdateOverheat), RpcTarget.All, true);
             }
         }
 
