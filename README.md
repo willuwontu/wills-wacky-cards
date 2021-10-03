@@ -36,7 +36,14 @@ You can add curses for usage by utilizing the `CurseManager` found in `WillsWack
 
 Simply toss in a `using WillsWackyCards.Utils;` and use `CustomCard.BuildCard<CurseCardName>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });` to register a curse for usage.
 
+Make sure to add `CurseManager.curseCategory` to your cards categories, so that it cannot be selected by players.
+
 It also contains various other utilities for handling curses.
+
+----
+## v 1.2.2
+- Curses are no longer hidden, they can be disabled or enabled individually in the toggle cards menu. If there are no enabled curses, hex will simply do nothing.
+- Immovable Object and Unstoppable Force are re-enabled and now work properly.
 
 ----
 ## v 1.2.1

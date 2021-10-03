@@ -20,7 +20,7 @@ namespace WillsWackyCards.Cards.Curses
             gun.reloadTimeAdd = 0.5f;
             gun.bursts = -1;
             gun.numberOfProjectiles = -1;
-            cardInfo.categories = new CardCategory[] { CurseManager.category };
+            cardInfo.categories = new CardCategory[] { CurseManager.curseCategory };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -90,7 +90,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         public override bool GetEnabled()
         {
-            return false;
+            return true;
         }
     }
 }
