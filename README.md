@@ -29,6 +29,15 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Unstoppable Force (Common)
 - Immovable Object (Common)
 
+---- 
+## Features for other mods
+### CurseManager
+You can add curses for usage by utilizing the `CurseManager` found in `WillsWackyCards.Utils`.
+
+Simply toss in a `using WillsWackyCards.Utils;` and use `CustomCard.BuildCard<CurseCardName>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });` to register a curse for usage.
+
+It also contains various other utilities for handling curses.
+
 ----
 ## v 1.2.1
 - Disabled Unstoppable Force, and Immovable Object while they're being fixed.

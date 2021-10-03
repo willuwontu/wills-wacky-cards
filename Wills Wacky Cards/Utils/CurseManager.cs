@@ -1,6 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnboundLib;
+using UnboundLib.Utils;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using UnityEngine;
 
 namespace WillsWackyCards.Utils
 {
@@ -11,6 +14,11 @@ namespace WillsWackyCards.Utils
     {
         private static List<CardInfo> curses = new List<CardInfo>();
         private static System.Random random = new System.Random();
+
+        /// <summary>
+        /// The card category for all curses.
+        /// </summary>
+        public static CardCategory category = CustomCardCategories.instance.CardCategory("Curse");
 
         /// <summary>
         /// Returns a random curse from the list of curses, if one exists.

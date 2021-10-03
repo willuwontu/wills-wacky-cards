@@ -7,6 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using WillsWackyCards.Utils;
 using UnityEngine;
 
 namespace WillsWackyCards.Cards.Curses
@@ -16,9 +17,10 @@ namespace WillsWackyCards.Cards.Curses
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             var block = cardInfo.gameObject.GetOrAddComponent<Block>();
+            block.InvokeMethod("ResetStats");
             block.cdMultiplier = 2.5f;
             block.additionalBlocks = -1;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
+            cardInfo.categories = new CardCategory[] { CurseManager.category };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
