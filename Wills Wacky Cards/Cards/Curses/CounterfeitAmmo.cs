@@ -9,14 +9,16 @@ using WillsWackyCards.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Hidden
+namespace WillsWackyCards.Cards.Curses
 {
-    class EasyTarget : CustomCard
+    class CounterfeitAmmo : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.sizeMultiplier = 3f;
-            statModifiers.GetAdditionalData().MassModifier = 1f / 5f;
+            gun.ammo = -2;
+            gun.reloadTimeAdd = 0.5f;
+            gun.bursts = -1;
+            gun.numberOfProjectiles = -1;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
@@ -29,11 +31,11 @@ namespace WillsWackyCards.Cards.Hidden
 
         protected override string GetTitle()
         {
-            return "Easy Target";
+            return "Counterfeit Ammo";
         }
         protected override string GetDescription()
         {
-            return "Might as well just paint a target on yourself.";
+            return "Should've bought it from a reputable source.";
         }
         protected override GameObject GetCardArt()
         {
@@ -50,9 +52,30 @@ namespace WillsWackyCards.Cards.Hidden
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Size",
-                    amount = "+200%",
+                    stat = "Reload Time",
+                    amount = "+0.5s",
                     simepleAmount = CardInfoStat.SimpleAmount.aLotOf
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Ammo",
+                    amount = "-2",
+                    simepleAmount = CardInfoStat.SimpleAmount.lower
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Bullet",
+                    amount = "-1",
+                    simepleAmount = CardInfoStat.SimpleAmount.slightlyLower
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Burst",
+                    amount = "-1",
+                    simepleAmount = CardInfoStat.SimpleAmount.slightlyLower
                 }
             };
         }

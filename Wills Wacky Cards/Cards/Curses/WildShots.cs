@@ -5,36 +5,36 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using WillsWackyCards.Extensions;
+using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Hidden
+namespace WillsWackyCards.Cards.Curses
 {
-    class DrivenToEarth : CustomCard
+    class WildShots : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.gravity = 2.5f;
-            statModifiers.jump = 0.6f;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
+            var backwards = player.gameObject.GetOrAddComponent<Backwards_Mono>();
+            backwards.backwardsChance += 10;
         }
         public override void OnRemoveCard()
         {
-            //Drives me crazy
         }
 
         protected override string GetTitle()
         {
-            return "Driven to Earth";
+            return "Wild Shots";
         }
         protected override string GetDescription()
         {
-            return "Birds, bats, fleas and flies, chase this fool from my skies.";
+            return "Which way was the enemy again?";
         }
         protected override GameObject GetCardArt()
         {
@@ -51,22 +51,15 @@ namespace WillsWackyCards.Cards.Hidden
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Jump Height",
-                    amount = "-40%",
+                    stat = "Wild Shots",
+                    amount = "+10%",
                     simepleAmount = CardInfoStat.SimpleAmount.aLotLower
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Gravity",
-                    amount = "+150%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aHugeAmountOf
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.PoisonGreen;
+            return CardThemeColor.CardThemeColorType.EvilPurple;
         }
         public override string GetModName()
         {

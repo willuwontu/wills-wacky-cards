@@ -5,36 +5,36 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using WillsWackyCards.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Hidden
+namespace WillsWackyCards.Cards.Curses
 {
-    class SlowReflexes : CustomCard
+    class DrivenToEarth : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            var block = cardInfo.gameObject.GetOrAddComponent<Block>();
-            block.cdMultiplier = 2.5f;
-            block.additionalBlocks = -1;
+            statModifiers.gravity = 2.5f;
+            statModifiers.jump = 0.6f;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            // Edits values on player when card is selected
         }
         public override void OnRemoveCard()
         {
+            //Drives me crazy
         }
 
         protected override string GetTitle()
         {
-            return "Uncomfortable Defense";
+            return "Driven to Earth";
         }
         protected override string GetDescription()
         {
-            return "Bim bung, you're now aware of your tongue.";
+            return "Birds, bats, fleas and flies, chase this fool from my skies.";
         }
         protected override GameObject GetCardArt()
         {
@@ -51,22 +51,22 @@ namespace WillsWackyCards.Cards.Hidden
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Block Cooldown",
-                    amount = "+150%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
+                    stat = "Jump Height",
+                    amount = "-40%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
                 },
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Additional Blocks",
-                    amount = "-1",
-                    simepleAmount = CardInfoStat.SimpleAmount.lower
+                    stat = "Gravity",
+                    amount = "+150%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aHugeAmountOf
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.TechWhite;
+            return CardThemeColor.CardThemeColorType.PoisonGreen;
         }
         public override string GetModName()
         {

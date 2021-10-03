@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using WillsWackyCards.Utils;
 using UnboundLib.Cards;
 using UnityEngine;
 
@@ -19,14 +20,14 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            if (WillsWackyCards.curses.Count > 0)
+            if (CurseManager.curses.Count > 0)
             {
                 UnityEngine.Debug.Log($"[WWC][Hex] Player {player.teamID} Cursing Enemies");
                 CardInfo curse;
 
                 foreach (var item in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
                 {
-                    curse = WillsWackyCards.GetRandomCurse();
+                    curse = CurseManager.RandomCurse;
                     ModdingUtils.Utils.Cards.instance.AddCardToPlayer(item, curse, false, "", 2f, 0, true);
                     UnityEngine.Debug.Log($"[WWC][Hex] Player {item.teamID} cursed with {curse.cardName}.");
                 }

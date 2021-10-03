@@ -6,24 +6,23 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
-using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Hidden
+namespace WillsWackyCards.Cards.Curses
 {
-    class Misfire : CustomCard
+    class SlowReflexes : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.reloadTime = 1.5f;
+            var block = cardInfo.gameObject.GetOrAddComponent<Block>();
+            block.cdMultiplier = 2.5f;
+            block.additionalBlocks = -1;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var misfire = player.gameObject.GetOrAddComponent<Misfire_Mono>();
-            misfire.misfireChance += 5;
         }
         public override void OnRemoveCard()
         {
@@ -31,11 +30,11 @@ namespace WillsWackyCards.Cards.Hidden
 
         protected override string GetTitle()
         {
-            return "Misfire";
+            return "Uncomfortable Defense";
         }
         protected override string GetDescription()
         {
-            return "Bippity boop, your gun can no longer shoot.";
+            return "Bim bung, you're now aware of your tongue.";
         }
         protected override GameObject GetCardArt()
         {
@@ -52,22 +51,22 @@ namespace WillsWackyCards.Cards.Hidden
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Misfire Rate",
-                    amount = "+5%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLittleBitOf
+                    stat = "Block Cooldown",
+                    amount = "+150%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
                 },
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Reload Time",
-                    amount = "+50%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
+                    stat = "Additional Blocks",
+                    amount = "-1",
+                    simepleAmount = CardInfoStat.SimpleAmount.lower
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.DestructiveRed;
+            return CardThemeColor.CardThemeColorType.TechWhite;
         }
         public override string GetModName()
         {

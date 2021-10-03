@@ -9,18 +9,22 @@ using WillsWackyCards.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Hidden
+namespace WillsWackyCards.Cards.Curses
 {
-    class Bleed : CustomCard
+    class NeedleBullets : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
+            gun.projectileSize = 0.5f;
+            gun.spread = 0.3f;
+            gun.evenSpread = -0.1f;
+            gun.reflects = -1;
+
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            characterStats.GetAdditionalData().Bleed += 0.5f;
         }
         public override void OnRemoveCard()
         {
@@ -28,11 +32,11 @@ namespace WillsWackyCards.Cards.Hidden
 
         protected override string GetTitle()
         {
-            return "Bleeding Wounds";
+            return "Needle Bullets";
         }
         protected override string GetDescription()
         {
-            return "By bracken and bone, your blood shall leave home.";
+            return "Hard to see, a pain to control, and likely to get lost in a haystack.";
         }
         protected override GameObject GetCardArt()
         {
@@ -49,9 +53,23 @@ namespace WillsWackyCards.Cards.Hidden
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Bleed Damage",
-                    amount = "+50%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                    stat = "Bullets",
+                    amount = "Smaller",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Spread",
+                    amount = "+30%",
+                    simepleAmount = CardInfoStat.SimpleAmount.Some
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Bounces",
+                    amount = "-1",
+                    simepleAmount = CardInfoStat.SimpleAmount.slightlyLower
                 }
             };
         }

@@ -14,7 +14,8 @@ using UnboundLib.Cards;
 using UnboundLib.Utils;
 using UnboundLib.Networking;
 using WillsWackyCards.Cards;
-using WillsWackyCards.Cards.Hidden;
+using WillsWackyCards.Cards.Curses;
+using WillsWackyCards.Utils;
 using WillsWackyCards.MonoBehaviours;
 using HarmonyLib;
 using Photon.Pun;
@@ -33,15 +34,8 @@ namespace WillsWackyCards
         private const string ModName = "Wills Wacky Cards";
         public const string Version = "1.2.1"; // What version are we on (major.minor.patch)?
 
-        internal static List<CardInfo> curses = new List<CardInfo>();
-        private static System.Random random = new System.Random();
         private static GameObject host;
         public static CardRemover remover;
-
-        internal static CardInfo GetRandomCurse()
-        {
-            return curses.ToArray()[random.Next(curses.Count)];
-        }
 
         void Awake()
         {
@@ -61,16 +55,16 @@ namespace WillsWackyCards
             CustomCard.BuildCard<WildAim>();
             CustomCard.BuildCard<RunningShoes>();
             CustomCard.BuildCard<JumpingShoes>();
-            CustomCard.BuildCard<PastaShells>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            CustomCard.BuildCard<CrookedLegs>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            CustomCard.BuildCard<Bleed>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            CustomCard.BuildCard<DrivenToEarth>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            CustomCard.BuildCard<Misfire>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            CustomCard.BuildCard<SlowReflexes>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            CustomCard.BuildCard<CounterfeitAmmo>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            CustomCard.BuildCard<NeedleBullets>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            CustomCard.BuildCard<EasyTarget>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-            CustomCard.BuildCard<WildShots>(cardInfo => { curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<PastaShells>(cardInfo => { CurseManager.curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<CrookedLegs>(cardInfo => { CurseManager.curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<DrivenToEarth>(cardInfo => { CurseManager.curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<Misfire>(cardInfo => { CurseManager.curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<SlowReflexes>(cardInfo => { CurseManager.curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<CounterfeitAmmo>(cardInfo => { CurseManager.curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<NeedleBullets>(cardInfo => { CurseManager.curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<EasyTarget>(cardInfo => { CurseManager.curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+            CustomCard.BuildCard<WildShots>(cardInfo => { CurseManager.curses.Add(cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
             CustomCard.BuildCard<Hex>();
             CustomCard.BuildCard<Gatling>();
             CustomCard.BuildCard<PlasmaRifle>();
@@ -161,6 +155,15 @@ namespace WillsWackyCards
         IEnumerator GameStart(IGameModeHandler gm)
         {
             MomentumTracker.stacks = 0;
+
+            foreach (var player in PlayerManager.instance.players)
+            {
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(Minigun.componentCatgory))
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(Minigun.componentCatgory);
+                }
+            }
+
             yield break;
         }
 

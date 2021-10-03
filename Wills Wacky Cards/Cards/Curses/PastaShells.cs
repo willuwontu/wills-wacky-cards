@@ -8,7 +8,7 @@ using UnboundLib.Cards;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Hidden
+namespace WillsWackyCards.Cards.Curses
 {
     class PastaShells : CustomCard
     {

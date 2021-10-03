@@ -6,25 +6,24 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
+using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Hidden
+namespace WillsWackyCards.Cards.Curses
 {
-    class NeedleBullets : CustomCard
+    class Misfire : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.projectileSize = 0.5f;
-            gun.spread = 0.3f;
-            gun.evenSpread = -0.1f;
-            gun.reflects = -1;
-
+            gun.reloadTime = 1.5f;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            var misfire = player.gameObject.GetOrAddComponent<Misfire_Mono>();
+            misfire.misfireChance += 5;
         }
         public override void OnRemoveCard()
         {
@@ -32,11 +31,11 @@ namespace WillsWackyCards.Cards.Hidden
 
         protected override string GetTitle()
         {
-            return "Needle Bullets";
+            return "Misfire";
         }
         protected override string GetDescription()
         {
-            return "Hard to see, a pain to control, and likely to get lost in a haystack.";
+            return "Bippity boop, your gun can no longer shoot.";
         }
         protected override GameObject GetCardArt()
         {
@@ -53,29 +52,22 @@ namespace WillsWackyCards.Cards.Hidden
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Bullets",
-                    amount = "Smaller",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                    stat = "Misfire Rate",
+                    amount = "+5%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLittleBitOf
                 },
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Spread",
-                    amount = "+30%",
-                    simepleAmount = CardInfoStat.SimpleAmount.Some
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Bounces",
-                    amount = "-1",
-                    simepleAmount = CardInfoStat.SimpleAmount.slightlyLower
+                    stat = "Reload Time",
+                    amount = "+50%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.EvilPurple;
+            return CardThemeColor.CardThemeColorType.DestructiveRed;
         }
         public override string GetModName()
         {

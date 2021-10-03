@@ -15,6 +15,7 @@ namespace WillsWackyCards.Cards
 {
     class Minigun : CustomCard
     {
+        internal static CardCategory componentCatgory = CustomCardCategories.instance.CardCategory("Minigun Component");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             var block = cardInfo.gameObject.GetOrAddComponent<Block>();

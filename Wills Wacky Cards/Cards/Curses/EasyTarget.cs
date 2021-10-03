@@ -6,23 +6,22 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
-using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Hidden
+namespace WillsWackyCards.Cards.Curses
 {
-    class WildShots : CustomCard
+    class EasyTarget : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
+            statModifiers.sizeMultiplier = 3f;
+            statModifiers.GetAdditionalData().MassModifier = 1f / 5f;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Curse") };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var backwards = player.gameObject.GetOrAddComponent<Backwards_Mono>();
-            backwards.backwardsChance += 10;
         }
         public override void OnRemoveCard()
         {
@@ -30,11 +29,11 @@ namespace WillsWackyCards.Cards.Hidden
 
         protected override string GetTitle()
         {
-            return "Wild Shots";
+            return "Easy Target";
         }
         protected override string GetDescription()
         {
-            return "Which way was the enemy again?";
+            return "Might as well just paint a target on yourself.";
         }
         protected override GameObject GetCardArt()
         {
@@ -51,9 +50,9 @@ namespace WillsWackyCards.Cards.Hidden
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Wild Shots",
-                    amount = "+10%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                    stat = "Size",
+                    amount = "+200%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
                 }
             };
         }
