@@ -75,8 +75,8 @@ namespace WillsWackyCards
             CustomCard.BuildCard<Gatling>();
             CustomCard.BuildCard<PlasmaRifle>();
             CustomCard.BuildCard<PlasmaShotgun>();
-            //CustomCard.BuildCard<UnstoppableForce>();
-            //CustomCard.BuildCard<ImmovableObject>();
+            CustomCard.BuildCard<UnstoppableForce>();
+            CustomCard.BuildCard<ImmovableObject>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
@@ -110,17 +110,27 @@ namespace WillsWackyCards
         IEnumerator BuildMomentumCards()
         {
             var stacks = 0;
+            yield return StartCoroutine(WaitFor.Frames(7));
             while (stacks <= 20)
             {
-                yield return StartCoroutine(WaitFor.Frames(7));
                 MomentumTracker.stacks = stacks;
                 //UnityEngine.Debug.Log($"[WWC][Debugging] {cardInfo.cardName} assigned to slot {MomentumTracker.stacks}"); 
                 CustomCard.BuildCard<BuildImmovableObject>(cardInfo => { MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
                 CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.createdOffenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
+                yield return StartCoroutine(WaitFor.Frames(7));
                 stacks++;
             }
             yield return StartCoroutine(WaitFor.Frames(7));
             MomentumTracker.stacks = 0;
+
+            //foreach (var cardInfo in MomentumTracker.createdDefenseCards)
+            //{
+            //    UnityEngine.Debug.Log($"Defense Card {cardInfo.Key}: {cardInfo.Value.cardName}, Stack Count: {cardInfo.Value.GetComponent<MomentumCard_Mono>().stacks}");
+            //}
+            //foreach (var cardInfo in MomentumTracker.createdOffenseCards)
+            //{
+            //    UnityEngine.Debug.Log($"Offense Card {cardInfo.Key}: {cardInfo.Value.cardName}, Stack Count: {cardInfo.Value.GetComponent<MomentumCard_Mono>().stacks}");
+            //}
         }
 
         public static class WaitFor

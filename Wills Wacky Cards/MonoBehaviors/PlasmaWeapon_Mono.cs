@@ -70,7 +70,7 @@ namespace WillsWackyCards.MonoBehaviours
 
         public static void ChargeGun()
         {
-            view.RPC("RPCA_ChargeGun", RpcTarget.All);
+            view.RPC(nameof(RPCA_ChargeGun), RpcTarget.AllViaServer);
             //gun.currentCharge = Mathf.Clamp(gun.currentCharge + TimeHandler.fixedDeltaTime / gun.GetAdditionalData().chargeTime, 0f, 1f);
         }
 
@@ -82,7 +82,7 @@ namespace WillsWackyCards.MonoBehaviours
 
         public static void FirePlasmaGun()
         {
-            view.RPC("RPCA_FirePlasmaGun", RpcTarget.All);
+            view.RPC(nameof(RPCA_FirePlasmaGun), RpcTarget.AllViaServer);
         }
 
         [PunRPC]

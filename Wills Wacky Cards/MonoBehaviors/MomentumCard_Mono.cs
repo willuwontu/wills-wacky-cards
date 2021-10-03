@@ -56,18 +56,20 @@ namespace WillsWackyCards.MonoBehaviours
         {
             if (updated)
             {
-                cardName.text = title;
+                //cardName.text = title;
                 foreach (var statInfo in card.cardStats)
                 {
-                    foreach (var stat in stats)
-                    {
-                        //UnityEngine.Debug.Log($"Comparing {statInfo.stat} and {stat.stat.text}");
-                        if (statInfo.stat == stat.stat.text)
-                        {
-                            stat.value.text = statInfo.amount;
-                            break;
-                        }
-                    }
+                    var stat = stats.Where((stat) => stat.stat.text == statInfo.stat).FirstOrDefault();
+                    stat.value.text = statInfo.amount;
+                    //foreach (var stat in stats)
+                    //{
+                    //    //UnityEngine.Debug.Log($"Comparing {statInfo.stat} and {stat.stat.text}");
+                    //    if (statInfo.stat == stat.stat.text)
+                    //    {
+                    //        stat.value.text = statInfo.amount;
+                    //        break;
+                    //    }
+                    //}
                 }
                 updated = false;
             }
