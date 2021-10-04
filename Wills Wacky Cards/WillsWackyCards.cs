@@ -32,7 +32,7 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.card";
         private const string ModName = "Wills Wacky Cards";
-        public const string Version = "1.2.2"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.2.3"; // What version are we on (major.minor.patch)?
 
         private static GameObject host;
         public static CardRemover remover;
@@ -150,13 +150,13 @@ namespace WillsWackyCards
         {
             foreach (var player in PlayerManager.instance.players)
             {
-                if (CurseManager.HasCurse(player))
-                {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category  => category == CurseManager.curseInteractionCategory);
-                }
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.curseInteractionCategory))
                 {
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.curseInteractionCategory);
+                }
+                if (CurseManager.HasCurse(player))
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category => category == CurseManager.curseInteractionCategory);
                 }
             }
             yield break;
