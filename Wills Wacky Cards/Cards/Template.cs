@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace WillsWackyCards.Cards
 {
-    class HotPotato : CustomCard
+    class Template : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
@@ -31,11 +31,11 @@ namespace WillsWackyCards.Cards
 
         protected override string GetTitle()
         {
-            return "Hot Potato";
+            return "Card Name";
         }
         protected override string GetDescription()
         {
-            return "Pass along a curse to a \"Friend\".";
+            return "Card Description";
         }
         protected override GameObject GetCardArt()
         {

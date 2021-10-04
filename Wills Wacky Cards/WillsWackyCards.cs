@@ -147,6 +147,17 @@ namespace WillsWackyCards
 
         IEnumerator PlayerPickStart(IGameModeHandler gm)
         {
+            foreach (var player in PlayerManager.instance.players)
+            {
+                if (CurseManager.HasCurse(player))
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category  => category == CurseManager.curseInteractionCategory);
+                }
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.curseInteractionCategory))
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.curseInteractionCategory);
+                }
+            }
             yield break;
         }
 

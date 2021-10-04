@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace WillsWackyCards.Cards
 {
-    class Template : CustomCard
+    class HotPotato : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
@@ -21,22 +21,33 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
+            var curses = player.data.currentCards.Intersect(CurseManager.GetRaw()).ToList();
+            var curse = curses[UnityEngine.Random.Range(0, curses.Count - 1)];
+
+            for (int i = 0; i < player.data.currentCards.Count; i++)
+            {
+                if (player.data.currentCards[i].cardName == curse.cardName)
+                {
+                    ModdingUtils.Utils.Cards.instance.RemoveCardFromPlayer(player, i);
+                    ModdingUtils.Utils.Cards.instance.AddCardToPlayer(PlayerManager.instance.players.Where((person) => person.teamID != player.teamID).ToArray()[UnityEngine.Random.Range(0, PlayerManager.instance.players.Count - 2)], curse, false, "", 2f, 2f, true);
+                    break;
+                }
+            }
+
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            //Drives me crazy
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "CardName";
+            return "Hot Potato";
         }
         protected override string GetDescription()
         {
-            return "CardDescription";
+            return "Pass along a curse to a \"Friend\".";
         }
         protected override GameObject GetCardArt()
         {
@@ -44,7 +55,7 @@ namespace WillsWackyCards.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return CardInfo.Rarity.Uncommon;
         }
         protected override CardInfoStat[] GetStats()
         {
