@@ -58,6 +58,7 @@ namespace WillsWackyCards.MonoBehaviours
             {
                 coroutineStarted = true;
                 InvokeRepeating(nameof(CheckIfValid), 0, 1f);
+                StartCoroutine(PeriodicSync());
             }
 
             SyncAttackInputs();
@@ -67,12 +68,12 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void SyncAttackInputs()
         {
-            if (input.shootIsPressed != inputSync.shootIsPressed || input.shootWasPressed != inputSync.shootWasPressed || input.shootWasReleased != inputSync.shootWasReleased)
+            if (this.photonView.IsMine)
             {
-                this.photonView.RPC(nameof(RPCA_SyncAttackInputs), RpcTarget.Others, input.shootIsPressed, input.shootWasPressed, input.shootWasReleased);
-                inputSync.shootIsPressed = input.shootIsPressed;
-                inputSync.shootWasPressed = input.shootWasPressed;
-                inputSync.shootWasReleased = input.shootWasReleased;
+                if (input.shootWasPressed != inputSync.shootWasPressed || input.shootWasReleased != inputSync.shootWasReleased)
+                {
+                    this.photonView.RPC(nameof(RPCA_SyncAttackInputs), RpcTarget.All, input.shootIsPressed, input.shootWasPressed, input.shootWasReleased);
+                }
             }
         }
 
@@ -82,6 +83,24 @@ namespace WillsWackyCards.MonoBehaviours
             inputSync.shootIsPressed = isPressed;
             inputSync.shootWasPressed = wasPressed;
             inputSync.shootWasReleased = wasReleased;
+        }
+
+        private IEnumerator PeriodicSync()
+        {
+            while (true)
+            {
+                if (this.photonView.IsMine)
+                {
+                    this.photonView.RPC(nameof(RPCA_SyncCharge), RpcTarget.All, gun.currentCharge);
+                }
+                yield return new WaitForSecondsRealtime(0.1f);
+            }
+        }
+
+        [PunRPC]
+        private void RPCA_SyncCharge(float charge)
+        {
+            gun.currentCharge = charge;
         }
 
         private void AttackHandler()
@@ -147,16 +166,29 @@ namespace WillsWackyCards.MonoBehaviours
         {
             ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
             MoveTransform move = obj.GetComponent<MoveTransform>();
-            move.localForce *= 1 + chargeToUse * gun.chargeSpeedTo;
-            //this.photonView.RPC(nameof(RPCA_ApplyChargeVel), RpcTarget.All, move, chargeToUse, gun.chargeSpeedTo);
-            UnityEngine.Debug.Log($"[WWC][PlasmaMono] Increasing bullet velocity by {string.Format("{0:F0}", chargeToUse * gun.chargeSpeedTo * 100)}%.");
+            var velBoost = obj.AddComponent<VelocityBooster>();
+            StartCoroutine(velBoost.ChangeVelocity(1 + chargeToUse * gun.chargeSpeedTo));
         }
 
-        [PunRPC]
-        private void RPCA_ApplyChargeVel(MoveTransform move, float charge, float chargeSpeed, PhotonMessageInfo info)
+        private class VelocityBooster : MonoBehaviourPun
         {
-            move.localForce *= 1 + charge * chargeSpeed;
-            UnityEngine.Debug.Log($"[WWC][PlasmaMono][Photon] {info.Sender} {info.photonView} {info.SentServerTime} Increasing bullet velocity by {string.Format("{0:F0}", charge * chargeSpeed * 100)}%.");
+            public IEnumerator ChangeVelocity(float speedMult)
+            {
+                yield return 0;
+                if (this.photonView.IsMine)
+                {
+                    this.photonView.RPC(nameof(RPCA_UpdateSpeed), RpcTarget.All, speedMult); 
+                }
+            }
+
+            [PunRPC]
+            private void RPCA_UpdateSpeed(float speedMult)
+            {
+                var move = base.GetComponentInParent<MoveTransform>();
+                move.velocity *= speedMult;
+                UnityEngine.Debug.Log($"[WWC][PlasmaMono] Increasing bullet velocity by {string.Format("{0:F0}", (speedMult - 1f) * 100)}%.");
+                Destroy(this);
+            }
         }
 
         private void CheckIfValid()
