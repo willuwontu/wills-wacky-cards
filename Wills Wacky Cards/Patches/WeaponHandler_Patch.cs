@@ -12,7 +12,7 @@ namespace WillsWackyCards.Patches
     {
         [HarmonyPrefix]
         [HarmonyPatch("Attack")]
-        static bool ChargeAttack(WeaponHandler __instance, CharacterData ___data, GeneralInput ___input, bool ___soundFireHold)
+        static bool ChargeAttack(WeaponHandler __instance)
         {
             var weaponHandler = __instance;
             if (weaponHandler.gun.useCharge)

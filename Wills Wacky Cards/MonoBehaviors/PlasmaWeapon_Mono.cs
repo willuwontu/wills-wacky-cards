@@ -132,7 +132,7 @@ namespace WillsWackyCards.MonoBehaviours
                     if (gun.GetAdditionalData().beginCharge && gun.currentCharge < 1f)
                     {
                         ChargeGun();
-                        //UnityEngine.Debug.Log(string.Format("[WWC][Plasma Rifle] Gun is currently {0:F1}% charged.", gun.currentCharge * 100f)); 
+                        //UnityEngine.Debug.Log(string.Format("[WWC][Plasma Weapon] Gun is currently {0:F1}% charged.", gun.currentCharge * 100f)); 
                     }
                 }
                 if (inputSync.shootWasReleased)
@@ -164,8 +164,8 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void OnShootProjectileAction(GameObject obj)
         {
-            ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
-            MoveTransform move = obj.GetComponent<MoveTransform>();
+            //ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
+            //MoveTransform move = obj.GetComponent<MoveTransform>();
             var velBoost = obj.AddComponent<VelocityBooster>();
             StartCoroutine(velBoost.ChangeVelocity(1 + chargeToUse * gun.chargeSpeedTo));
         }

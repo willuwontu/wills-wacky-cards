@@ -56,7 +56,7 @@ namespace WillsWackyCards.MonoBehaviours
         {
             if (updated)
             {
-                //cardName.text = title;
+                cardName.text = title;
                 foreach (var statInfo in card.cardStats)
                 {
                     var stat = stats.Where((stat) => stat.stat.text == statInfo.stat).FirstOrDefault();

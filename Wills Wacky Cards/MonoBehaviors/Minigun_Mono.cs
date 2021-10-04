@@ -86,7 +86,7 @@ namespace WillsWackyCards.MonoBehaviours
                 {
                     heat -= coolPerSecond * TimeHandler.fixedDeltaTime;
                 }
-                if (overheated && (heat <= 0f))
+                if (overheated && (heat <= 0f) && this.photonView.IsMine)
                 {
                     this.photonView.RPC(nameof(RPCA_UpdateOverheat), RpcTarget.All, false);
                     gunAmmo.ReloadAmmo(true);
@@ -137,7 +137,10 @@ namespace WillsWackyCards.MonoBehaviours
             }
             else
             {
-                this.photonView.RPC(nameof(RPCA_UpdateOverheat), RpcTarget.All, true);
+                if (this.photonView.IsMine)
+                {
+                    this.photonView.RPC(nameof(RPCA_UpdateOverheat), RpcTarget.All, true);
+                }
             }
         }
 
