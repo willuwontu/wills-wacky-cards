@@ -70,8 +70,7 @@ namespace WillsWackyCards.Utils
         }
 
         /// <summary>
-        /// Adds the curse to the list of available curses for a player.
-        /// The curse is automatically registered to ModdingUtils list of hidden cards as well.
+        /// Adds the curse to the list of available curses.
         /// </summary>
         /// <param name="cardInfo">The card to register.</param>
         public static void RegisterCurse(CardInfo cardInfo)

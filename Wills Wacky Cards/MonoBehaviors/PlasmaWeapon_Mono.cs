@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnboundLib;
 using WillsWackyCards.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Sonigon;
 using Photon.Pun;
@@ -20,6 +21,8 @@ namespace WillsWackyCards.MonoBehaviours
         private CharacterData data;
         private WeaponHandler weaponHandler;
         private Player player;
+        private GeneralInput input;
+        private GeneralInput inputSync = new GeneralInput();
         private static PhotonView view;
 
         // Heat Bar stuff, god bless Boss Sloth
@@ -46,6 +49,7 @@ namespace WillsWackyCards.MonoBehaviours
                     gun = weaponHandler.gun;
                     gunAmmo = gun.GetComponentInChildren<GunAmmo>();
                     gun.ShootPojectileAction += OnShootProjectileAction;
+                    input = data.input;
                     view = this.photonView;
                 }
             }
@@ -56,43 +60,87 @@ namespace WillsWackyCards.MonoBehaviours
                 InvokeRepeating(nameof(CheckIfValid), 0, 1f);
             }
 
+            SyncAttackInputs();
+            AttackHandler();
             UpdateChargeBar();
+        }
+
+        private void SyncAttackInputs()
+        {
+            if (input.shootIsPressed != inputSync.shootIsPressed || input.shootWasPressed != inputSync.shootWasPressed || input.shootWasReleased != inputSync.shootWasReleased)
+            {
+                this.photonView.RPC(nameof(RPCA_SyncAttackInputs), RpcTarget.Others, input.shootIsPressed, input.shootWasPressed, input.shootWasReleased);
+                inputSync.shootIsPressed = input.shootIsPressed;
+                inputSync.shootWasPressed = input.shootWasPressed;
+                inputSync.shootWasReleased = input.shootWasReleased;
+            }
+        }
+
+        [PunRPC]
+        private void RPCA_SyncAttackInputs(bool isPressed, bool wasPressed, bool wasReleased)
+        {
+            inputSync.shootIsPressed = isPressed;
+            inputSync.shootWasPressed = wasPressed;
+            inputSync.shootWasReleased = wasReleased;
+        }
+
+        private void AttackHandler()
+        {
+            var ready = true;
+            if (!gun)
+            {
+                ready = false;
+            }
+            if (!gun.IsReady(0f))
+            {
+                ready = false;
+            }
+
+            if (ready)
+            {
+                if (inputSync.shootWasPressed && (int)gunAmmo.GetFieldValue("currentAmmo") > 0)
+                {
+                    gun.GetAdditionalData().beginCharge = true;
+                    UnityEngine.Debug.Log("[WWC][Plasma Weapon] Beginning to charge shot.");
+                }
+                else if (inputSync.shootWasPressed)
+                {
+                    SoundManager.Instance.Play(weaponHandler.soundCharacterCantShoot, weaponHandler.transform);
+                }
+
+                if (inputSync.shootIsPressed)
+                {
+                    if (gun.GetAdditionalData().beginCharge && gun.currentCharge < 1f)
+                    {
+                        ChargeGun();
+                        //UnityEngine.Debug.Log(string.Format("[WWC][Plasma Rifle] Gun is currently {0:F1}% charged.", gun.currentCharge * 100f)); 
+                    }
+                }
+                if (inputSync.shootWasReleased)
+                {
+                    if (gun.GetAdditionalData().beginCharge)
+                    {
+                        UnityEngine.Debug.Log(string.Format("[WWC][Plasma Weapon] Charged shot was fired at {0:F1}% charge.", gun.currentCharge * 100f));
+                        chargeToUse = gun.currentCharge;
+                        weaponHandler.gun.Attack(gun.currentCharge, false, gun.currentCharge * gun.chargeDamageMultiplier, 1f, true);
+                        gun.currentCharge = 0f;
+                        gun.GetAdditionalData().beginCharge = false;
+                    }
+                } 
+            }
         }
 
         private void UpdateChargeBar()
         {
-            
             chargeTarget = gun.currentCharge;
             chargeImage.fillAmount = chargeTarget;
             whiteImage.fillAmount = chargeTarget;
             chargeImage.color = new Color(Mathf.Clamp(0.5f - chargeTarget, 0f, 1f), 1f - (chargeTarget) * 0.85f, chargeTarget, 1f);
         }
 
-        public static void ChargeGun()
-        {
-            view.RPC(nameof(RPCA_ChargeGun), RpcTarget.AllViaServer);
-            //gun.currentCharge = Mathf.Clamp(gun.currentCharge + TimeHandler.fixedDeltaTime / gun.GetAdditionalData().chargeTime, 0f, 1f);
-        }
-
-        [PunRPC]
-        private void RPCA_ChargeGun()
+        public void ChargeGun()
         {
             gun.currentCharge = Mathf.Clamp(gun.currentCharge + TimeHandler.fixedDeltaTime / gun.GetAdditionalData().chargeTime, 0f, 1f);
-        }
-
-        public static void FirePlasmaGun()
-        {
-            view.RPC(nameof(RPCA_FirePlasmaGun), RpcTarget.AllViaServer);
-        }
-
-        [PunRPC]
-        private void RPCA_FirePlasmaGun()
-        {
-            UnityEngine.Debug.Log(string.Format("[WWC][Plasma Weapon] Charged shot was fired at {0:F1}% charge.", gun.currentCharge * 100f));
-            chargeToUse = gun.currentCharge;
-            weaponHandler.gun.Attack(gun.currentCharge, false, gun.currentCharge * gun.chargeDamageMultiplier, 1f, true);
-            gun.currentCharge = 0f;
-            gun.GetAdditionalData().beginCharge = false;
         }
 
         private void OnShootProjectileAction(GameObject obj)
@@ -100,7 +148,8 @@ namespace WillsWackyCards.MonoBehaviours
             ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
             MoveTransform move = obj.GetComponent<MoveTransform>();
             move.localForce *= 1 + chargeToUse * gun.chargeSpeedTo;
-            //this.photonView.RPC("RPCA_ApplyChargeVel", RpcTarget.All, move, chargeToUse, gun.chargeSpeedTo);
+            //this.photonView.RPC(nameof(RPCA_ApplyChargeVel), RpcTarget.All, move, chargeToUse, gun.chargeSpeedTo);
+            UnityEngine.Debug.Log($"[WWC][PlasmaMono] Increasing bullet velocity by {string.Format("{0:F0}", chargeToUse * gun.chargeSpeedTo * 100)}%.");
         }
 
         [PunRPC]

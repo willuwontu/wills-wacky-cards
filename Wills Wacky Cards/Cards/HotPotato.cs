@@ -47,7 +47,7 @@ namespace WillsWackyCards.Cards
         }
         protected override string GetDescription()
         {
-            return "Pass along a curse to a \"Friend\".";
+            return "Pass along a curse to a \"friend\".";
         }
         protected override GameObject GetCardArt()
         {
@@ -72,7 +72,7 @@ namespace WillsWackyCards.Cards
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.ColdBlue;
+            return CardThemeColor.CardThemeColorType.DestructiveRed;
         }
         public override string GetModName()
         {
