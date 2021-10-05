@@ -34,6 +34,7 @@ namespace WillsWackyCards
         private const string ModName = "Wills Wacky Cards";
         public const string Version = "1.2.3"; // What version are we on (major.minor.patch)?
 
+        public WillsWackyCards instance;
         private static GameObject host;
         public static CardRemover remover;
 
@@ -45,6 +46,7 @@ namespace WillsWackyCards
         void Start()
         {
             UnityEngine.Debug.Log("[WWC] Loading Cards");
+            instance = this;
             CustomCard.BuildCard<AmmoCache>();
             CustomCard.BuildCard<Shotgun>();
             CustomCard.BuildCard<SlowDeath>();

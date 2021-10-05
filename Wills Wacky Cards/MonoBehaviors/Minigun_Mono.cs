@@ -60,7 +60,7 @@ namespace WillsWackyCards.MonoBehaviours
             if (!(player is null) && player.gameObject.activeInHierarchy && !coroutineStarted)
             {
                 coroutineStarted = true;
-                StartCoroutine(Cooldown());
+                InvokeRepeating(nameof(Cooldown), 0f, 0.1f);
                 InvokeRepeating(nameof(CheckIfValid), 0, 1f);
             }
             if (!(player is null))
@@ -69,29 +69,25 @@ namespace WillsWackyCards.MonoBehaviours
             }
         }
 
-        private IEnumerator Cooldown()
+        private void Cooldown()
         {
-            while (true)
+            if (gun.spread < 0.15f)
             {
-                yield return new WaitForSecondsRealtime(TimeHandler.fixedDeltaTime);
-                if (gun.spread < 0.15f)
-                {
-                    gun.spread = 0.15f;
-                }
-                if (cooldownTimeRemaining > 0)
-                {
-                    cooldownTimeRemaining -= TimeHandler.fixedDeltaTime;
-                }
-                if ((cooldownTimeRemaining <= 0) && (heat > 0f))
-                {
-                    heat -= coolPerSecond * TimeHandler.fixedDeltaTime;
-                }
-                if (overheated && (heat <= 0f) && this.photonView.IsMine)
-                {
-                    this.photonView.RPC(nameof(RPCA_UpdateOverheat), RpcTarget.All, false);
-                    gunAmmo.ReloadAmmo(true);
-                } 
+                gun.spread = 0.15f;
             }
+            if (cooldownTimeRemaining > 0)
+            {
+                cooldownTimeRemaining -= 0.1f;
+            }
+            if ((cooldownTimeRemaining <= 0) && (heat > 0f))
+            {
+                heat -= coolPerSecond * 0.1f;
+            }
+            if (overheated && (heat <= 0f) && this.photonView.IsMine)
+            {
+                this.photonView.RPC(nameof(RPCA_UpdateOverheat), RpcTarget.All, false);
+                gunAmmo.ReloadAmmo(true);
+            } 
         }
 
         [PunRPC]

@@ -18,7 +18,6 @@ namespace WillsWackyCards.Cards.Curses
         {
             gun.projectileSize = 0.7f;
             gun.spread = 0.3f;
-            gun.evenSpread = -0.1f;
             gun.reflects = -1;
 
             cardInfo.categories = new CardCategory[] { CurseManager.curseCategory };

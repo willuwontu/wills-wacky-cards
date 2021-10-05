@@ -68,13 +68,16 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void SyncAttackInputs()
         {
-            if (this.photonView.IsMine)
-            {
-                if (input.shootWasPressed != inputSync.shootWasPressed || input.shootWasReleased != inputSync.shootWasReleased)
-                {
-                    this.photonView.RPC(nameof(RPCA_SyncAttackInputs), RpcTarget.All, input.shootIsPressed, input.shootWasPressed, input.shootWasReleased);
-                }
-            }
+            //if (this.photonView.IsMine)
+            //{
+            //    if (input.shootWasPressed != inputSync.shootWasPressed || input.shootWasReleased != inputSync.shootWasReleased)
+            //    {
+            //        this.photonView.RPC(nameof(RPCA_SyncAttackInputs), RpcTarget.All, input.shootIsPressed, input.shootWasPressed, input.shootWasReleased);
+            //    }
+            //}
+            inputSync.shootIsPressed = input.shootIsPressed;
+            inputSync.shootWasPressed = input.shootWasPressed;
+            inputSync.shootWasReleased = input.shootWasReleased;
         }
 
         [PunRPC]
@@ -93,7 +96,7 @@ namespace WillsWackyCards.MonoBehaviours
                 {
                     this.photonView.RPC(nameof(RPCA_SyncCharge), RpcTarget.All, gun.currentCharge);
                 }
-                yield return new WaitForSecondsRealtime(0.1f);
+                yield return new WaitForSecondsRealtime(TimeHandler.deltaTime * 5f);
             }
         }
 
@@ -131,7 +134,7 @@ namespace WillsWackyCards.MonoBehaviours
                 {
                     if (gun.GetAdditionalData().beginCharge && gun.currentCharge < 1f)
                     {
-                        ChargeGun();
+                        gun.currentCharge = Mathf.Clamp(gun.currentCharge + TimeHandler.fixedDeltaTime / gun.GetAdditionalData().chargeTime, 0f, 1f);
                         //UnityEngine.Debug.Log(string.Format("[WWC][Plasma Weapon] Gun is currently {0:F1}% charged.", gun.currentCharge * 100f)); 
                     }
                 }
@@ -157,37 +160,55 @@ namespace WillsWackyCards.MonoBehaviours
             chargeImage.color = new Color(Mathf.Clamp(0.5f - chargeTarget, 0f, 1f), 1f - (chargeTarget) * 0.85f, chargeTarget, 1f);
         }
 
-        public void ChargeGun()
-        {
-            gun.currentCharge = Mathf.Clamp(gun.currentCharge + TimeHandler.fixedDeltaTime / gun.GetAdditionalData().chargeTime, 0f, 1f);
-        }
-
         private void OnShootProjectileAction(GameObject obj)
         {
             //ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
             //MoveTransform move = obj.GetComponent<MoveTransform>();
             var velBoost = obj.AddComponent<VelocityBooster>();
-            StartCoroutine(velBoost.ChangeVelocity(1 + chargeToUse * gun.chargeSpeedTo));
+            if (this.photonView.IsMine)
+            {
+                StartCoroutine(velBoost.ChangeVelocity(1 + chargeToUse * gun.chargeSpeedTo));
+            }
         }
 
         private class VelocityBooster : MonoBehaviourPun
         {
+            private bool updated = false;
             public IEnumerator ChangeVelocity(float speedMult)
             {
                 yield return 0;
-                if (this.photonView.IsMine)
-                {
-                    this.photonView.RPC(nameof(RPCA_UpdateSpeed), RpcTarget.All, speedMult); 
-                }
+
+                this.photonView.RPC(nameof(RPCA_UpdateSpeed), RpcTarget.All, speedMult);
+
+                yield return 0;
+
+                this.photonView.RPC(nameof(RPCA_UpdateSpeed), RpcTarget.All, speedMult);
+
+                yield return 0;
+
+                this.photonView.RPC(nameof(RPCA_UpdateSpeed), RpcTarget.All, speedMult);
+
+                yield return 0;
+
+                this.photonView.RPC(nameof(RPCA_UpdateSpeed), RpcTarget.All, speedMult);
+
+                yield return 0;
+
+                this.photonView.RPC(nameof(RPCA_UpdateSpeed), RpcTarget.All, speedMult);
             }
 
             [PunRPC]
             private void RPCA_UpdateSpeed(float speedMult)
             {
-                var move = base.GetComponentInParent<MoveTransform>();
-                move.velocity *= speedMult;
-                UnityEngine.Debug.Log($"[WWC][PlasmaMono] Increasing bullet velocity by {string.Format("{0:F0}", (speedMult - 1f) * 100)}%.");
-                Destroy(this);
+                if (!updated)
+                {
+                    updated = true;
+                    var move = base.GetComponentInParent<MoveTransform>();
+                    move.velocity *= speedMult;
+                    UnityEngine.Debug.Log($"[WWC][PlasmaMono] Increasing bullet velocity by {string.Format("{0:F0}", (speedMult - 1f) * 100)}%.");
+                    this.ExecuteAfterFrames(5, delegate(){ Destroy(this); });
+
+                }
             }
         }
 

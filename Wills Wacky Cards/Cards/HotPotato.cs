@@ -29,8 +29,10 @@ namespace WillsWackyCards.Cards
                 if (player.data.currentCards[i].cardName == curse.cardName)
                 {
                     ModdingUtils.Utils.Cards.instance.RemoveCardFromPlayer(player, i);
-                    ModdingUtils.Utils.Cards.instance.AddCardToPlayer(PlayerManager.instance.players.Where((person) => person.teamID != player.teamID).ToArray()[UnityEngine.Random.Range(0, PlayerManager.instance.players.Count - 2)], curse, false, "", 2f, 2f, true);
-                    break;
+                    var randomEnemy = PlayerManager.instance.players.Where((person) => person.teamID != player.teamID).ToArray()[UnityEngine.Random.Range(0, PlayerManager.instance.players.Count - 2)];
+                    ModdingUtils.Utils.Cards.instance.AddCardToPlayer(randomEnemy, curse, false, "", 2f, 2f, true);
+                    ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(randomEnemy, curse);
+                    i = player.data.currentCards.Count;
                 }
             }
 
@@ -55,7 +57,7 @@ namespace WillsWackyCards.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Common;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -64,8 +66,8 @@ namespace WillsWackyCards.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Effect",
-                    amount = "No",
+                    stat = "Curse",
+                    amount = "-1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

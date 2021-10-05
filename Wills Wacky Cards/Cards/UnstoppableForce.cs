@@ -130,7 +130,7 @@ namespace WillsWackyCards.Cards
 
             //if (!(GM_Test.instance != null && GM_Test.instance.gameObject.activeInHierarchy))
             {
-                MomentumTracker.stacks = 0;
+                MomentumTracker.stacks = MomentumTracker.stacks / 4;
             }
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

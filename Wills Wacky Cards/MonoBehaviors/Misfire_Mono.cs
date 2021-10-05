@@ -60,6 +60,13 @@ namespace WillsWackyCards.MonoBehaviours
         {
             UnityEngine.Debug.Log($"[WWC][Hex] Player {player.playerID} Misfire Curse activated with a roll of {roll} and a chance of {misfireChance}%.");
             gunAmmo.SetFieldValue("currentAmmo", 0);
+            for (int i = gunAmmo.populate.transform.childCount - 1; i >= 0; i--)
+            {
+                if (gunAmmo.populate.transform.GetChild(i).gameObject.activeSelf)
+                {
+                    Destroy(gunAmmo.populate.transform.GetChild(i).gameObject);
+                }
+            }
         }
 
         private void CheckIfValid()

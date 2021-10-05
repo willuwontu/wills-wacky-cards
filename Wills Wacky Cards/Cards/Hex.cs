@@ -8,6 +8,7 @@ using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using WillsWackyCards.Utils;
 using UnboundLib.Cards;
 using UnityEngine;
+using ModdingUtils.Extensions;
 
 namespace WillsWackyCards.Cards
 {
@@ -15,7 +16,8 @@ namespace WillsWackyCards.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CardManipulation") };
+            cardInfo.GetAdditionalData().canBeReassigned = false;
+            cardInfo.categories = new CardCategory[] { CardChoiceSpawnUniqueCardPatch.CustomCategories.CustomCardCategories.instance.CardCategory("CardManipulation") };
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -26,7 +28,7 @@ namespace WillsWackyCards.Cards
 
                 foreach (var item in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
                 {
-                    CurseManager.CursePlayer(item);
+                    CurseManager.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse); } );
                 }
             }
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} added to Player {player.playerID}");

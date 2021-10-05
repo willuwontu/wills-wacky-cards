@@ -28,6 +28,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Plasma Shotgun (Rare)
 - Unstoppable Force (Common)
 - Immovable Object (Common)
+- Hot Potato (Common)
 
 ---- 
 ## Features for other mods
@@ -39,6 +40,12 @@ Simply toss in a `using WillsWackyCards.Utils;` and use `CustomCard.BuildCard<Cu
 Make sure to add `CurseManager.curseCategory` to your cards categories, so that it cannot be selected by players.
 
 It also contains various other utilities for handling curses.
+
+----
+## v 1.2.3
+- New card (Hot Potato) only shows up if you're cursed.
+- Attempts to Sync Plasma weapon charge bars and bullet velocity have beeen made.
+- Hex no longer gives additional curses when readded as part of removing another card.
 
 ----
 ## v 1.2.2
