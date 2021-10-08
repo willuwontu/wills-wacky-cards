@@ -15,6 +15,7 @@ using UnboundLib.Utils;
 using UnboundLib.Networking;
 using WillsWackyCards.Cards;
 using WillsWackyCards.Cards.Curses;
+using WillsWackyCards.Extensions;
 using WillsWackyCards.Utils;
 using WillsWackyCards.MonoBehaviours;
 using HarmonyLib;
@@ -31,11 +32,10 @@ namespace WillsWackyCards
     public class WillsWackyCards : BaseUnityPlugin
     {
         private const string ModId = "com.willuwontu.rounds.card";
-        private const string ModName = "Wills Wacky Cards";
-        public const string Version = "1.2.3"; // What version are we on (major.minor.patch)?
+        private const string ModName = "Will's Wacky Cards";
+        public const string Version = "1.2.6"; // What version are we on (major.minor.patch)?
 
-        public WillsWackyCards instance;
-        private static GameObject host;
+        public static WillsWackyCards instance { get; private set; }
         public static CardRemover remover;
 
         void Awake()
@@ -45,28 +45,36 @@ namespace WillsWackyCards
         }
         void Start()
         {
-            UnityEngine.Debug.Log("[WWC] Loading Cards");
+            Unbound.RegisterCredits(ModName, new string[] { "willuwontu" }, new string[] { "github", "Ko-Fi" }, new string[] { "https://github.com/willuwontu/wills-wacky-cards", "https://ko-fi.com/willuwontu" });
+
             instance = this;
+            instance.gameObject.name = "WillsWackyCards";
+
+            remover = gameObject.GetOrAddComponent<CardRemover>();
+            gameObject.GetOrAddComponent<BoardWipeManager>();
+            gameObject.GetOrAddComponent<CurseManager>();
+
+            UnityEngine.Debug.Log("[WWC] Loading Cards");
             CustomCard.BuildCard<AmmoCache>();
             CustomCard.BuildCard<Shotgun>();
             CustomCard.BuildCard<SlowDeath>();
             CustomCard.BuildCard<Vampirism>();
             CustomCard.BuildCard<FastBall>();
             CustomCard.BuildCard<SlowBall>();
-            CustomCard.BuildCard<Minigun>();
+            //CustomCard.BuildCard<Minigun>();
             CustomCard.BuildCard<WildAim>();
             CustomCard.BuildCard<RunningShoes>();
             CustomCard.BuildCard<JumpingShoes>();
-            CustomCard.BuildCard<PastaShells>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<CrookedLegs>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<DrivenToEarth>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<Misfire>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<SlowReflexes>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<CounterfeitAmmo>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<NeedleBullets>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<EasyTarget>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<WildShots>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<PastaShells>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<CrookedLegs>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<DrivenToEarth>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<Misfire>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<SlowReflexes>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<CounterfeitAmmo>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<NeedleBullets>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<EasyTarget>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<WildShots>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<Hex>();
             CustomCard.BuildCard<Gatling>();
             CustomCard.BuildCard<PlasmaRifle>();
@@ -74,6 +82,9 @@ namespace WillsWackyCards
             CustomCard.BuildCard<UnstoppableForce>();
             CustomCard.BuildCard<ImmovableObject>();
             CustomCard.BuildCard<HotPotato>();
+            //CustomCard.BuildCard<Rebind>();
+            CustomCard.BuildCard<TableFlip>(CardInfo => BoardWipeManager.instance.tableFlipCard = CardInfo);
+            CustomCard.BuildCard<Reroll>(CardInfo => BoardWipeManager.instance.rerollCard = CardInfo);
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
@@ -85,10 +96,8 @@ namespace WillsWackyCards
             GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
             GameModeManager.AddHook(GameModeHooks.HookBattleStart, BattleStart);
             GameModeManager.AddHook(GameModeHooks.HookPlayerPickStart, PlayerPickStart);
-
-            host = gameObject;
-            host.name = "WillsWackyCards";
-            remover = host.GetOrAddComponent<CardRemover>();
+            GameModeManager.AddHook(GameModeHooks.HookPlayerPickEnd, PlayerPickEnd);
+            GameModeManager.AddHook(GameModeHooks.HookPointEnd, PointEnd);
 
             var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
             networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
@@ -148,17 +157,48 @@ namespace WillsWackyCards
             }
         }
 
+        IEnumerator PointEnd(IGameModeHandler gm)
+        {
+            foreach (var player in PlayerManager.instance.players)
+            {
+                var plasma = player.gameObject.GetComponent<PlasmaWeapon_Mono>();
+                if (plasma)
+                {
+                    plasma.canShoot = false;
+                    player.data.weaponHandler.gun.GetAdditionalData().beginCharge = false;
+                    player.data.weaponHandler.gun.currentCharge = 0f;
+                }
+            }
+            yield break;
+        }
+
+        IEnumerator PlayerPickEnd(IGameModeHandler gm)
+        {
+            if (BoardWipeManager.instance.tableFlipped)
+            {
+                StartCoroutine(BoardWipeManager.instance.FlipTable());
+            }
+            yield return new WaitUntil(() => BoardWipeManager.instance.tableFlipped == false);
+            if (BoardWipeManager.instance.reroll)
+            {
+                StartCoroutine(BoardWipeManager.instance.Reroll());
+            }
+            yield return new WaitUntil(() => BoardWipeManager.instance.reroll == false);
+            yield break;
+        }
+
         IEnumerator PlayerPickStart(IGameModeHandler gm)
         {
             foreach (var player in PlayerManager.instance.players)
             {
-                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.curseInteractionCategory))
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.instance.curseInteractionCategory))
                 {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.curseInteractionCategory);
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.instance.curseInteractionCategory);
                 }
-                if (CurseManager.HasCurse(player))
+                if (CurseManager.instance.HasCurse(player))
                 {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category => category == CurseManager.curseInteractionCategory);
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category => category == CurseManager.instance.curseInteractionCategory);
+                    UnityEngine.Debug.Log($"Player {player.playerID} is available for curse interaction effects");
                 }
             }
             yield break;
@@ -168,7 +208,20 @@ namespace WillsWackyCards
         {
             foreach (var player in PlayerManager.instance.players)
             {
-                player.data.weaponHandler.gun.currentCharge = 0f;
+                var minigun = player.gameObject.GetComponent<Minigun_Mono>();
+                if (minigun)
+                {
+                    minigun.heat = 0f;
+                    minigun.overheated = false;
+                    player.data.weaponHandler.gun.GetAdditionalData().overHeated = false;
+                    var gunAmmo = player.data.weaponHandler.gun.GetComponentInChildren<GunAmmo>();
+                    gunAmmo.ReloadAmmo();
+                }
+                var plasma = player.gameObject.GetComponent<PlasmaWeapon_Mono>();
+                if (plasma)
+                {
+                    plasma.canShoot = true;
+                }
             }
             yield break;
         }
@@ -182,13 +235,13 @@ namespace WillsWackyCards
                 {
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(Minigun.componentCatgory);
                 }
-                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.curseCategory))
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.instance.curseCategory))
                 {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.curseCategory);
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.instance.curseCategory);
                 }
-                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.curseInteractionCategory))
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.instance.curseInteractionCategory))
                 {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.curseInteractionCategory);
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.instance.curseInteractionCategory);
                 }
             }
 

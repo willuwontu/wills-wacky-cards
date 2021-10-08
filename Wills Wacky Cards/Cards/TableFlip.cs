@@ -8,34 +8,37 @@ using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
 using WillsWackyCards.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using ModdingUtils.Extensions;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Curses
+namespace WillsWackyCards.Cards
 {
-    class Bleed : CustomCard
+    class TableFlip : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
+            cardInfo.GetAdditionalData().canBeReassigned = false;
+            cardInfo.categories = new CardCategory[] { BoardWipeManager.instance.NoFlip };
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            characterStats.GetAdditionalData().Bleed += 0.5f;
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
+            BoardWipeManager.instance.flippingPlayer = player;
+            BoardWipeManager.instance.tableFlipped = true;
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Bleeding Wounds";
+            return "Table Flip";
         }
         protected override string GetDescription()
         {
-            return "By bracken and bone, your blood shall leave home.";
+            return "When rage quitting isn't enough. Removes everyone's cards and replaces it with a random one of the same rarity.";
         }
         protected override GameObject GetCardArt()
         {
@@ -43,19 +46,12 @@ namespace WillsWackyCards.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return CardInfo.Rarity.Rare;
         }
         protected override CardInfoStat[] GetStats()
         {
             return new CardInfoStat[]
             {
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Bleed Damage",
-                    amount = "+50%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
-                }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
@@ -64,7 +60,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         public override string GetModName()
         {
-            return "Curse";
+            return "WWC";
         }
         public override bool GetEnabled()
         {

@@ -18,13 +18,14 @@ namespace WillsWackyCards.Cards.Curses
         {
             gun.ammo = -2;
             gun.reloadTimeAdd = 0.5f;
-            gun.bursts = -1;
-            gun.numberOfProjectiles = -1;
-            cardInfo.categories = new CardCategory[] { CurseManager.curseCategory };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            gun.bursts = Mathf.Max(gun.bursts -1, 0);
+            gun.numberOfProjectiles = Mathf.Max(gun.numberOfProjectiles - 1, 1);
+
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

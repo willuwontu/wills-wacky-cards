@@ -18,10 +18,10 @@ namespace WillsWackyCards.Cards
         {
             statModifiers.gravity = 0.7f;
             gun.projectileColor = Color.red;
-            statModifiers.lifeSteal = 1.0f;
+            statModifiers.lifeSteal = 1.5f;
             statModifiers.jump = 1.15f;
             statModifiers.movementSpeed = 1.15f;
-            statModifiers.health = 0.8f;
+            gun.damage = 1.2f;
 
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CharacterCurse") };
@@ -74,7 +74,7 @@ namespace WillsWackyCards.Cards
                 {
                     positive = true,
                     stat = "Life Steal",
-                    amount = "+100%",
+                    amount = "+150%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -100,9 +100,9 @@ namespace WillsWackyCards.Cards
                 },
                 new CardInfoStat()
                 {
-                    positive = false,
-                    stat = "Health",
-                    amount = "-20%",
+                    positive = true,
+                    stat = "Damage",
+                    amount = "+20%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

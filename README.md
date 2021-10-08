@@ -14,7 +14,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Running Shoes (Common)
 - Hex (Uncommon)
   - Bleeding Wounds (Curse)
-  - Cheap Magazines (Curse)
+  - Counterfeit Ammo (Curse)
   - Crooked Legs (Curse)
   - Driven to Earth (Curse)
   - Easy Target (Curse)
@@ -29,17 +29,37 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Unstoppable Force (Common)
 - Immovable Object (Common)
 - Hot Potato (Common)
+- Reroll (Uncommon)
+- Table Flip (Rare)
 
 ---- 
 ## Features for other mods
 ### CurseManager
 You can add curses for usage by utilizing the `CurseManager` found in `WillsWackyCards.Utils`.
 
-Simply toss in a `using WillsWackyCards.Utils;` and use `CustomCard.BuildCard<CurseCardName>(cardInfo => { CurseManager.RegisterCurse(cardInfo); });` to register a curse for usage.
+Simply toss in a `using WillsWackyCards.Utils;` and use `CustomCard.BuildCard<CurseCardName>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });` to register a curse for usage.
 
-Make sure to add `CurseManager.curseCategory` to your cards categories, so that it cannot be selected by players.
+Make sure to add `CurseManager.instance.curseCategory` to your cards categories, so that it cannot be selected by players.
 
 It also contains various other utilities for handling curses.
+
+----
+## v 1.2.6
+- hotfix for hex and table flip
+
+----
+## v 1.2.5
+- The Curse Manager was refactored to have a static instance instead of static functions.
+- Curses now respect rarity when being randomly picked, WWC currently only provides common curses.
+- Added 2 new cards (Reroll, Table Flip)
+- Minigun has been disabled while testing is being done to figure out the issues with it.
+- Plasma weapons can no longer fire during the cease fire at the start of a match.
+
+----
+## v 1.2.4
+- Hot Potato no longer deletes itself, nor gives away all curses you possess.
+- Minigun overheat no longer persists after death. Phoenix + other revive cards may still not work properly with it though.
+- Plasma Charge Bars now sync, projectile velocity remains elusive however.
 
 ----
 ## v 1.2.3

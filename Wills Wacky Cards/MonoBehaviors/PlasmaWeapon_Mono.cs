@@ -14,6 +14,7 @@ namespace WillsWackyCards.MonoBehaviours
     public class PlasmaWeapon_Mono : MonoBehaviourPun
     {
         public float chargeToUse = 0f;
+        public bool canShoot = true;
 
         private bool coroutineStarted;
         private Gun gun;
@@ -120,7 +121,7 @@ namespace WillsWackyCards.MonoBehaviours
 
             if (ready)
             {
-                if (inputSync.shootWasPressed && (int)gunAmmo.GetFieldValue("currentAmmo") > 0)
+                if (inputSync.shootWasPressed && (int)gunAmmo.GetFieldValue("currentAmmo") > 0 && canShoot)
                 {
                     gun.GetAdditionalData().beginCharge = true;
                     UnityEngine.Debug.Log("[WWC][Plasma Weapon] Beginning to charge shot.");
@@ -138,7 +139,7 @@ namespace WillsWackyCards.MonoBehaviours
                         //UnityEngine.Debug.Log(string.Format("[WWC][Plasma Weapon] Gun is currently {0:F1}% charged.", gun.currentCharge * 100f)); 
                     }
                 }
-                if (inputSync.shootWasReleased)
+                if (inputSync.shootWasReleased && canShoot)
                 {
                     if (gun.GetAdditionalData().beginCharge)
                     {

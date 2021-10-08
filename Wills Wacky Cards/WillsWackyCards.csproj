@@ -24,6 +24,9 @@
     <Reference Include="CardChoiceSpawnUniqueCardPatch">
       <HintPath>Libs\CardChoiceSpawnUniqueCardPatch.dll</HintPath>
     </Reference>
+    <Reference Include="InControl">
+      <HintPath>..\..\..\Visual Studio 2019\Projects\Rounds\Dependencies\InControl.dll</HintPath>
+    </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>Libs\MMHOOK_Assembly-CSharp.dll</HintPath>
     </Reference>

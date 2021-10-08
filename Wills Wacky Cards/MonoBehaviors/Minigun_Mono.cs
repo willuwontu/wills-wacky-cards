@@ -14,14 +14,14 @@ namespace WillsWackyCards.MonoBehaviours
     {
         public float heat = 0.0f;
         public float heatCap = 3f;
-        private bool overheated = false;
+        public bool overheated = false;
         public float coolPerSecond = 1.5f;
         public float secondsBeforeStartToCool = 0.1f;
         private float cooldownTimeRemaining = 0.1f;
         public float overheatBonusCooldownTime = 0.5f;
         private bool coroutineStarted;
         private float minigunDamageM = 0.035f;
-        public float heatPerBullet = 0.02f;
+        public float heatPerBullet = 0.03f;
         private Gun gun;
         private GunAmmo gunAmmo;
         private CharacterData data;
@@ -83,9 +83,18 @@ namespace WillsWackyCards.MonoBehaviours
             {
                 heat -= coolPerSecond * 0.1f;
             }
-            if (overheated && (heat <= 0f) && this.photonView.IsMine)
+            if (overheated && (heat <= 0f) && (this.photonView.IsMine || PhotonNetwork.OfflineMode))
             {
-                this.photonView.RPC(nameof(RPCA_UpdateOverheat), RpcTarget.All, false);
+                if (PhotonNetwork.OfflineMode)
+                {
+                    overheated = false;
+                    gun.GetAdditionalData().overHeated = false;
+                    UnityEngine.Debug.Log($"[WWC][Minigun] Player {player.playerID}'s minigun is {(false ? "" : "no longer ")}overheated.");
+                }
+                else
+                {
+                    this.photonView.RPC(nameof(RPCA_UpdateOverheat), RpcTarget.All, false);
+                }
                 gunAmmo.ReloadAmmo(true);
             } 
         }
@@ -133,7 +142,16 @@ namespace WillsWackyCards.MonoBehaviours
             }
             else
             {
-                if (this.photonView.IsMine)
+                if (PhotonNetwork.OfflineMode)
+                {
+                    overheated = true;
+                    gun.GetAdditionalData().overHeated = true;
+                    cooldownTimeRemaining += overheatBonusCooldownTime;
+                    heatImage.color = Color.red;
+                    gunAmmo.SetFieldValue("currentAmmo", 0);
+                    UnityEngine.Debug.Log($"[WWC][Minigun] Player {player.playerID}'s minigun is {(true ? "" : "no longer ")}overheated.");
+                }
+                else if (this.photonView.IsMine)
                 {
                     this.photonView.RPC(nameof(RPCA_UpdateOverheat), RpcTarget.All, true);
                 }

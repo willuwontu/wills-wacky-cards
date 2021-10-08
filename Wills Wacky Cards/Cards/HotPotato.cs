@@ -7,6 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
 using WillsWackyCards.Utils;
+using ModdingUtils.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
@@ -16,25 +17,28 @@ namespace WillsWackyCards.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            cardInfo.categories = new CardCategory[] { CurseManager.curseInteractionCategory };
+            cardInfo.GetAdditionalData().canBeReassigned = false;
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseInteractionCategory };
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var curses = player.data.currentCards.Intersect(CurseManager.GetRaw()).ToList();
-            var curse = curses[UnityEngine.Random.Range(0, curses.Count - 1)];
-
-            for (int i = 0; i < player.data.currentCards.Count; i++)
+            WillsWackyCards.instance.ExecuteAfterFrames(20, () =>
             {
-                if (player.data.currentCards[i].cardName == curse.cardName)
+                var curses = player.data.currentCards.Intersect(CurseManager.instance.GetRaw()).ToList();
+                var curse = curses[UnityEngine.Random.Range(0, curses.Count - 1)];
+                for (int i = 0; i < player.data.currentCards.Count; i++)
                 {
-                    ModdingUtils.Utils.Cards.instance.RemoveCardFromPlayer(player, i);
-                    var randomEnemy = PlayerManager.instance.players.Where((person) => person.teamID != player.teamID).ToArray()[UnityEngine.Random.Range(0, PlayerManager.instance.players.Count - 2)];
-                    ModdingUtils.Utils.Cards.instance.AddCardToPlayer(randomEnemy, curse, false, "", 2f, 2f, true);
-                    ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(randomEnemy, curse);
-                    i = player.data.currentCards.Count;
+                    if (player.data.currentCards[i].cardName == curse.cardName)
+                    {
+                        ModdingUtils.Utils.Cards.instance.RemoveCardFromPlayer(player, i);
+                        var randomEnemy = PlayerManager.instance.players.Where((person) => person.teamID != player.teamID).ToArray()[UnityEngine.Random.Range(0, PlayerManager.instance.players.Count - 2)];
+                        ModdingUtils.Utils.Cards.instance.AddCardToPlayer(randomEnemy, curse, false, "", 2f, 2f, true);
+                        ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(randomEnemy, curse);
+                        break;
+                    }
                 }
-            }
+            });
 
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }

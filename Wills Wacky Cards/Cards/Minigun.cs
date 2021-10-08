@@ -19,7 +19,7 @@ namespace WillsWackyCards.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             var block = cardInfo.gameObject.GetOrAddComponent<Block>();
-            gun.attackSpeed = 1f/2000f;
+            gun.attackSpeed = 1f/1000f;
             gun.timeBetweenBullets = 0.05f;
             gun.projectileSpeed = 3f;
             gun.destroyBulletAfter = 0.2f;

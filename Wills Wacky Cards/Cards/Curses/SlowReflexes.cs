@@ -20,7 +20,7 @@ namespace WillsWackyCards.Cards.Curses
             block.InvokeMethod("ResetStats");
             block.cdMultiplier = 2.5f;
             block.additionalBlocks = -1;
-            cardInfo.categories = new CardCategory[] { CurseManager.curseCategory };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

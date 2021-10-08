@@ -17,7 +17,7 @@ namespace WillsWackyCards.Cards.Curses
         {
             gun.damage = 0.5f;
             gun.drag = 5f;
-            cardInfo.categories = new CardCategory[] { CurseManager.curseCategory };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

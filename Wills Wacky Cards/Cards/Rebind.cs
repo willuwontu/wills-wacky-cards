@@ -6,36 +6,40 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
-using WillsWackyCards.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using InControl;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Curses
+namespace WillsWackyCards.Cards
 {
-    class Bleed : CustomCard
+    class Rebind : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
+            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            characterStats.GetAdditionalData().Bleed += 0.5f;
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
+            //data.playerActions.ListenOptions.MaxAllowedBindings = 1U;
+            WillsWackyCards.instance.ExecuteAfterFrames(0, () => { data.playerActions.Jump.ListenForBindingReplacing(data.playerActions.Jump.UnfilteredBindings[0]); });
+            UnityEngine.Debug.Log($"{data.playerActions.Jump.UnfilteredBindings[0].Name}");
+            // Edits values on player when card is selected
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
+            //Drives me crazy
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Bleeding Wounds";
+            return "Rebind";
         }
         protected override string GetDescription()
         {
-            return "By bracken and bone, your blood shall leave home.";
+            return "Rebinds the jump key.";
         }
         protected override GameObject GetCardArt()
         {
@@ -43,7 +47,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return CardInfo.Rarity.Uncommon;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -51,10 +55,10 @@ namespace WillsWackyCards.Cards.Curses
             {
                 new CardInfoStat()
                 {
-                    positive = false,
-                    stat = "Bleed Damage",
-                    amount = "+50%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                    positive = true,
+                    stat = "Effect",
+                    amount = "No",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
@@ -64,7 +68,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         public override string GetModName()
         {
-            return "Curse";
+            return "WWC";
         }
         public override bool GetEnabled()
         {

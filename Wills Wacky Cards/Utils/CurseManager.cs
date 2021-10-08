@@ -11,12 +11,32 @@ namespace WillsWackyCards.Utils
     /// <summary>
     /// Manages the collection of curse cards given out, and contains various methods for utilizing them.
     /// </summary>
-    public class CurseManager
+    public class CurseManager : MonoBehaviour
     {
-        private static List<CardInfo> curses = new List<CardInfo>();
-        private static List<CardInfo> activeCurses = new List<CardInfo>();
+        /// <summary>
+        /// Instanced version of the class for accessibility from within static functions.
+        /// </summary>
+        public static CurseManager instance { get; private set; }
+        private List<CardInfo> curses = new List<CardInfo>();
+        private List<CardInfo> activeCurses = new List<CardInfo>();
+        private System.Random random = new System.Random();
 
-        private static void CheckCurses()
+        /// <summary>
+        /// The card category for all curses.
+        /// </summary>
+        public CardCategory curseCategory = CustomCardCategories.instance.CardCategory("Curse");
+
+        /// <summary>
+        /// The card category for cards that interact with cursed players.
+        /// </summary>
+        public CardCategory curseInteractionCategory = CustomCardCategories.instance.CardCategory("Cursed");
+
+        private void Start()
+        {
+            instance = this;
+        }
+
+        private void CheckCurses()
         {
             activeCurses = curses.Intersect(CardManager.cards.Values.ToArray().Where((card) => card.enabled).Select(card => card.cardInfo).ToArray()).ToList();
             foreach (var item in activeCurses)
@@ -25,25 +45,21 @@ namespace WillsWackyCards.Utils
             }
         }
 
-        private static System.Random random = new System.Random();
-
-        /// <summary>
-        /// The card category for all curses.
-        /// </summary>
-        public static CardCategory curseCategory = CustomCardCategories.instance.CardCategory("Curse");
-
-        /// <summary>
-        /// The card category for cards that interact with cursed players.
-        /// </summary>
-        public static CardCategory curseInteractionCategory = CustomCardCategories.instance.CardCategory("Cursed");
-
         /// <summary>
         /// Returns a random curse from the list of curses, if one exists.
         /// </summary>
         /// <returns>CardInfo for the generated curse.</returns>
-        public static CardInfo RandomCurse()
+        public CardInfo RandomCurse()
         {
             CheckCurses();
+
+            var choices = new CardChoice();
+
+            choices.cards = activeCurses.ToArray();
+
+            var curse = ((GameObject)choices.InvokeMethod("GetRanomCard")).GetComponent<CardInfo>();
+
+            //return curse;
             return activeCurses.ToArray()[random.Next(activeCurses.Count)];
         }
 
@@ -51,7 +67,7 @@ namespace WillsWackyCards.Utils
         /// Curses a player with a random curse.
         /// </summary>
         /// <param name="player">The player to curse.</param>
-        public static void CursePlayer(Player player)
+        public void CursePlayer(Player player)
         {
             CursePlayer(player, null);
         }
@@ -61,7 +77,7 @@ namespace WillsWackyCards.Utils
         /// </summary>
         /// <param name="player">The player to curse.</param>
         /// <param name="callback">An action to run with the information of the curse.</param>
-        public static void CursePlayer(Player player, Action<CardInfo> callback)
+        public void CursePlayer(Player player, Action<CardInfo> callback)
         {
             var curse = RandomCurse();
             ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, curse, false, "", 2f, 2f, true);
@@ -73,17 +89,17 @@ namespace WillsWackyCards.Utils
         /// Adds the curse to the list of available curses.
         /// </summary>
         /// <param name="cardInfo">The card to register.</param>
-        public static void RegisterCurse(CardInfo cardInfo)
+        public void RegisterCurse(CardInfo cardInfo)
         {
             curses.Add(cardInfo); 
             //ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);
-            CheckCurses();
+            //CheckCurses();
         }
 
         /// <summary>
         /// Returns an array containing all curses available.
         /// </summary>
-        public static CardInfo[] GetRaw()
+        public CardInfo[] GetRaw()
         {
             return curses.ToArray();
         }
@@ -93,7 +109,7 @@ namespace WillsWackyCards.Utils
         /// </summary>
         /// <param name="player">The player to check for a curse.</param>
         /// <returns>Returns true if a player has a registered curse.</returns>
-        public static bool HasCurse(Player player)
+        public bool HasCurse(Player player)
         {
             bool result = false;
 
@@ -107,7 +123,7 @@ namespace WillsWackyCards.Utils
         /// </summary>
         /// <param name="cardInfo">The card to check.</param>
         /// <returns>Returns true if the card is a registered curse.</returns>
-        public static bool IsCurse(CardInfo cardInfo)
+        public bool IsCurse(CardInfo cardInfo)
         {
             return curses.Contains(cardInfo);
         }
