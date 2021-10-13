@@ -48,18 +48,30 @@ namespace WillsWackyCards.Utils
         /// <summary>
         /// Returns a random curse from the list of curses, if one exists.
         /// </summary>
+        /// <param name="player"></param>
         /// <returns>CardInfo for the generated curse.</returns>
-        public CardInfo RandomCurse()
+        public CardInfo RandomCurse(Player player)
         {
             CheckCurses();
 
             var choices = new CardChoice();
 
             choices.cards = activeCurses.ToArray();
+            choices.pickrID = player.playerID;
 
+            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category => category == curseCategory);
             var curse = ((GameObject)choices.InvokeMethod("GetRanomCard")).GetComponent<CardInfo>();
+            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(curseCategory);
 
-            //return curse;
+            if (activeCurses.Contains(curse))
+            {
+                UnityEngine.Debug.Log($"[WWC][Debugging] {curse.cardName} is an enabled curse, new method working.");
+
+                return curse;
+            }
+
+            UnityEngine.Debug.Log($"[WWC][Debugging] {curse.cardName} is not an enabled curse, falling back to old method.");
+
             return activeCurses.ToArray()[random.Next(activeCurses.Count)];
         }
 
@@ -79,7 +91,7 @@ namespace WillsWackyCards.Utils
         /// <param name="callback">An action to run with the information of the curse.</param>
         public void CursePlayer(Player player, Action<CardInfo> callback)
         {
-            var curse = RandomCurse();
+            var curse = RandomCurse(player);
             ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, curse, false, "", 2f, 2f, true);
             UnityEngine.Debug.Log($"[WWC][Curse Manager] Player {player.playerID} cursed with {curse.cardName}.");
             callback?.Invoke(curse);

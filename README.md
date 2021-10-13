@@ -44,6 +44,11 @@ Make sure to add `CurseManager.instance.curseCategory` to your cards categories,
 It also contains various other utilities for handling curses.
 
 ----
+## v 1.2.7
+- Reroll no longer causes the game to enter into statis anymore.
+- Curses will once again attempt to respect rarity.
+
+----
 ## v 1.2.6
 - hotfix for hex and table flip
 

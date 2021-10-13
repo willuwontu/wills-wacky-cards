@@ -8,6 +8,7 @@ using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
 using WillsWackyCards.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using ModdingUtils.Extensions;
 using UnityEngine;
 
 namespace WillsWackyCards.Cards
@@ -16,6 +17,7 @@ namespace WillsWackyCards.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
+            cardInfo.GetAdditionalData().canBeReassigned = false;
             cardInfo.categories = new CardCategory[] { BoardWipeManager.instance.NoFlip };
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
