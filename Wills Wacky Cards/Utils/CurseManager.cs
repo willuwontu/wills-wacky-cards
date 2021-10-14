@@ -54,13 +54,8 @@ namespace WillsWackyCards.Utils
         {
             CheckCurses();
 
-            var choices = new CardChoice();
-
-            choices.cards = activeCurses.ToArray();
-            choices.pickrID = player.playerID;
-
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category => category == curseCategory);
-            var curse = ((GameObject)choices.InvokeMethod("GetRanomCard")).GetComponent<CardInfo>();
+            var curse = ModdingUtils.Utils.Cards.instance.GetRandomCardWithCondition(player, null, null, null, null, null, null, null, this.Condition);
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(curseCategory);
 
             if (activeCurses.Contains(curse))
@@ -73,6 +68,11 @@ namespace WillsWackyCards.Utils
             UnityEngine.Debug.Log($"[WWC][Debugging] {curse.cardName} is not an enabled curse, falling back to old method.");
 
             return activeCurses.ToArray()[random.Next(activeCurses.Count)];
+        }
+
+        private bool Condition(CardInfo card, Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
+        {
+            return card.categories.Contains(curseCategory);
         }
 
         /// <summary>
