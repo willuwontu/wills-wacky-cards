@@ -51,8 +51,6 @@ namespace WillsWackyCards.Utils
         /// </summary>
         public bool reroll;
 
-        private List<bool> rerolling = new List<bool>();
-
         /// <summary>
         /// The reroll card itself. It's automatically given out to the rerolling player after a table flip.
         /// </summary>
@@ -165,13 +163,17 @@ namespace WillsWackyCards.Utils
         /// <returns></returns>
         public IEnumerator InitiateRerolls(bool addCard = true)
         {
+            List<Player> rerolledPlayers = new List<Player>();
             foreach (var player in rerollPlayers)
             {
-                StartCoroutine(Reroll(player));
+                if (!rerolledPlayers.Contains(player))
+                {
+                    rerolledPlayers.Add(player);
+                    yield return Reroll(player);
+                }
             }
 
-            yield return new WaitUntil(() => rerolling.Count <= 0);
-
+            rerollPlayers.Clear();
             reroll = false;
             yield return null;
         }
@@ -184,7 +186,6 @@ namespace WillsWackyCards.Utils
         /// <returns></returns>
         public IEnumerator Reroll(Player player, bool addCard = true)
         {
-            rerolling.Add(true);
             if (player && (player ? player.data.currentCards.Count : 0) > 0)
             {
                 List<Rarity> cardRarities = new List<Rarity>();
@@ -257,7 +258,6 @@ namespace WillsWackyCards.Utils
                 }
                 yield return WaitFor.Frames(20);
             }
-            rerolling.Remove(true);
 
             yield return null;
         }
