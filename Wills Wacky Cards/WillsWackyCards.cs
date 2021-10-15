@@ -51,7 +51,7 @@ namespace WillsWackyCards
             instance.gameObject.name = "WillsWackyCards";
 
             remover = gameObject.GetOrAddComponent<CardRemover>();
-            gameObject.GetOrAddComponent<BoardWipeManager>();
+            gameObject.GetOrAddComponent<RerollManager>();
             gameObject.GetOrAddComponent<CurseManager>();
 
             UnityEngine.Debug.Log("[WWC] Loading Cards");
@@ -83,8 +83,8 @@ namespace WillsWackyCards
             CustomCard.BuildCard<ImmovableObject>();
             CustomCard.BuildCard<HotPotato>();
             //CustomCard.BuildCard<Rebind>();
-            CustomCard.BuildCard<TableFlip>(CardInfo => BoardWipeManager.instance.tableFlipCard = CardInfo);
-            CustomCard.BuildCard<Reroll>(CardInfo => BoardWipeManager.instance.rerollCard = CardInfo);
+            CustomCard.BuildCard<TableFlip>(CardInfo => RerollManager.instance.tableFlipCard = CardInfo);
+            CustomCard.BuildCard<Reroll>(CardInfo => RerollManager.instance.rerollCard = CardInfo);
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
@@ -174,16 +174,16 @@ namespace WillsWackyCards
 
         IEnumerator PlayerPickEnd(IGameModeHandler gm)
         {
-            if (BoardWipeManager.instance.tableFlipped)
+            if (RerollManager.instance.tableFlipped)
             {
-                StartCoroutine(BoardWipeManager.instance.FlipTable());
+                StartCoroutine(RerollManager.instance.FlipTable());
             }
-            yield return new WaitUntil(() => BoardWipeManager.instance.tableFlipped == false);
-            if (BoardWipeManager.instance.reroll)
+            yield return new WaitUntil(() => RerollManager.instance.tableFlipped == false);
+            if (RerollManager.instance.reroll)
             {
-                StartCoroutine(BoardWipeManager.instance.Reroll());
+                StartCoroutine(RerollManager.instance.InitiateRerolls());
             }
-            yield return new WaitUntil(() => BoardWipeManager.instance.reroll == false);
+            yield return new WaitUntil(() => RerollManager.instance.reroll == false);
             yield break;
         }
 

@@ -18,13 +18,13 @@ namespace WillsWackyCards.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.GetAdditionalData().canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { BoardWipeManager.instance.NoFlip };
+            cardInfo.categories = new CardCategory[] { RerollManager.instance.NoFlip };
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            BoardWipeManager.instance.rerollPlayer = player;
-            BoardWipeManager.instance.reroll = true;
+            RerollManager.instance.rerollPlayers.Add(player);
+            RerollManager.instance.reroll = true;
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

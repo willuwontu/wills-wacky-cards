@@ -206,7 +206,7 @@ namespace WillsWackyCards.MonoBehaviours
                     updated = true;
                     var move = base.GetComponentInParent<MoveTransform>();
                     move.velocity *= speedMult;
-                    UnityEngine.Debug.Log($"[WWC][PlasmaMono] Increasing bullet velocity by {string.Format("{0:F0}", (speedMult - 1f) * 100)}%.");
+                    //UnityEngine.Debug.Log($"[WWC][PlasmaMono] Increasing bullet velocity by {string.Format("{0:F0}", (speedMult - 1f) * 100)}%.");
                     this.ExecuteAfterFrames(5, delegate(){ Destroy(this); });
 
                 }
