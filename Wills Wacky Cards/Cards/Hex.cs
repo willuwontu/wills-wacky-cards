@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
-using WillsWackyCards.Utils;
+using WillsWackyManagers.Utils;
 using UnboundLib.Cards;
 using UnityEngine;
 using ModdingUtils.Extensions;

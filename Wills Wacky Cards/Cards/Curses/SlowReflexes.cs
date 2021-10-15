@@ -7,7 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
-using WillsWackyCards.Utils;
+using WillsWackyManagers.Utils;
 using UnityEngine;
 
 namespace WillsWackyCards.Cards.Curses

@@ -84,6 +84,9 @@
     <Reference Include="UnityEngine.UIModule">
       <HintPath>Libs\UnityEngine.UIModule.dll</HintPath>
     </Reference>
+    <Reference Include="WillsWackyManagers">
+      <HintPath>..\..\..\Visual Studio 2019\Projects\Rounds\Dependencies\WillsWackyManagers.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>

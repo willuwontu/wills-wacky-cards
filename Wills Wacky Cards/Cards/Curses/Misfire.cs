@@ -7,7 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
 using WillsWackyCards.MonoBehaviours;
-using WillsWackyCards.Utils;
+using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 

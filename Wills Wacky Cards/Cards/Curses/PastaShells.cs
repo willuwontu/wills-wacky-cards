@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
-using WillsWackyCards.Utils;
+using WillsWackyManagers.Utils;
 using UnityEngine;
 
 namespace WillsWackyCards.Cards.Curses

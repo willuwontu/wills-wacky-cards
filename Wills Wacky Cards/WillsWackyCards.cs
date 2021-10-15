@@ -16,7 +16,7 @@ using UnboundLib.Networking;
 using WillsWackyCards.Cards;
 using WillsWackyCards.Cards.Curses;
 using WillsWackyCards.Extensions;
-using WillsWackyCards.Utils;
+using WillsWackyManagers.Utils;
 using WillsWackyCards.MonoBehaviours;
 using HarmonyLib;
 using Photon.Pun;
@@ -25,15 +25,16 @@ using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 namespace WillsWackyCards
 {
     [BepInDependency("com.willis.rounds.unbound", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("com.willuwontu.rounds.managers", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("pykess.rounds.plugins.moddingutils", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("pykess.rounds.plugins.cardchoicespawnuniquecardpatch", BepInDependency.DependencyFlags.HardDependency)]
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
     public class WillsWackyCards : BaseUnityPlugin
     {
-        private const string ModId = "com.willuwontu.rounds.card";
+        private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.2.7"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.2.8"; // What version are we on (major.minor.patch)?
 
         public static WillsWackyCards instance { get; private set; }
         public static CardRemover remover;
@@ -51,8 +52,6 @@ namespace WillsWackyCards
             instance.gameObject.name = "WillsWackyCards";
 
             remover = gameObject.GetOrAddComponent<CardRemover>();
-            gameObject.GetOrAddComponent<RerollManager>();
-            gameObject.GetOrAddComponent<CurseManager>();
 
             UnityEngine.Debug.Log("[WWC] Loading Cards");
             CustomCard.BuildCard<AmmoCache>();
@@ -82,7 +81,6 @@ namespace WillsWackyCards
             CustomCard.BuildCard<UnstoppableForce>();
             CustomCard.BuildCard<ImmovableObject>();
             CustomCard.BuildCard<HotPotato>();
-            //CustomCard.BuildCard<Rebind>();
             CustomCard.BuildCard<TableFlip>(CardInfo => RerollManager.instance.tableFlipCard = CardInfo);
             CustomCard.BuildCard<Reroll>(CardInfo => RerollManager.instance.rerollCard = CardInfo);
             UnityEngine.Debug.Log("[WWC] Cards Built");
@@ -174,33 +172,11 @@ namespace WillsWackyCards
 
         IEnumerator PlayerPickEnd(IGameModeHandler gm)
         {
-            if (RerollManager.instance.tableFlipped)
-            {
-                StartCoroutine(RerollManager.instance.FlipTable());
-            }
-            yield return new WaitUntil(() => RerollManager.instance.tableFlipped == false);
-            if (RerollManager.instance.reroll)
-            {
-                StartCoroutine(RerollManager.instance.InitiateRerolls());
-            }
-            yield return new WaitUntil(() => RerollManager.instance.reroll == false);
             yield break;
         }
 
         IEnumerator PlayerPickStart(IGameModeHandler gm)
         {
-            foreach (var player in PlayerManager.instance.players)
-            {
-                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.instance.curseInteractionCategory))
-                {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.instance.curseInteractionCategory);
-                }
-                if (CurseManager.instance.HasCurse(player))
-                {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category => category == CurseManager.instance.curseInteractionCategory);
-                    UnityEngine.Debug.Log($"Player {player.playerID} is available for curse interaction effects");
-                }
-            }
             yield break;
         }
 
@@ -234,14 +210,6 @@ namespace WillsWackyCards
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(Minigun.componentCatgory))
                 {
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(Minigun.componentCatgory);
-                }
-                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.instance.curseCategory))
-                {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.instance.curseCategory);
-                }
-                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseManager.instance.curseInteractionCategory))
-                {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.instance.curseInteractionCategory);
                 }
             }
 
