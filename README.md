@@ -45,6 +45,10 @@ It also contains various other utilities for handling curses.
 
 ----
 ## v 1.2.8
+- Patched some logic in Hex
+
+----
+## v 1.2.8
 - Null reference errors caused by cards having issues when being removed, no longer causes reroll and table flip to break.
 - CurseManager and RerollManager have been split off into their own mod.
 

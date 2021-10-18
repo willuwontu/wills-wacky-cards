@@ -7,6 +7,7 @@ using UnboundLib;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using WillsWackyManagers.Utils;
 using UnboundLib.Cards;
+using UnboundLib.Utils;
 using UnityEngine;
 using ModdingUtils.Extensions;
 
@@ -24,11 +25,15 @@ namespace WillsWackyCards.Cards
         {
             if (CurseManager.instance.GetRaw().Count() > 0)
             {
+                var curses = CurseManager.instance.GetRaw().Intersect(CardManager.cards.Values.ToArray().Where((card) => card.enabled).Select(card => card.cardInfo).ToArray()).ToList();
                 UnityEngine.Debug.Log($"[WWC][Hex] Player {player.teamID} Cursing Enemies");
 
                 foreach (var item in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
                 {
-                    CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse); } );
+                    if (curses.Where((curse) => ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(item, curse)).ToArray().Count() > 0)
+                    {
+                        CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse); }); 
+                    }
                 }
             }
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} added to Player {player.playerID}");
