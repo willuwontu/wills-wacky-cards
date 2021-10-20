@@ -30,10 +30,7 @@ namespace WillsWackyCards.Cards
 
                 foreach (var item in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
                 {
-                    if (curses.Where((curse) => ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(item, curse)).ToArray().Count() > 0)
-                    {
-                        CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse); }); 
-                    }
+                    CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse); }); 
                 }
             }
             UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} added to Player {player.playerID}");

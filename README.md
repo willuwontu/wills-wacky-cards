@@ -44,7 +44,11 @@ Make sure to add `CurseManager.instance.curseCategory` to your cards categories,
 It also contains various other utilities for handling curses.
 
 ----
-## v 1.2.8
+## v 1.2.10
+- Hex now works again.
+
+----
+## v 1.2.9
 - Patched some logic in Hex
 
 ----
