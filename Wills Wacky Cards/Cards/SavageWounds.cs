@@ -5,40 +5,53 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using WillsWackyCards.MonoBehaviours;
 using WillsWackyCards.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
-using WillsWackyManagers.Utils;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Curses
+namespace WillsWackyCards.Cards
 {
-    class SlowReflexes : CustomCard
+    class SavageWounds : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            var block = cardInfo.gameObject.GetOrAddComponent<Block>();
-            block.InvokeMethod("ResetStats");
-            block.cdMultiplier = 2.5f;
-            block.additionalBlocks = -1;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
+            gun.damage = 0.8f;
+            List<ObjectsToSpawn> list = gun.objectsToSpawn.ToList<ObjectsToSpawn>();
+            list.Add(new ObjectsToSpawn
+            {
+                AddToProjectile = new GameObject("Savage_Hit", new Type[]
+                {
+                    typeof(SavageWounds_Mono)
+                })
+            });
+            gun.objectsToSpawn = list.ToArray();
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
+            // Edits values on player when card is selected
+            var wounds = player.gameObject.GetOrAddComponent<SavageWounds_Mono>();
+            wounds.duration += 2f;
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
+            var wounds = player.gameObject.GetComponent<SavageWounds_Mono>();
+            if (wounds)
+            {
+                wounds.duration -= 2f;
+            }
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Uncomfortable Defense";
+            return "Savage Wounds";
         }
         protected override string GetDescription()
         {
-            return "Bim bung, you're now aware of your tongue.";
+            return "Some wounds take more time to recover from.";
         }
         protected override GameObject GetCardArt()
         {
@@ -55,26 +68,26 @@ namespace WillsWackyCards.Cards.Curses
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Block Cooldown",
-                    amount = "+150%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
+                    stat = "Damage",
+                    amount = "-20%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
-                    positive = false,
-                    stat = "Additional Blocks",
-                    amount = "-1",
-                    simepleAmount = CardInfoStat.SimpleAmount.lower
+                    positive = true,
+                    stat = "Stop Healing",
+                    amount = "+2s",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.TechWhite;
+            return CardThemeColor.CardThemeColorType.DestructiveRed;
         }
         public override string GetModName()
         {
-            return "Curse";
+            return "WWC";
         }
         public override bool GetEnabled()
         {

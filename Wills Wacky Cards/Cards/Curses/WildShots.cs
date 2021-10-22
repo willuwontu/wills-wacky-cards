@@ -18,6 +18,7 @@ namespace WillsWackyCards.Cards.Curses
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
+            gun.reloadTimeAdd = 0.75f;
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -28,6 +29,11 @@ namespace WillsWackyCards.Cards.Curses
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            var backwards = player.gameObject.GetComponent<Backwards_Mono>();
+            if (backwards)
+            {
+                backwards.backwardsChance += 10; 
+            }
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
         }
 
@@ -45,7 +51,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return CardInfo.Rarity.Uncommon;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -56,6 +62,13 @@ namespace WillsWackyCards.Cards.Curses
                     positive = false,
                     stat = "Wild Shots",
                     amount = "+10%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Reload Time",
+                    amount = "+0.75s",
                     simepleAmount = CardInfoStat.SimpleAmount.aLotLower
                 }
             };

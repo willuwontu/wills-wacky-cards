@@ -6,39 +6,39 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using WillsWackyManagers.Utils;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using ModdingUtils.Extensions;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Curses
+namespace WillsWackyCards.Cards
 {
-    class SlowReflexes : CustomCard
+    class HiltlessBlade : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            var block = cardInfo.gameObject.GetOrAddComponent<Block>();
-            block.InvokeMethod("ResetStats");
-            block.cdMultiplier = 2.5f;
-            block.additionalBlocks = -1;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
+            gun.damage = 2.5f;
+            cardInfo.GetAdditionalData().canBeReassigned = false;
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
+            CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
+
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Uncomfortable Defense";
+            return "Hiltless Blade";
         }
         protected override string GetDescription()
         {
-            return "Bim bung, you're now aware of your tongue.";
+            return "Sometimes it take a little pain to win.";
         }
         protected override GameObject GetCardArt()
         {
@@ -46,7 +46,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Common;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -54,27 +54,27 @@ namespace WillsWackyCards.Cards.Curses
             {
                 new CardInfoStat()
                 {
-                    positive = false,
-                    stat = "Block Cooldown",
-                    amount = "+150%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
+                    positive = true,
+                    stat = "Rare",
+                    amount = "+1",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Additional Blocks",
-                    amount = "-1",
-                    simepleAmount = CardInfoStat.SimpleAmount.lower
+                    stat = "Curse",
+                    amount = "+1",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.TechWhite;
+            return CardThemeColor.CardThemeColorType.EvilPurple;
         }
         public override string GetModName()
         {
-            return "Curse";
+            return "WWC";
         }
         public override bool GetEnabled()
         {

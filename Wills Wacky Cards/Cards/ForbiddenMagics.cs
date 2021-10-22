@@ -5,40 +5,51 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using UnboundLib.Utils;
 using WillsWackyCards.Extensions;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using ModdingUtils.Extensions;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Curses
+namespace WillsWackyCards.Cards
 {
-    class NeedleBullets : CustomCard
+    class ForbiddenMagics : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.projectileSize = 0.7f;
-            gun.spread = 0.3f;
-            gun.reflects = -1;
-
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
+            cardInfo.GetAdditionalData().canBeReassigned = false;
+            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
+            if (CurseManager.instance.GetRaw().Count() > 0)
+            {
+                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
+
+                foreach (var item in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
+                {
+                    CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse); });
+                    CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse); });
+                    CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse); });
+                }
+            }
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
+            //Drives me crazy
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Needle Bullets";
+            return "Forbidden Magics";
         }
         protected override string GetDescription()
         {
-            return "Hard to see, a pain to control, and likely to get lost in a haystack.";
+            return "Burn yourself to hurt your foes.";
         }
         protected override GameObject GetCardArt()
         {
@@ -46,7 +57,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Rare;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -55,23 +66,16 @@ namespace WillsWackyCards.Cards.Curses
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Bullets",
-                    amount = "Smaller",
+                    stat = "Curse",
+                    amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
-                    positive = false,
-                    stat = "Spread",
-                    amount = "+30%",
-                    simepleAmount = CardInfoStat.SimpleAmount.Some
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Bounces",
-                    amount = "-1",
-                    simepleAmount = CardInfoStat.SimpleAmount.slightlyLower
+                    positive = true,
+                    stat = "Curses to Foes",
+                    amount = "+3",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
@@ -81,7 +85,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         public override string GetModName()
         {
-            return "Curse";
+            return "WWC";
         }
         public override bool GetEnabled()
         {

@@ -34,7 +34,7 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.2.10"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.3.0"; // What version are we on (major.minor.patch)?
 
         public static WillsWackyCards instance { get; private set; }
         public static CardRemover remover;
@@ -83,6 +83,12 @@ namespace WillsWackyCards
             CustomCard.BuildCard<HotPotato>();
             CustomCard.BuildCard<TableFlip>(CardInfo => RerollManager.instance.tableFlipCard = CardInfo);
             CustomCard.BuildCard<Reroll>(CardInfo => RerollManager.instance.rerollCard = CardInfo);
+            CustomCard.BuildCard<MomentaryConfusion>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<SavageWounds>();
+            CustomCard.BuildCard<RitualisticSacrifice>();
+            CustomCard.BuildCard<ForbiddenMagics>();
+            CustomCard.BuildCard<PurifyingLight>();
+            CustomCard.BuildCard<CursedKnowledge>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 

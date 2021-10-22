@@ -30,11 +30,11 @@ namespace WillsWackyCards.Cards.Curses
 
         protected override string GetTitle()
         {
-            return "Misfire";
+            return "Template Curse";
         }
         protected override string GetDescription()
         {
-            return "Bippity boop, your gun can no longer shoot.";
+            return "Somebody forgot to change this stuff.";
         }
         protected override GameObject GetCardArt()
         {

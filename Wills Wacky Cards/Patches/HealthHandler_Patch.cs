@@ -9,6 +9,18 @@ namespace WillsWackyCards.Patches
     [HarmonyPatch(typeof(HealthHandler))] 
     class HealthHandler_Patch
     {
+        [HarmonyPrefix]
+        [HarmonyPriority(Priority.Last)]
+        [HarmonyPatch("Heal")]
+        static void NoHeal(Player ___player, ref float healAmount)
+        {
+            var noHeal = ___player.GetComponent<SavageWoundsDamage_Mono>();
+            if (noHeal)
+            {
+                healAmount = 0f;
+            }
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch("CallTakeDamage")]
         static void BleedEffect(HealthHandler __instance, Vector2 damage, Vector2 position, Player damagingPlayer, Player ___player)

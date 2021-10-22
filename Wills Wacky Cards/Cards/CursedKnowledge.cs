@@ -8,35 +8,45 @@ using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using ModdingUtils.Extensions;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Curses
+namespace WillsWackyCards.Cards
 {
-    class EasyTarget : CustomCard
+    class CursedKnowledge : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.sizeMultiplier = 3f;
-            statModifiers.GetAdditionalData().MassModifier = 1f / 5f;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
+            cardInfo.GetAdditionalData().canBeReassigned = false;
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
+            CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
+
+            var rare = ModdingUtils.Utils.Cards.instance.GetRandomCardWithCondition(player, gun, gunAmmo, data, health, gravity, block, characterStats, RareCondition);
+
+            ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, rare, false, "", 2f, 2f, true);
+
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
+        }
+
+        private bool RareCondition(CardInfo card, Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
+        {
+            return card.rarity == CardInfo.Rarity.Rare;
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
+            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Easy Target";
+            return "Cursed Knowledge";
         }
         protected override string GetDescription()
         {
-            return "Might as well just paint a target on yourself.";
+            return "Things are hidden away for a reason.";
         }
         protected override GameObject GetCardArt()
         {
@@ -44,7 +54,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Common;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -52,10 +62,17 @@ namespace WillsWackyCards.Cards.Curses
             {
                 new CardInfoStat()
                 {
+                    positive = true,
+                    stat = "Rare",
+                    amount = "+1",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
                     positive = false,
-                    stat = "Size",
-                    amount = "+200%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
+                    stat = "Curse",
+                    amount = "+1",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
@@ -65,7 +82,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         public override string GetModName()
         {
-            return "Curse";
+            return "WWC";
         }
         public override bool GetEnabled()
         {

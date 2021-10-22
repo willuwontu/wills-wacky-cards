@@ -29,6 +29,11 @@ namespace WillsWackyCards.Cards.Curses
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            var misfire = player.gameObject.GetComponent<Misfire_Mono>();
+            if (misfire)
+            {
+                misfire.misfireChance -= 5; 
+            }
             UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
         }
 
@@ -46,7 +51,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return CardInfo.Rarity.Rare;
         }
         protected override CardInfoStat[] GetStats()
         {

@@ -23,6 +23,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Pasta Shells (Curse)
   - Slow Reflexes (Curse)
   - Wild Shots (Curse)
+  - Momentary Confusion (Curse)
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
@@ -31,17 +32,16 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Hot Potato (Common)
 - Reroll (Uncommon)
 - Table Flip (Rare)
+- Savage Wounds (Uncommon)
+- Ritualistic Sacrifice (Rare)
+- Forbidden Magics (Rare)
+- Purifying Light (Rare)
+- Cursed Knowledge (Common)
 
----- 
-## Features for other mods
-### CurseManager
-You can add curses for usage by utilizing the `CurseManager` found in `WillsWackyCards.Utils`.
 
-Simply toss in a `using WillsWackyCards.Utils;` and use `CustomCard.BuildCard<CurseCardName>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });` to register a curse for usage.
-
-Make sure to add `CurseManager.instance.curseCategory` to your cards categories, so that it cannot be selected by players.
-
-It also contains various other utilities for handling curses.
+----
+## v 1.2.10
+- 6 new cards added (Savage Wounds, Ritualistic Sacrifice, Forbidden Magics, Purifying Light, Cursed Knowledge, Momentary Confusion)
 
 ----
 ## v 1.2.10
