@@ -19,18 +19,18 @@ namespace WillsWackyCards.Cards
         {
             cardInfo.GetAdditionalData().canBeReassigned = false;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseInteractionCategory };
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             CurseManager.instance.RemoveAllCurses(player, (cardInfo) => ModdingUtils.Utils.Cards.instance.AddCardToPlayer(PlayerManager.instance.GetRandomEnemy(player), cardInfo, false, "", 2f, 2f, true));
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             //Drives me crazy
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -68,7 +68,7 @@ namespace WillsWackyCards.Cards
         }
         public override string GetModName()
         {
-            return "WWC";
+            return WillsWackyCards.ModInitials;
         }
         public override bool GetEnabled()
         {

@@ -58,7 +58,7 @@ namespace WillsWackyCards.MonoBehaviours
         [PunRPC]
         private void RPCA_Misfire(int roll)
         {
-            UnityEngine.Debug.Log($"[WWC][Hex] Player {player.playerID} Misfire Curse activated with a roll of {roll} and a chance of {misfireChance}%.");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Hex] Player {player.playerID} Misfire Curse activated with a roll of {roll} and a chance of {misfireChance}%.");
             gunAmmo.SetFieldValue("currentAmmo", 0);
             for (int i = gunAmmo.populate.transform.childCount - 1; i >= 0; i--)
             {

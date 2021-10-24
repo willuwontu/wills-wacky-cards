@@ -11,7 +11,7 @@ namespace WillsWackyCards.MonoBehaviours
         private void Start()
         {
             var move = base.GetComponentInParent<MoveTransform>();
-            //UnityEngine.Debug.Log($"[WWC] Bullet Velocity is ({move.velocity.x}, {move.velocity.y}, {move.velocity.z}) with a magnitude of {move.velocity.magnitude}.");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}] Bullet Velocity is ({move.velocity.x}, {move.velocity.y}, {move.velocity.z}) with a magnitude of {move.velocity.magnitude}.");
             move.velocity *= -1;
             Destroy(this);
         }
@@ -58,11 +58,11 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void OnShootProjectileAction(GameObject obj)
         {
-            //UnityEngine.Debug.Log($"[WWC] Player Velocity is ({((Vector2)data.playerVel.GetFieldValue("velocity")).x}, {((Vector2)data.playerVel.GetFieldValue("velocity")).y}) with a magnitude of {((Vector2)data.playerVel.GetFieldValue("velocity")).magnitude}.");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}] Player Velocity is ({((Vector2)data.playerVel.GetFieldValue("velocity")).x}, {((Vector2)data.playerVel.GetFieldValue("velocity")).y}) with a magnitude of {((Vector2)data.playerVel.GetFieldValue("velocity")).magnitude}.");
             var roll = random.Next(100);
             if (roll < backwardsChance)
             {
-                UnityEngine.Debug.Log($"[WWC][Hex] Player {player.teamID} Backwards Curse activated with a roll of {roll} and a chance of {backwardsChance}%.");
+                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Hex] Player {player.teamID} Backwards Curse activated with a roll of {roll} and a chance of {backwardsChance}%.");
                 var component = obj.GetComponent<ProjectileHit>();
                 var gameObject = UnityEngine.Object.Instantiate<GameObject>(bulletMono, component.transform.position, component.transform.rotation, component.transform);
             }

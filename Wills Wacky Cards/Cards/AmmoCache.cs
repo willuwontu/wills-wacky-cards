@@ -16,15 +16,15 @@ namespace WillsWackyCards.Cards
             gun.ammo = 10;
             gun.reloadTime = 0.9f;
             statModifiers.movementSpeed = 0.9f;
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} added to Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -77,7 +77,7 @@ namespace WillsWackyCards.Cards
         }
         public override string GetModName()
         {
-            return "WWC";
+            return WillsWackyCards.ModInitials;
         }
     }
 }

@@ -89,7 +89,7 @@ namespace WillsWackyCards.MonoBehaviours
                 {
                     overheated = false;
                     gun.GetAdditionalData().overHeated = false;
-                    UnityEngine.Debug.Log($"[WWC][Minigun] Player {player.playerID}'s minigun is {(false ? "" : "no longer ")}overheated.");
+                    UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Minigun] Player {player.playerID}'s minigun is {(false ? "" : "no longer ")}overheated.");
                 }
                 else
                 {
@@ -110,7 +110,7 @@ namespace WillsWackyCards.MonoBehaviours
                 heatImage.color = Color.red;
                 gunAmmo.SetFieldValue("currentAmmo", 0);
             }
-            UnityEngine.Debug.Log($"[WWC][Minigun] Player {player.playerID}'s minigun is {(status ? "" : "no longer " )}overheated.");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Minigun] Player {player.playerID}'s minigun is {(status ? "" : "no longer " )}overheated.");
         }
 
         private void UpdateHeatBar()
@@ -149,7 +149,7 @@ namespace WillsWackyCards.MonoBehaviours
                     cooldownTimeRemaining += overheatBonusCooldownTime;
                     heatImage.color = Color.red;
                     gunAmmo.SetFieldValue("currentAmmo", 0);
-                    UnityEngine.Debug.Log($"[WWC][Minigun] Player {player.playerID}'s minigun is {(true ? "" : "no longer ")}overheated.");
+                    UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Minigun] Player {player.playerID}'s minigun is {(true ? "" : "no longer ")}overheated.");
                 }
                 else if (this.photonView.IsMine)
                 {

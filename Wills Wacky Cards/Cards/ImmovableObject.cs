@@ -24,12 +24,12 @@ namespace WillsWackyCards.Cards
 
             var stacks = MomentumTracker.stacks = Math.Max(MomentumTracker.stacks, 1);
 
-            UnityEngine.Debug.Log($"[WWC][Card] {stacks} Momentum Stacks built up");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {stacks} Momentum Stacks built up");
 
             cardInfo.cardStats = MomentumTracker.GetDefensiveMomentumStats(stacks);
             tracker.updated = true;
 
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -53,12 +53,12 @@ namespace WillsWackyCards.Cards
             //cleaner.player = player;
 
             //cleaner.CleanUp();
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Added to Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
                 
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            UnityEngine.Debug.Log($"[WWC][Card] Immovable Object base card removed from player {player.teamID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] Immovable Object base card removed from player {player.teamID}");
         }
 
         protected override string GetTitle()
@@ -87,7 +87,7 @@ namespace WillsWackyCards.Cards
         }
         public override string GetModName()
         {
-            return "WWC";
+            return WillsWackyCards.ModInitials;
         }
         public override bool GetEnabled()
         {
@@ -122,12 +122,12 @@ namespace WillsWackyCards.Cards
             cardInfo.cardStats = MomentumTracker.GetDefensiveMomentumStats(stacks);
             tracker.updated = true;
 
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var tracker = this.gameObject.GetOrAddComponent<MomentumCard_Mono>();
-            UnityEngine.Debug.Log($"[WWC][Card] Immovable Object ({tracker.stacks} stacks) added to player {player.teamID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] Immovable Object ({tracker.stacks} stacks) added to player {player.teamID}");
 
             //if (!(GM_Test.instance != null && GM_Test.instance.gameObject.activeInHierarchy))
             {
@@ -137,7 +137,7 @@ namespace WillsWackyCards.Cards
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var tracker = this.gameObject.GetOrAddComponent<MomentumCard_Mono>();
-            UnityEngine.Debug.Log($"[WWC][Card] Immovable Object ({tracker.stacks} stacks) removed from player {player.teamID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] Immovable Object ({tracker.stacks} stacks) removed from player {player.teamID}");
         }
         protected override string GetTitle()
         {

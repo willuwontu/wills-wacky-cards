@@ -17,7 +17,7 @@ namespace WillsWackyCards.Cards.Curses
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -26,7 +26,7 @@ namespace WillsWackyCards.Cards.Curses
             confuzzle.bufferTime = Mathf.Max(2, confuzzle.bufferTime - 2f);
             confuzzle.duration += 2f;
             confuzzle.timeBetweenChecks = Mathf.Max(0.2f, confuzzle.timeBetweenChecks - 0.2f);
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -38,7 +38,7 @@ namespace WillsWackyCards.Cards.Curses
                 confuzzle.duration -= 2f;
                 confuzzle.timeBetweenChecks = Mathf.Max(0.2f, confuzzle.timeBetweenChecks + 0.2f); 
             }
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -76,7 +76,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         public override string GetModName()
         {
-            return "Curse";
+            return WillsWackyCards.CurseInitials;
         }
         public override bool GetEnabled()
         {

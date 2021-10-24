@@ -36,6 +36,9 @@ namespace WillsWackyCards
         private const string ModName = "Will's Wacky Cards";
         public const string Version = "1.3.0"; // What version are we on (major.minor.patch)?
 
+        public const string ModInitials = "WWC";
+        public const string CurseInitials = "Curse";
+
         public static WillsWackyCards instance { get; private set; }
         public static CardRemover remover;
 
@@ -125,7 +128,7 @@ namespace WillsWackyCards
             while (stacks <= 20)
             {
                 MomentumTracker.stacks = stacks;
-                //UnityEngine.Debug.Log($"[WWC][Debugging] {cardInfo.cardName} assigned to slot {MomentumTracker.stacks}"); 
+                //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] {cardInfo.cardName} assigned to slot {MomentumTracker.stacks}"); 
                 CustomCard.BuildCard<BuildImmovableObject>(cardInfo => { MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
                 CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.createdOffenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
                 yield return StartCoroutine(WaitFor.Frames(7));

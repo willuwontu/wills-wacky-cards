@@ -19,13 +19,13 @@ namespace WillsWackyCards.Cards.Curses
         {
             gun.reloadTime = 1.5f;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} Built");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var misfire = player.gameObject.GetOrAddComponent<Misfire_Mono>();
             misfire.misfireChance += 5;
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} added to Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -34,7 +34,7 @@ namespace WillsWackyCards.Cards.Curses
             {
                 misfire.misfireChance -= 5; 
             }
-            UnityEngine.Debug.Log($"[WWC][Curse] {GetTitle()} removed from Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -79,7 +79,7 @@ namespace WillsWackyCards.Cards.Curses
         }
         public override string GetModName()
         {
-            return "Curse";
+            return WillsWackyCards.CurseInitials;
         }
         public override bool GetEnabled()
         {

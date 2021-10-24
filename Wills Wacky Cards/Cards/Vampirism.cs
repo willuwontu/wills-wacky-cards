@@ -26,7 +26,7 @@ namespace WillsWackyCards.Cards
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CharacterCurse") };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CharacterCurse") };
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} Built");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -34,13 +34,13 @@ namespace WillsWackyCards.Cards
             var vampirism = LifeDrain.gameObject.AddComponent<Vampirism_Mono>();
             statModifiers.AddObjectToPlayer = LifeDrain;
             statModifiers.GetAdditionalData().Vampire = true;
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} added to Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var vamprism = player.gameObject.GetOrAddComponent<Vampirism_Mono>();
             Destroy(vamprism);
-            UnityEngine.Debug.Log($"[WWC][Card] {GetTitle()} removed from Player {player.playerID}");
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -113,7 +113,7 @@ namespace WillsWackyCards.Cards
         }
         public override string GetModName()
         {
-            return "WWC";
+            return WillsWackyCards.ModInitials;
         }
     }
 }
