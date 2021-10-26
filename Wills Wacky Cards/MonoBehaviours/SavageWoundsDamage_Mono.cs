@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    public class SavageWoundsDamage_Mono : MonoBehaviour
+    public class SavageWoundsDamage_Mono : Hooked_Mono
     {
         public bool start = false;
         public float duration = 0f;
@@ -23,6 +23,7 @@ namespace WillsWackyCards.MonoBehaviours
         private void Start()
         {
             data = GetComponentInParent<CharacterData>();
+            HookedMonoManager.instance.hookedMonos.Add(this);
         }
 
         private void FixedUpdate()
@@ -56,7 +57,7 @@ namespace WillsWackyCards.MonoBehaviours
             }
         }
 
-        private void OnDisable()
+        public override void OnPointEnd()
         {
             colorEffect.Destroy();
             Destroy(this);
@@ -64,6 +65,7 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void OnDestroy()
         {
+            HookedMonoManager.instance.hookedMonos.Remove(this);
             colorEffect.Destroy();
         }
 

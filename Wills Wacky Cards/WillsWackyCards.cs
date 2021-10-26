@@ -54,7 +54,8 @@ namespace WillsWackyCards
             instance = this;
             instance.gameObject.name = "WillsWackyCards";
 
-            remover = gameObject.GetOrAddComponent<CardRemover>();
+            gameObject.AddComponent<HookedMonoManager>();
+            remover = gameObject.AddComponent<CardRemover>();
 
             UnityEngine.Debug.Log("[WWC] Loading Cards");
             CustomCard.BuildCard<AmmoCache>();
@@ -104,7 +105,12 @@ namespace WillsWackyCards
             GameModeManager.AddHook(GameModeHooks.HookBattleStart, BattleStart);
             GameModeManager.AddHook(GameModeHooks.HookPlayerPickStart, PlayerPickStart);
             GameModeManager.AddHook(GameModeHooks.HookPlayerPickEnd, PlayerPickEnd);
+            GameModeManager.AddHook(GameModeHooks.HookPointEnd, PointStart);
             GameModeManager.AddHook(GameModeHooks.HookPointEnd, PointEnd);
+            GameModeManager.AddHook(GameModeHooks.HookPickStart, PickStart);
+            GameModeManager.AddHook(GameModeHooks.HookPickEnd, PickEnd);
+            GameModeManager.AddHook(GameModeHooks.HookRoundStart, RoundStart);
+            GameModeManager.AddHook(GameModeHooks.HookRoundEnd, RoundEnd);
 
             var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
             networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
@@ -164,6 +170,33 @@ namespace WillsWackyCards
             }
         }
 
+        IEnumerator RoundStart(IGameModeHandler gm)
+        {
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnRoundStart();
+            }
+            yield break;
+        }
+
+        IEnumerator RoundEnd(IGameModeHandler gm)
+        {
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnRoundEnd();
+            }
+            yield break;
+        }
+
+        IEnumerator PointStart(IGameModeHandler gm)
+        {
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnPointStart();
+            }
+            yield break;
+        }
+
         IEnumerator PointEnd(IGameModeHandler gm)
         {
             foreach (var player in PlayerManager.instance.players)
@@ -176,16 +209,46 @@ namespace WillsWackyCards
                     player.data.weaponHandler.gun.currentCharge = 0f;
                 }
             }
-            yield break;
-        }
-
-        IEnumerator PlayerPickEnd(IGameModeHandler gm)
-        {
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnPointEnd();
+            }
             yield break;
         }
 
         IEnumerator PlayerPickStart(IGameModeHandler gm)
         {
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnPlayerPickStart();
+            }
+            yield break;
+        }
+
+        IEnumerator PlayerPickEnd(IGameModeHandler gm)
+        {
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnPlayerPickEnd();
+            }
+            yield break;
+        }
+
+        IEnumerator PickStart(IGameModeHandler gm)
+        {
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnPickStart();
+            }
+            yield break;
+        }
+
+        IEnumerator PickEnd(IGameModeHandler gm)
+        {
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnPickEnd();
+            }
             yield break;
         }
 
@@ -208,6 +271,10 @@ namespace WillsWackyCards
                     plasma.canShoot = true;
                 }
             }
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnBattleStart();
+            }
             yield break;
         }
         IEnumerator GameStart(IGameModeHandler gm)
@@ -221,7 +288,10 @@ namespace WillsWackyCards
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(Minigun.componentCatgory);
                 }
             }
-
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnGameStart();
+            }
             yield break;
         }
 
@@ -231,6 +301,10 @@ namespace WillsWackyCards
             DestroyAll<Vampirism_Mono>();
             DestroyAll<Gatling_Mono>();
             DestroyAll<Misfire_Mono>();
+            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
+            {
+                hookedMono.OnGameEnd();
+            }
             yield break;
         }
         void DestroyAll<T>() where T : UnityEngine.Object
