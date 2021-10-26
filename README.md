@@ -37,10 +37,16 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Forbidden Magics (Rare)
 - Purifying Light (Rare)
 - Cursed Knowledge (Common)
-
+- Adrenaline Rush (Uncommon)
+- Endurance Training (Uncommon)
 
 ----
-## v 1.2.10
+## v 1.3.1
+- 2 new cards added (Adrenaline Rush, Endurance Training)
+- Momentary Confusion is no longer confused about being a curse.
+
+----
+## v 1.3.0
 - 6 new cards added (Savage Wounds, Ritualistic Sacrifice, Forbidden Magics, Purifying Light, Cursed Knowledge, Momentary Confusion)
 
 ----

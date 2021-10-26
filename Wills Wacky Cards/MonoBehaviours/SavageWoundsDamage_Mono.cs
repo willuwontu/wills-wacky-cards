@@ -59,8 +59,7 @@ namespace WillsWackyCards.MonoBehaviours
 
         public override void OnPointEnd()
         {
-            colorEffect.Destroy();
-            Destroy(this);
+            UnityEngine.GameObject.Destroy(this);
         }
 
         private void OnDestroy()

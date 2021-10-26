@@ -1,43 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyCards.Extensions;
-using WillsWackyManagers.Utils;
+using WillsWackyCards.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
-using ModdingUtils.Extensions;
 using UnityEngine;
 
 namespace WillsWackyCards.Cards
 {
-    class HiltlessBlade : CustomCard
+    class AdrenalineRush : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            cardInfo.GetAdditionalData().canBeReassigned = false;
+            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
+            var cardMono = gameObject.GetOrAddComponent<PointCard_Mono>();
+            cardMono.multiplierPerPoint = -0.2f;
+            cardMono.startValue = 1.30f;
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
-
+            var training = player.gameObject.AddComponent<AdrenalineRush_Mono>();
+            training.multiplierPerPoint = -0.2f;
+            training.startValue = 1.30f;
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            var training = player.gameObject.GetComponent<AdrenalineRush_Mono>();
+            Destroy(training);
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Hiltless Blade";
+            return "Adrenaline Rush";
         }
         protected override string GetDescription()
         {
-            return "Sometimes it take a little pain to win.";
+            return "Decreases by 20% with each match point.";
         }
         protected override GameObject GetCardArt()
         {
@@ -45,7 +47,7 @@ namespace WillsWackyCards.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return CardInfo.Rarity.Uncommon;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -54,22 +56,43 @@ namespace WillsWackyCards.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Rare",
-                    amount = "+1",
+                    stat = "HP",
+                    amount = "+0%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
-                    positive = false,
-                    stat = "Curse",
-                    amount = "+1",
+                    positive = true,
+                    stat = "Movespeed",
+                    amount = "+0%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Damage",
+                    amount = "+0%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Reload Time",
+                    amount = "+0%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Block Cooldown",
+                    amount = "+0%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.EvilPurple;
+            return CardThemeColor.CardThemeColorType.DestructiveRed;
         }
         public override string GetModName()
         {

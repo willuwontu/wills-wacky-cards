@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Photon.Pun;
 using UnityEngine;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    public abstract class Hooked_Mono : MonoBehaviour
+    public class Hooked_Mono : MonoBehaviourPun
     {
         public virtual void OnRoundStart()
         {

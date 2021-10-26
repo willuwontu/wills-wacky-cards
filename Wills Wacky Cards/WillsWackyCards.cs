@@ -34,7 +34,7 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.3.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.3.1"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -93,6 +93,8 @@ namespace WillsWackyCards
             CustomCard.BuildCard<ForbiddenMagics>();
             CustomCard.BuildCard<PurifyingLight>();
             CustomCard.BuildCard<CursedKnowledge>();
+            CustomCard.BuildCard<EnduranceTraining>();
+            CustomCard.BuildCard<AdrenalineRush>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
@@ -105,7 +107,7 @@ namespace WillsWackyCards
             GameModeManager.AddHook(GameModeHooks.HookBattleStart, BattleStart);
             GameModeManager.AddHook(GameModeHooks.HookPlayerPickStart, PlayerPickStart);
             GameModeManager.AddHook(GameModeHooks.HookPlayerPickEnd, PlayerPickEnd);
-            GameModeManager.AddHook(GameModeHooks.HookPointEnd, PointStart);
+            GameModeManager.AddHook(GameModeHooks.HookPointStart, PointStart);
             GameModeManager.AddHook(GameModeHooks.HookPointEnd, PointEnd);
             GameModeManager.AddHook(GameModeHooks.HookPickStart, PickStart);
             GameModeManager.AddHook(GameModeHooks.HookPickEnd, PickEnd);
@@ -192,6 +194,7 @@ namespace WillsWackyCards
         {
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
             {
+                //UnityEngine.Debug.Log($"[{ModInitials}][Debugging] Running OnPointStart");
                 hookedMono.OnPointStart();
             }
             yield break;
@@ -211,6 +214,7 @@ namespace WillsWackyCards
             }
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
             {
+                //UnityEngine.Debug.Log($"[{ModInitials}][Debugging] Running OnPointEnd");
                 hookedMono.OnPointEnd();
             }
             yield break;
