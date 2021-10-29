@@ -9,11 +9,11 @@ using System.Collections.Generic;
 
 namespace WillsWackyCards.MonoBehaviours
 {
-    public class MomentaryConfusion_Mono : MonoBehaviour
+    public class MomentaryConfusion_Mono : Hooked_Mono
     {
         public int chance = 0;
         public float duration = 0f;
-        public float bufferTime = 12f;
+        public float bufferTime = 8f;
         public float timeBetweenChecks = 2f;
 
         private static System.Random random = new System.Random();
@@ -26,7 +26,7 @@ namespace WillsWackyCards.MonoBehaviours
         private bool coroutineStarted;
         private CharacterData data;
         private Player player;
-        private PlayerActions controls;
+        private PlayerActions controls = null;
         private List<BindingSource> controlsA;
         private List<BindingSource> controlsB;
         private List<PlayerAction> actions;
@@ -36,6 +36,7 @@ namespace WillsWackyCards.MonoBehaviours
         private void Start()
         {
             data = GetComponentInParent<CharacterData>();
+            HookedMonoManager.instance.hookedMonos.Add(this);
         }
 
         private void FixedUpdate()
@@ -54,7 +55,7 @@ namespace WillsWackyCards.MonoBehaviours
                 coroutineStarted = true;
             }
 
-            if (!swapped)
+            if (!swapped && controls != null)
             {
                 timeSinceSwap += Time.deltaTime;
                 if (timeSinceSwap >= bufferTime)
@@ -86,12 +87,17 @@ namespace WillsWackyCards.MonoBehaviours
             }
         }
 
-        private void OnDisable()
+        public override void OnRoundEnd()
         {
             if (swapped)
             {
                 UndoSwap();
             }
+        }
+
+        public override void OnGameStart()
+        {
+            UnityEngine.GameObject.Destroy(this);
         }
 
         private void SwapControls()
@@ -105,12 +111,33 @@ namespace WillsWackyCards.MonoBehaviours
             controlsA = new List<BindingSource>();
             controlsB = new List<BindingSource>();
 
-            actions.Add(controls.Block);
-            actions.Add(controls.Fire);
+            try
+            {
+                actions.Add(controls.Block);
+            }
+            catch (NullReferenceException)
+            {
+                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] Player {player.playerID} has no block action??!!!");
+            }
+
+            try
+            {
+                actions.Add(controls.Fire);
+            }
+            catch (NullReferenceException)
+            {
+                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] Player {player.playerID} has no block action??!!!");
+            }
+
+
             actions.Add(controls.Left);
+
             actions.Add(controls.Right);
+
             actions.Add(controls.Up);
+
             actions.Add(controls.Down);
+
             actions.Add(controls.Jump);
 
             actionA = actions[random.Next(actions.Count)];
@@ -146,6 +173,7 @@ namespace WillsWackyCards.MonoBehaviours
 
         private void UndoSwap()
         {
+            swapped = false;
             actionA.ClearBindings();
             actionB.ClearBindings();
 
@@ -159,7 +187,6 @@ namespace WillsWackyCards.MonoBehaviours
             }
 
             colorEffect.Destroy();
-            swapped = false;
         }
 
         private void OnDestroy()
@@ -168,6 +195,7 @@ namespace WillsWackyCards.MonoBehaviours
             {
                 UndoSwap();
             }
+            HookedMonoManager.instance.hookedMonos.Remove(this);
         }
 
         public void Destroy()

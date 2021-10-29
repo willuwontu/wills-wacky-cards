@@ -8,7 +8,9 @@ using System.Threading.Tasks;
 using System.Reflection;
 using UnityEngine;
 using BepInEx;
+using BepInEx.Configuration;
 using UnboundLib;
+using UnboundLib.Utils.UI;
 using UnboundLib.GameModes;
 using UnboundLib.Cards;
 using UnboundLib.Utils;
@@ -20,6 +22,7 @@ using WillsWackyManagers.Utils;
 using WillsWackyCards.MonoBehaviours;
 using HarmonyLib;
 using Photon.Pun;
+using TMPro;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 
 namespace WillsWackyCards
@@ -34,10 +37,12 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.3.1"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.3.2"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
+
+        public static ConfigEntry<bool> enableTableFlip;
 
         public static WillsWackyCards instance { get; private set; }
         public static CardRemover remover;
@@ -53,6 +58,8 @@ namespace WillsWackyCards
 
             instance = this;
             instance.gameObject.name = "WillsWackyCards";
+
+            enableTableFlip = Config.Bind("Wills Wacky Cards", "Enabled", true, "Enable table flip and reroll.");
 
             gameObject.AddComponent<HookedMonoManager>();
             remover = gameObject.AddComponent<CardRemover>();
@@ -95,6 +102,8 @@ namespace WillsWackyCards
             CustomCard.BuildCard<CursedKnowledge>();
             CustomCard.BuildCard<EnduranceTraining>();
             CustomCard.BuildCard<AdrenalineRush>();
+            CustomCard.BuildCard<RunicWards>();
+            CustomCard.BuildCard<HiltlessBlade>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
@@ -117,6 +126,9 @@ namespace WillsWackyCards
             var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
             networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
             networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
+
+            Unbound.RegisterMenu(ModName, () => { }, NewGUI, null, false);
+            Unbound.RegisterHandshake(ModId, OnHandShakeCompleted);
         }
 
         private void OnJoinedRoomAction()
@@ -153,6 +165,28 @@ namespace WillsWackyCards
             //{
             //    UnityEngine.Debug.Log($"Offense Card {cardInfo.Key}: {cardInfo.Value.cardName}, Stack Count: {cardInfo.Value.GetComponent<MomentumCard_Mono>().stacks}");
             //}
+        }
+
+        private static void NewGUI(GameObject menu)
+        {
+            MenuHandler.CreateText($"{ModName} Options", menu, out TextMeshProUGUI _);
+            MenuHandler.CreateText(" ", menu, out TextMeshProUGUI _);
+            MenuHandler.CreateToggle(enableTableFlip.Value, "Enable Table Flip and Reroll", menu, value => { enableTableFlip.Value = value; OnHandShakeCompleted(); } );
+        }
+
+        private static void OnHandShakeCompleted()
+        {
+            if (PhotonNetwork.IsMasterClient)
+            {
+                NetworkingManager.RPC_Others(typeof(WillsWackyCards), nameof(SyncSettings),
+                    new[] { enableTableFlip.Value });
+            }
+        }
+
+        [UnboundRPC]
+        private static void SyncSettings(bool tableFlipEnabled)
+        {
+            enableTableFlip.Value = tableFlipEnabled;
         }
 
         public static class WaitFor
@@ -192,6 +226,10 @@ namespace WillsWackyCards
 
         IEnumerator PointStart(IGameModeHandler gm)
         {
+            foreach (var player in PlayerManager.instance.players)
+            {
+                player.data.stats.GetAdditionalData().shieldsRemaining = player.data.currentCards.Where((cardInfo) => cardInfo.cardName == "Runic Wards").Count();
+            }
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
             {
                 //UnityEngine.Debug.Log($"[{ModInitials}][Debugging] Running OnPointStart");
@@ -287,9 +325,20 @@ namespace WillsWackyCards
 
             foreach (var player in PlayerManager.instance.players)
             {
-                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(Minigun.componentCatgory))
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(Minigun.componentCategory))
                 {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(Minigun.componentCatgory);
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(Minigun.componentCategory);
+                }
+                if (!enableTableFlip.Value)
+                {
+                    if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(TableFlip.tableFlipCategory))
+                    {
+                        ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(TableFlip.tableFlipCategory);
+                    }                    
+                }
+                else
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll((category) => category == TableFlip.tableFlipCategory);
                 }
             }
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)

@@ -15,10 +15,11 @@ namespace WillsWackyCards.Cards
 {
     class TableFlip : CustomCard
     {
+        internal static CardCategory tableFlipCategory = CustomCardCategories.instance.CardCategory("Table Flip");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.GetAdditionalData().canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { RerollManager.instance.NoFlip };
+            cardInfo.categories = new CardCategory[] { RerollManager.instance.NoFlip, tableFlipCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
