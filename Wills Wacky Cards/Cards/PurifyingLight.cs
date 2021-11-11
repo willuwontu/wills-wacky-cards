@@ -23,7 +23,14 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            CurseManager.instance.RemoveAllCurses(player, (cardInfo) => ReplaceCurse(cardInfo, player, gun, gunAmmo, data, health, gravity, block, characterStats));
+            var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
+
+            foreach (var curse in curses)
+            {
+                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][{GetTitle()}] Player {player.playerID} has {curse.cardName} on them.");
+            }
+
+            WillsWackyCards.instance.ExecuteAfterFrames(10, () => CurseManager.instance.RemoveAllCurses(player, (cardInfo) => ReplaceCurse(cardInfo, player, gun, gunAmmo, data, health, gravity, block, characterStats)));
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
@@ -45,6 +52,11 @@ namespace WillsWackyCards.Cards
             }
 
             var replacement = ModdingUtils.Utils.Cards.instance.GetRandomCardWithCondition(player, gun, gunAmmo, data, health, gravity, block, characterStats, condition);
+
+            if (replacement == null)
+            {
+                UnityEngine.Debug.Log($"[WWC][Debugging] Purifying Light replacement is null.");
+            }
 
             ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, replacement, false, "", 2f, 2f, true);
         }

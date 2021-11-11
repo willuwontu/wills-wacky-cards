@@ -25,7 +25,7 @@ namespace WillsWackyCards.Cards
         {
             CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
 
-            player.gameObject.GetOrAddComponent<HiltlessBlade_Mono>();
+            WillsWackyCards.instance.ExecuteAfterFrames(10, () => player.gameObject.GetOrAddComponent<HiltlessBlade_Mono>());
 
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }

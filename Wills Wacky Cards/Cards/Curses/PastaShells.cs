@@ -51,11 +51,18 @@ namespace WillsWackyCards.Cards.Curses
             {
                 new CardInfoStat()
                 {
-                    positive = true,
+                    positive = false,
                     stat = "Damage",
                     amount = "-50%",
                     simepleAmount = CardInfoStat.SimpleAmount.aLotLower
-                }
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Bullet Drag",
+                    amount = "Increased",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                },
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()

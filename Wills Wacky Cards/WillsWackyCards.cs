@@ -102,7 +102,7 @@ namespace WillsWackyCards
             CustomCard.BuildCard<CursedKnowledge>();
             CustomCard.BuildCard<EnduranceTraining>();
             CustomCard.BuildCard<AdrenalineRush>();
-            CustomCard.BuildCard<RunicWards>();
+            //CustomCard.BuildCard<RunicWards>();
             CustomCard.BuildCard<HiltlessBlade>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
@@ -172,6 +172,7 @@ namespace WillsWackyCards
             MenuHandler.CreateText($"{ModName} Options", menu, out TextMeshProUGUI _);
             MenuHandler.CreateText(" ", menu, out TextMeshProUGUI _);
             MenuHandler.CreateToggle(enableTableFlip.Value, "Enable Table Flip and Reroll", menu, value => { enableTableFlip.Value = value; OnHandShakeCompleted(); } );
+            MenuHandler.CreateText(" ", menu, out TextMeshProUGUI _);
         }
 
         private static void OnHandShakeCompleted()

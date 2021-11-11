@@ -39,6 +39,13 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Cursed Knowledge (Common)
 - Adrenaline Rush (Uncommon)
 - Endurance Training (Uncommon)
+- Hiltless Blade (Common)
+
+----
+## v 1.3.2
+- 1 new card (Hiltless Blade)
+- There is now a setting to toggle Reroll and Tableflip off (by default they're allowed), so you don't have to worry about if they're disabled or not.
+- Patches to code logic and foundations laid for other cards.
 
 ----
 ## v 1.3.1

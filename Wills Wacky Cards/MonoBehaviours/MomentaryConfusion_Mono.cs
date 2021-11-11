@@ -27,9 +27,9 @@ namespace WillsWackyCards.MonoBehaviours
         private CharacterData data;
         private Player player;
         private PlayerActions controls = null;
-        private List<BindingSource> controlsA;
-        private List<BindingSource> controlsB;
-        private List<PlayerAction> actions;
+        private List<BindingSource> controlsA = new List<BindingSource>();
+        private List<BindingSource> controlsB = new List<BindingSource>();
+        //private List<PlayerAction> actions;
         private PlayerAction actionA;
         private PlayerAction actionB;
 
@@ -107,37 +107,18 @@ namespace WillsWackyCards.MonoBehaviours
             timeSinceCheck = 0f;
             swapTimeLeft = duration;
 
-            actions = new List<PlayerAction>();
+            var actions = new List<PlayerAction>();
+            controlsA.Clear();
+            controlsB.Clear();
             controlsA = new List<BindingSource>();
             controlsB = new List<BindingSource>();
 
-            try
-            {
-                actions.Add(controls.Block);
-            }
-            catch (NullReferenceException)
-            {
-                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] Player {player.playerID} has no block action??!!!");
-            }
-
-            try
-            {
-                actions.Add(controls.Fire);
-            }
-            catch (NullReferenceException)
-            {
-                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] Player {player.playerID} has no block action??!!!");
-            }
-
-
+            actions.Add(controls.Block);
+            actions.Add(controls.Fire);
             actions.Add(controls.Left);
-
             actions.Add(controls.Right);
-
             actions.Add(controls.Up);
-
             actions.Add(controls.Down);
-
             actions.Add(controls.Jump);
 
             actionA = actions[random.Next(actions.Count)];
@@ -193,7 +174,14 @@ namespace WillsWackyCards.MonoBehaviours
         {
             if (swapped)
             {
-                UndoSwap();
+                try
+                {
+                    UndoSwap();
+                }
+                catch (NullReferenceException)
+                {
+                    UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] Player {player.playerID} has issues with undoing the swap.");
+                }
             }
             HookedMonoManager.instance.hookedMonos.Remove(this);
         }

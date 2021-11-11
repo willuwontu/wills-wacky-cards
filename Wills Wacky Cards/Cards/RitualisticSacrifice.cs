@@ -23,7 +23,7 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            CurseManager.instance.RemoveAllCurses(player, (cardInfo) => ModdingUtils.Utils.Cards.instance.AddCardToPlayer(PlayerManager.instance.GetRandomEnemy(player), cardInfo, false, "", 2f, 2f, true));
+            WillsWackyCards.instance.ExecuteAfterFrames(10, () => CurseManager.instance.RemoveAllCurses(player, (cardInfo) => ModdingUtils.Utils.Cards.instance.AddCardToPlayer(PlayerManager.instance.GetRandomEnemy(player), cardInfo, false, "", 2f, 2f, true)));
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 

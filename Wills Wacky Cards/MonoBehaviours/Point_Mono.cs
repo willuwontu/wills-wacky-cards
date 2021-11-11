@@ -28,7 +28,7 @@ namespace WillsWackyCards.MonoBehaviours
                 {
                     result = 1/result;
                 }
-                UnityEngine.Debug.Log($"Stat multiplier is {result}");
+                //UnityEngine.Debug.Log($"Stat multiplier is {result}");
                 return result; 
             };
         public float multiplierPerPoint = 1f;
