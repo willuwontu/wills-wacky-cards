@@ -34,25 +34,6 @@ namespace WWC.Patches
             }
         }
 
-        [HarmonyPrefix]
-        [HarmonyPatch(typeof(HealthHandler), "CallTakeDamage")]
-        static void RunicShieldBlock(HealthHandler __instance, ref Vector2 damage, Vector2 position, Player damagingPlayer, Player ___player)
-        {
-            var player = ___player;
-            if (damagingPlayer != null && damagingPlayer != player && player.data.stats.GetAdditionalData().shieldsRemaining > 0)
-            {
-                player.data.stats.GetAdditionalData().shieldsRemaining -= 1;
-                damage = Vector2.zero;
-                var enemy = damagingPlayer;
-                if (damagingPlayer.data.GetAdditionalData().isAIMinion)
-                {
-                    enemy = damagingPlayer.data.GetAdditionalData().spawner;
-                }
-
-                CurseManager.instance.CursePlayer(enemy, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(enemy, curse); });
-            }
-        }
-
         //[HarmonyPrefix]
         //[HarmonyPatch("SomeMethod")]
         //static void MyMethodName()
