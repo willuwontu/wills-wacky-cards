@@ -9,7 +9,7 @@ using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Curses
+namespace WWC.Cards.Curses
 {
     class CrookedLegs : CustomCard
     {

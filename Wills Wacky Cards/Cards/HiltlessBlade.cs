@@ -5,14 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using WillsWackyCards.Extensions;
-using WillsWackyCards.MonoBehaviours;
+using WWC.Extensions;
+using WWC.MonoBehaviours;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using ModdingUtils.Extensions;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class HiltlessBlade : CustomCard
     {

@@ -15,17 +15,17 @@ using UnboundLib.GameModes;
 using UnboundLib.Cards;
 using UnboundLib.Utils;
 using UnboundLib.Networking;
-using WillsWackyCards.Cards;
-using WillsWackyCards.Cards.Curses;
-using WillsWackyCards.Extensions;
+using WWC.Cards;
+using WWC.Cards.Curses;
+using WWC.Extensions;
 using WillsWackyManagers.Utils;
-using WillsWackyCards.MonoBehaviours;
+using WWC.MonoBehaviours;
 using HarmonyLib;
 using Photon.Pun;
 using TMPro;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 
-namespace WillsWackyCards
+namespace WWC
 {
     [BepInDependency("com.willis.rounds.unbound", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.willuwontu.rounds.managers", BepInDependency.DependencyFlags.HardDependency)]
@@ -37,7 +37,7 @@ namespace WillsWackyCards
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.3.2"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.3.3"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";

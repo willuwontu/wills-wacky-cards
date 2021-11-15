@@ -7,7 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class AmmoCache : CustomCard
     {

@@ -5,7 +5,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-namespace WillsWackyCards.MonoBehaviours
+namespace WWC.MonoBehaviours
 {
     public class MomentumCard_Mono : MonoBehaviour
     {

@@ -8,7 +8,7 @@ using UnboundLib.Cards;
 using UnityEngine;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class RunningShoes : CustomCard
     {

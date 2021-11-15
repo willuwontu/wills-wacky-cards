@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnboundLib;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using System;
 using Photon.Pun;
 
-namespace WillsWackyCards.MonoBehaviours
+namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
     public class Misfire_Mono : MonoBehaviourPun

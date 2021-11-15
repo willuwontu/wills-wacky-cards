@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using WillsWackyCards.Extensions;
-using WillsWackyCards.MonoBehaviours;
+using WWC.Extensions;
+using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class PlasmaRifle : CustomCard
     {

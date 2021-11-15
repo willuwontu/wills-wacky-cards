@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using UnityEngine;
-using WillsWackyCards.Extensions;
-using WillsWackyCards.MonoBehaviours;
+using WWC.Extensions;
+using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class Vampirism : CustomCard
     {

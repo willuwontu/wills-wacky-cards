@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using UnityEngine;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class Shotgun : CustomCard
     {

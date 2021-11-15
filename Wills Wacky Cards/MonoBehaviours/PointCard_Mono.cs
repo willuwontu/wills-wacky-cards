@@ -6,7 +6,7 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
-namespace WillsWackyCards.MonoBehaviours
+namespace WWC.MonoBehaviours
 {
     public class PointCard_Mono : Hooked_Mono
     {

@@ -1,12 +1,12 @@
 ﻿using UnityEngine;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using UnboundLib.GameModes;
 using UnboundLib;
 using System.Collections.Generic;
 using System;
 using System.Linq;
 
-namespace WillsWackyCards.MonoBehaviours
+namespace WWC.MonoBehaviours
 {
     public class HiltlessBlade_Mono : Hooked_Mono
     {

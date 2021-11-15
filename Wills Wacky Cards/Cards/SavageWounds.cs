@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using WillsWackyCards.MonoBehaviours;
-using WillsWackyCards.Extensions;
+using WWC.MonoBehaviours;
+using WWC.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class SavageWounds : CustomCard
     {

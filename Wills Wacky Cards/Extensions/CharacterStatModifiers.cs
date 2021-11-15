@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using HarmonyLib;
 
-namespace WillsWackyCards.Extensions
+namespace WWC.Extensions
 {
     // ADD FIELDS TO GUN
     [Serializable]

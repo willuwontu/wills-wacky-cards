@@ -1,11 +1,11 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using WillsWackyCards.Extensions;
-using WillsWackyCards.MonoBehaviours;
+using WWC.Extensions;
+using WWC.MonoBehaviours;
 using Sonigon;
 using UnboundLib;
 
-namespace WillsWackyCards.Patches
+namespace WWC.Patches
 {
     [HarmonyPatch(typeof(WeaponHandler))] 
     class WeaponHandler_Patch

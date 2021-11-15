@@ -9,7 +9,7 @@ using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using WillsWackyManagers.Utils;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Curses
+namespace WWC.Cards.Curses
 {
     class PastaShells : CustomCard
     {

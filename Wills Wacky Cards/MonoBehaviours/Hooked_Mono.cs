@@ -4,7 +4,7 @@ using System.Text;
 using Photon.Pun;
 using UnityEngine;
 
-namespace WillsWackyCards.MonoBehaviours
+namespace WWC.MonoBehaviours
 {
     public class Hooked_Mono : MonoBehaviourPun
     {

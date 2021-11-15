@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using UnboundLib.GameModes;
 using UnboundLib;
 using System.Collections.Generic;
 using System;
 
-namespace WillsWackyCards.MonoBehaviours
+namespace WWC.MonoBehaviours
 {
     public class AdrenalineRush_Mono : Point_Mono
     {

@@ -11,7 +11,7 @@ using UnboundLib.Utils;
 using UnityEngine;
 using ModdingUtils.Extensions;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class Hex : CustomCard
     {

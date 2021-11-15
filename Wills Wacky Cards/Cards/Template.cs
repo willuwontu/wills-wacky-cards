@@ -5,11 +5,11 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class Template : CustomCard
     {

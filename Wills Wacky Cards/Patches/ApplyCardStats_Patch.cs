@@ -1,9 +1,9 @@
 ﻿using UnityEngine;
 using HarmonyLib;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using UnboundLib;
 
-namespace WillsWackyCards.Patches
+namespace WWC.Patches
 {
     [HarmonyPatch(typeof(ApplyCardStats), "ApplyStats")]
     class ApplyCardStats_Patch

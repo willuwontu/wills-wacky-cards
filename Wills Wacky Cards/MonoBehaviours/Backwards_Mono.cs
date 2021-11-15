@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnboundLib;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using System;
 
-namespace WillsWackyCards.MonoBehaviours
+namespace WWC.MonoBehaviours
 {
     public class BackwardsBullet_Mono : MonoBehaviour
     {

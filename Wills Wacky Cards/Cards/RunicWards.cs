@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 using UnboundLib;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using WillsWackyManagers.Utils;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using UnboundLib.Cards;
 using UnboundLib.Utils;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class RunicWards : CustomCard
     {

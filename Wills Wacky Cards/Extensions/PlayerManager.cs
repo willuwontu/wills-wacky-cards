@@ -2,7 +2,7 @@
 using System.Reflection;
 using UnityEngine;
 
-namespace WillsWackyCards.Extensions
+namespace WWC.Extensions
 {
     public static class PlayerManagerExtension
     {

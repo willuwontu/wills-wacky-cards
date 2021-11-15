@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using ModdingUtils.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using WillsWackyManagers.Utils;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class RitualisticSacrifice : CustomCard
     {
@@ -23,7 +23,19 @@ namespace WillsWackyCards.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            WillsWackyCards.instance.ExecuteAfterFrames(10, () => CurseManager.instance.RemoveAllCurses(player, (cardInfo) => ModdingUtils.Utils.Cards.instance.AddCardToPlayer(PlayerManager.instance.GetRandomEnemy(player), cardInfo, false, "", 2f, 2f, true)));
+            WillsWackyCards.instance.ExecuteAfterFrames(10, () => 
+                {
+                    var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
+                    CurseManager.instance.RemoveAllCurses(player);
+                    foreach (var curse in curses)
+                    {
+                        var enemies = PlayerManager.instance.players.Where((person) => person.teamID != player.teamID).ToArray();
+
+                        var enemy = enemies[UnityEngine.Random.Range(0, enemies.Count())];
+
+                        ModdingUtils.Utils.Cards.instance.AddCardToPlayer(enemy, curse, false, "", 2f, 2f, true);
+                    }
+                });
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 

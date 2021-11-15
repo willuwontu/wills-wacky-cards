@@ -2,7 +2,7 @@
 using ModdingUtils.RoundsEffects;
 using UnityEngine;
 
-namespace WillsWackyCards.MonoBehaviours
+namespace WWC.MonoBehaviours
 {
 	public class SavageWounds_Mono : HitEffect
 	{

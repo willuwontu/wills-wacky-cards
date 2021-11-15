@@ -5,12 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using WillsWackyManagers.Utils;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards.Curses
+namespace WWC.Cards.Curses
 {
     class SlowReflexes : CustomCard
     {

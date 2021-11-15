@@ -1,10 +1,10 @@
 ﻿using HarmonyLib;
 using UnityEngine;
-using WillsWackyCards.Extensions;
-using WillsWackyCards.MonoBehaviours;
+using WWC.Extensions;
+using WWC.MonoBehaviours;
 using UnboundLib;
 
-namespace WillsWackyCards.Patches
+namespace WWC.Patches
 {
     [HarmonyPatch(typeof(GunAmmo))] 
     class GunAmmo_Patch

@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using UnboundLib;
-using WillsWackyCards.Extensions;
+using WWC.Extensions;
 using InControl;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 
-namespace WillsWackyCards.MonoBehaviours
+namespace WWC.MonoBehaviours
 {
     public class MomentaryConfusion_Mono : Hooked_Mono
     {

@@ -7,11 +7,11 @@ using UnboundLib;
 using UnboundLib.Cards;
 using UnityEngine;
 using UnityEngine.UI;
-using WillsWackyCards.Extensions;
-using WillsWackyCards.MonoBehaviours;
+using WWC.Extensions;
+using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class Minigun : CustomCard
     {

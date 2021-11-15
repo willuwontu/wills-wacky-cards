@@ -10,7 +10,7 @@ using UnboundLib.Utils;
 using UnboundLib.Cards;
 using UnityEngine;
 
-namespace WillsWackyCards.Cards
+namespace WWC.Cards
 {
     class BounceTest : CustomCard
     {
