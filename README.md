@@ -24,6 +24,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Slow Reflexes (Curse)
   - Wild Shots (Curse)
   - Momentary Confusion (Curse)
+  - Eroding Darkness (Curse)
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
@@ -40,6 +41,15 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Adrenaline Rush (Uncommon)
 - Endurance Training (Uncommon)
 - Hiltless Blade (Common)
+- Holy Water (Common)
+- Corrupted Ammunition (Rare)
+- Runic Shields (Rare)
+- Cleansing Ritual (Uncommon)
+
+----
+## v 1.4.0
+- 5 new cards (Eroding Darkness, Holy Water, Cleansing Ritual, Runic Shields, Corrupted Ammunition)
+- Lots of fixes.
 
 ----
 ## v 1.3.2

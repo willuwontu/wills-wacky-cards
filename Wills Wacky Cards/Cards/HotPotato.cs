@@ -20,24 +20,22 @@ namespace WWC.Cards
             cardInfo.GetAdditionalData().canBeReassigned = false;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseInteractionCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+
+            gun.damage = 1.2f;
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(20, () =>
             {
-                var curses = player.data.currentCards.Intersect(CurseManager.instance.GetRaw()).ToList();
-                var curse = curses[UnityEngine.Random.Range(0, curses.Count - 1)];
-                for (int i = 0; i < player.data.currentCards.Count; i++)
-                {
-                    if (player.data.currentCards[i].cardName == curse.cardName)
-                    {
-                        ModdingUtils.Utils.Cards.instance.RemoveCardFromPlayer(player, i);
-                        var randomEnemy = PlayerManager.instance.players.Where((person) => person.teamID != player.teamID).ToArray()[UnityEngine.Random.Range(0, PlayerManager.instance.players.Count - 2)];
-                        ModdingUtils.Utils.Cards.instance.AddCardToPlayer(randomEnemy, curse, false, "", 2f, 2f, true);
-                        ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(randomEnemy, curse);
-                        break;
-                    }
-                }
+                var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
+                var curse = curses[UnityEngine.Random.Range(0, curses.Count())];
+
+                ModdingUtils.Utils.Cards.instance.RemoveCardFromPlayer(player, curse, ModdingUtils.Utils.Cards.SelectionType.Random);
+                var enemies = PlayerManager.instance.players.Where((person) => person.teamID != player.teamID).ToArray();
+                var randomEnemy = enemies[UnityEngine.Random.Range(0, enemies.Count())];
+                ModdingUtils.Utils.Cards.instance.AddCardToPlayer(randomEnemy, curse, false, "", 2f, 2f, true);
+                ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(randomEnemy, curse);
+
             });
 
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -67,6 +65,13 @@ namespace WWC.Cards
         {
             return new CardInfoStat[]
             {
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Damage",
+                    amount = "+20%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
                 new CardInfoStat()
                 {
                     positive = true,

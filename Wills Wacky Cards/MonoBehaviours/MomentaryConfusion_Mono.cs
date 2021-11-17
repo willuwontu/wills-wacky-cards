@@ -64,7 +64,7 @@ namespace WWC.MonoBehaviours
                     {
                         timeSinceCheck = 0;
                         var roll = random.Next(100);
-                        if (roll <= chance)
+                        if (roll < chance)
                         {
                             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Hex] Player {player.playerID} Confusion Curse activated with a roll of {roll} and a chance of {chance}%.");
                             SwapControls();

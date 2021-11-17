@@ -37,7 +37,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.3.3"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.4.0"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -78,6 +78,7 @@ namespace WWC
             CustomCard.BuildCard<PastaShells>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<CrookedLegs>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<ErodingDarkness>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<DrivenToEarth>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<Misfire>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<SlowReflexes>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
@@ -102,8 +103,12 @@ namespace WWC
             CustomCard.BuildCard<CursedKnowledge>();
             CustomCard.BuildCard<EnduranceTraining>();
             CustomCard.BuildCard<AdrenalineRush>();
-            //CustomCard.BuildCard<RunicWards>();
+            CustomCard.BuildCard<RunicWards>();
             CustomCard.BuildCard<HiltlessBlade>();
+            CustomCard.BuildCard<CorruptedAmmunition>();
+            CustomCard.BuildCard<HolyWater>();
+            //CustomCard.BuildCard<MixUp>();
+            CustomCard.BuildCard<CleansingRitual>();
             UnityEngine.Debug.Log("[WWC] Cards Built");
             
 
@@ -139,6 +144,65 @@ namespace WWC
         private void OnLeftRoomAction()
         {
 
+        }
+
+        public List<Player> MixUpPlayers = new List<Player>();
+
+        IEnumerator IMixUpCards(Player player)
+        {
+            var triggeringPlayer = player;
+            var nonAIPlayers = PlayerManager.instance.players.Where((person) => !ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(person.data).isAIMinion).ToArray();
+            var originalBoard = nonAIPlayers.ToDictionary((person) => person, (person) => person.data.currentCards.ToArray());
+
+            var newBoard = originalBoard.ToDictionary((kvp) => kvp.Key, (kvp) => kvp.Value.ToList());
+
+            for (int i = 0; i < originalBoard[triggeringPlayer].Count() - 1; i++)
+            {
+                yield return WaitFor.Frames(20);
+
+                if (originalBoard[triggeringPlayer][i].categories.Contains(TableFlip.tableFlipCategory))
+                {
+                    continue;
+                }
+
+                var currentOptions = originalBoard.Where((kvp) => kvp.Value.Length > i).ToDictionary((kvp) => kvp.Key, (kvp) => kvp.Value[i]).Where(
+                    (kvp) => 
+                        !kvp.Value.categories.Contains(TableFlip.tableFlipCategory) && 
+                        (
+                            ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(triggeringPlayer, kvp.Value) || 
+                            kvp.Key == triggeringPlayer
+                        ) && 
+                        (
+                            ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(kvp.Key, originalBoard[triggeringPlayer][i]) || 
+                            kvp.Key == triggeringPlayer
+                        )
+                    ).ToDictionary((kvp) => kvp.Key, (kvp) => kvp.Value);
+
+                if (!(currentOptions.Count > 0))
+                {
+                    continue;
+                }
+
+                var randomSelection = currentOptions.Keys.ToArray()[UnityEngine.Random.Range(0, currentOptions.Keys.ToArray().Count())];
+
+                if (randomSelection = triggeringPlayer)
+                {
+                    continue;
+                }
+
+                var replaced = originalBoard[triggeringPlayer][i];
+                var replacement = currentOptions[randomSelection];
+
+                newBoard[triggeringPlayer][i] = replacement;
+                newBoard[randomSelection][i] = replaced;
+
+                ModdingUtils.Utils.Cards.instance.ReplaceCard(triggeringPlayer, i, replacement, "", 2f, 2f, true);
+                ModdingUtils.Utils.Cards.instance.ReplaceCard(randomSelection, i, replaced, "", 2f, 2f, true);
+
+                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Mix Up][Debugging] Swapped player {triggeringPlayer.playerID}'s {replaced.cardName} with player {randomSelection.playerID}'s {replacement.cardName}.");
+            }
+
+            yield break;
         }
 
         IEnumerator BuildMomentumCards()
@@ -227,10 +291,6 @@ namespace WWC
 
         IEnumerator PointStart(IGameModeHandler gm)
         {
-            foreach (var player in PlayerManager.instance.players)
-            {
-                player.data.stats.GetAdditionalData().shieldsRemaining = player.data.currentCards.Where((cardInfo) => cardInfo.cardName == "Runic Wards").Count();
-            }
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
             {
                 //UnityEngine.Debug.Log($"[{ModInitials}][Debugging] Running OnPointStart");
@@ -274,6 +334,16 @@ namespace WWC
             {
                 hookedMono.OnPlayerPickEnd();
             }
+
+            var mixers = MixUpPlayers.ToArray();
+
+            foreach (var player in mixers)
+            {
+                yield return IMixUpCards(player);
+            }
+
+            MixUpPlayers.Clear();
+
             yield break;
         }
 

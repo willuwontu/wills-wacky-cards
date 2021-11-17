@@ -6,41 +6,38 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
-using WWC.MonoBehaviours;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
-using ModdingUtils.Extensions;
 using UnityEngine;
 
 namespace WWC.Cards
 {
-    class HiltlessBlade : CustomCard
+    class CleansingRitual : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            cardInfo.GetAdditionalData().canBeReassigned = false;
+            ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseInteractionCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            WillsWackyCards.instance.ExecuteAfterFrames(20, () => CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); }));
-
-            WillsWackyCards.instance.ExecuteAfterFrames(10, () => player.gameObject.GetOrAddComponent<HiltlessBlade_Mono>());
-
+            WillsWackyCards.instance.ExecuteAfterFrames(20, () => CurseManager.instance.RemoveAllCurses(player));
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            //Drives me crazy
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Hiltless Blade";
+            return "Cleansing Ritual";
         }
         protected override string GetDescription()
         {
-            return "Sometimes it take a little pain to win.";
+            return "Purify the darkness within my soul.";
         }
         protected override GameObject GetCardArt()
         {
@@ -48,7 +45,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return CardInfo.Rarity.Uncommon;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -57,15 +54,8 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Damage",
-                    amount = "+200%",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Curse",
-                    amount = "+1",
+                    stat = "Curses Removed",
+                    amount = "All",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
