@@ -22,6 +22,7 @@ namespace WWC.MonoBehaviours
         private float timeSinceSwap = 0f;
         private float timeSinceCheck = 0f;
         private ModdingUtils.MonoBehaviours.ColorEffect colorEffect;
+        private bool battleStarted = false;
 
         private bool coroutineStarted;
         private CharacterData data;
@@ -57,6 +58,10 @@ namespace WWC.MonoBehaviours
 
             if (!swapped && controls != null)
             {
+                if (!battleStarted)
+                {
+                    return;
+                }
                 timeSinceSwap += Time.deltaTime;
                 if (timeSinceSwap >= bufferTime)
                 {
@@ -85,6 +90,16 @@ namespace WWC.MonoBehaviours
                     UndoSwap();
                 }
             }
+        }
+
+        public override void OnPointEnd()
+        {
+            battleStarted = false;
+        }
+
+        public override void OnBattleStart()
+        {
+            battleStarted = true;
         }
 
         public override void OnRoundEnd()

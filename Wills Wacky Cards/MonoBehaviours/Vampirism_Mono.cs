@@ -55,7 +55,7 @@ namespace WWC.MonoBehaviours
                 return;
             }
             damage = target.data.maxHealth * percentLifeDrain;
-            target.data.healthHandler.TakeDamageOverTime(damage * Vector2.up, transform.position, 1f, 0.25f, Color.black, null, data.player, true);
+            target.data.healthHandler.TakeDamageOverTime(damage * Vector2.up, transform.position, 1f, 0.25f, Color.black, null, null, true);
         }
         public void Destroy()
         {

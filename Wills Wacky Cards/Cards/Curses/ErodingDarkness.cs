@@ -111,7 +111,8 @@ namespace WWC.Cards.Curses
 
         public override void OnRoundStart()
         {
-            rounds++;
+            rounds += 1;
+
             if (rounds >= 2)
             {
                 CurseManager.instance.CursePlayer(player);

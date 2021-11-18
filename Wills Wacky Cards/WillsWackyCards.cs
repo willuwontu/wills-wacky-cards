@@ -24,6 +24,7 @@ using HarmonyLib;
 using Photon.Pun;
 using TMPro;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using UnityEngine.UI;
 
 namespace WWC
 {
@@ -37,12 +38,13 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.4.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.4.2"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
 
         public static ConfigEntry<bool> enableTableFlip;
+        public static ConfigEntry<bool> secondHalfTableFlip;
 
         public static WillsWackyCards instance { get; private set; }
         public static CardRemover remover;
@@ -59,7 +61,8 @@ namespace WWC
             instance = this;
             instance.gameObject.name = "WillsWackyCards";
 
-            enableTableFlip = Config.Bind("Wills Wacky Cards", "Enabled", true, "Enable table flip and reroll.");
+            enableTableFlip = Config.Bind("Wills Wacky Cards", "TableFlipAllowed", true, "Enable table flip and reroll.");
+            secondHalfTableFlip = Config.Bind("Wills Wacky Cards", "TableFlipSecondHalf", true, "Makes Table Flip an Uncommon and only able to appear in the second half.");
 
             gameObject.AddComponent<HookedMonoManager>();
             remover = gameObject.AddComponent<CardRemover>();
@@ -235,7 +238,19 @@ namespace WWC
         {
             MenuHandler.CreateText($"{ModName} Options", menu, out TextMeshProUGUI _);
             MenuHandler.CreateText(" ", menu, out TextMeshProUGUI _);
-            MenuHandler.CreateToggle(enableTableFlip.Value, "Enable Table Flip and Reroll", menu, value => { enableTableFlip.Value = value; OnHandShakeCompleted(); } );
+            var secondHalf = MenuHandler.CreateToggle(secondHalfTableFlip.Value, "Table Flip becomes uncommon, and can only show up when someone has half the rounds needed to win.", menu, value => { secondHalfTableFlip.Value = value; OnHandShakeCompleted(); });
+            var toggle = secondHalf.GetComponent<Toggle>();
+            var enable = MenuHandler.CreateToggle(enableTableFlip.Value, "Enable Table Flip and Reroll", menu, value => 
+                {
+                    if (!value)
+                    {
+                        toggle.isOn = false;
+                        toggle.enabled = false;
+                    }
+                    enableTableFlip.Value = value; 
+                    OnHandShakeCompleted(); 
+                } );
+
             MenuHandler.CreateText(" ", menu, out TextMeshProUGUI _);
         }
 
@@ -243,14 +258,14 @@ namespace WWC
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                NetworkingManager.RPC_Others(typeof(WillsWackyCards), nameof(SyncSettings),
-                    new[] { enableTableFlip.Value });
+                NetworkingManager.RPC_Others(typeof(WillsWackyCards), nameof(SyncSettings), new[] { secondHalfTableFlip.Value, enableTableFlip.Value }); ;
             }
         }
 
         [UnboundRPC]
-        private static void SyncSettings(bool tableFlipEnabled)
+        private static void SyncSettings(bool tableFlipSecondHalf, bool tableFlipEnabled)
         {
+            secondHalfTableFlip.Value = tableFlipSecondHalf;
             enableTableFlip.Value = tableFlipEnabled;
         }
 

@@ -55,7 +55,7 @@ namespace WWC.Cards
             {
                 new CardInfoStat()
                 {
-                    positive = false,
+                    positive = true,
                     stat = "Damage per Curse",
                     amount = "+20%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned

@@ -15,7 +15,7 @@ namespace WWC.Cards.Curses
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.damage = 0.5f;
+            gun.damage = 0.75f;
             gun.drag = 5f;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
@@ -53,7 +53,7 @@ namespace WWC.Cards.Curses
                 {
                     positive = false,
                     stat = "Damage",
-                    amount = "-50%",
+                    amount = "-25%",
                     simepleAmount = CardInfoStat.SimpleAmount.aLotLower
                 },
                 new CardInfoStat()

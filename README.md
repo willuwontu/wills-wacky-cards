@@ -43,12 +43,20 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Hiltless Blade (Common)
 - Holy Water (Common)
 - Corrupted Ammunition (Rare)
-- Runic Shields (Rare)
+- Runic Wards (Rare)
 - Cleansing Ritual (Uncommon)
 
 ----
+## v 1.4.2
+- Runic Wards now grants a curse for every 200 damage dealt to the card's holder. Yes, this includes self-damage. Quit hitting yourself.
+
+----
+## v 1.4.1
+- Quick patch to a bug
+
+----
 ## v 1.4.0
-- 5 new cards (Eroding Darkness, Holy Water, Cleansing Ritual, Runic Shields, Corrupted Ammunition)
+- 5 new cards (Eroding Darkness, Holy Water, Cleansing Ritual, Runic Wards, Corrupted Ammunition)
 - Lots of fixes.
 
 ----

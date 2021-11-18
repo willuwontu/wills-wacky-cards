@@ -34,32 +34,6 @@ namespace WWC.Patches
             }
         }
 
-        [HarmonyPatch("CallTakeDamage")]
-        [HarmonyPrefix]
-        public static void CallTakeDamage(Player ___player, Vector2 damage, Player damagingPlayer = null)
-        {
-            var wards = ___player.gameObject.GetComponent<RunicWardsBlock_Mono>();
-
-            if (!wards)
-            {
-                return;
-            }
-
-            if (damagingPlayer != null && !wards.damaged)
-            {
-                wards.damaged = true;
-                var target = damagingPlayer;
-
-                if (ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(target.data).isAIMinion)
-                {
-                    target = ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(target.data).spawner;
-                    UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Runic Wards][Debugging] Player {damagingPlayer.playerID} was an AI with player {target.playerID} as it's master.");
-                }
-
-                wards.attacker = target;
-            }
-        }
-
         //[HarmonyPrefix]
         //[HarmonyPatch("SomeMethod")]
         //static void MyMethodName()

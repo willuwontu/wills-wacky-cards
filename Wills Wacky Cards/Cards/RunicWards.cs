@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
+using WWC.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using WillsWackyManagers.Utils;
 using WWC.MonoBehaviours;
@@ -25,7 +26,10 @@ namespace WWC.Cards
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(20, () => CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); }));
-            player.gameObject.GetOrAddComponent<RunicWardsBlock_Mono>();
+            var blockMono = player.gameObject.GetOrAddComponent<RunicWardsBlock_Mono>();
+            var wasHitMono = player.gameObject.GetOrAddComponent<RunicWards_WasHitMono>();
+            blockMono.wasHitMono = wasHitMono;
+            wasHitMono.blockMono = blockMono;
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -39,7 +43,7 @@ namespace WWC.Cards
         }
         protected override string GetDescription()
         {
-            return "The first person to hurt you each round gains a curse.";
+            return "For every 200 points of damage a person deals to you, they get a curse.";
         }
         protected override GameObject GetCardArt()
         {
@@ -55,7 +59,7 @@ namespace WWC.Cards
             {
                 new CardInfoStat()
                 {
-                    positive = false,
+                    positive = true,
                     stat = "Block per Curse",
                     amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
@@ -83,13 +87,15 @@ namespace WWC.Cards
         }
     }
 
+    [DisallowMultipleComponent]
     class RunicWardsBlock_Mono : Hooked_Mono
     {
+        internal RunicWards_WasHitMono wasHitMono;
+
         public int shields = 0;
-        public bool damaged = false;
-        public Player attacker = null;
         public int additionalBlocks = 0;
         private bool increased;
+        internal Dictionary<Player, float> damageTracker = new Dictionary<Player, float>();
 
         private CharacterData data;
         private Player player;
@@ -139,7 +145,6 @@ namespace WWC.Cards
 
         public override void OnBattleStart()
         {
-            damaged = false;
             shields = CurseManager.instance.GetAllCursesOnPlayer(player).Count();
         }
 
@@ -158,18 +163,37 @@ namespace WWC.Cards
 
         public override void OnPointEnd()
         {
-            if (increased)
+            if (PhotonNetwork.OfflineMode || this.photonView.IsMine)
             {
-                increased = false;
-                block.additionalBlocks -= additionalBlocks;
+                var blah = damageTracker.ToDictionary((kvp) => kvp.Key, (kvp) => kvp.Value);
+                foreach (var trackedDamage in blah)
+                {
+                    if (PhotonNetwork.OfflineMode)
+                    {
+                        RPCA_GiveCurse(trackedDamage.Key.playerID, trackedDamage.Value);
+                    }
+                    else
+                    {
+                        this.photonView.RPC(nameof(RPCA_GiveCurse), RpcTarget.All, trackedDamage.Key.playerID, trackedDamage.Value);
+                    }
+                }
+            }
+        }
+
+        [PunRPC]
+        private void RPCA_GiveCurse(int id, float amount)
+        {
+            var person = PlayerManager.instance.GetPlayerWithID(id);
+            var counter = amount;
+
+            while (counter >= 200f)
+            {
+                CurseManager.instance.CursePlayer(person, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(person, curse); });
+                counter -= 200f;
             }
 
-            if (damaged && attacker != null)
-            {
-                CurseManager.instance.CursePlayer(attacker, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
-                attacker = null;
-                damaged = false;
-            }
+            damageTracker[person] = counter;
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Runic Wards][Debugging] Player {player.playerID} has a total of {counter} damage from player {person.playerID} after giving out curses.");
         }
 
         private void OnDestroy()
@@ -178,6 +202,54 @@ namespace WWC.Cards
             {
                 increased = false;
                 block.additionalBlocks -= additionalBlocks;
+            }
+
+            UnityEngine.GameObject.Destroy(wasHitMono);
+        }
+    }
+
+    [DisallowMultipleComponent]
+    class RunicWards_WasHitMono : ModdingUtils.RoundsEffects.WasHitEffect
+    {
+        internal RunicWardsBlock_Mono blockMono;
+
+        private CharacterData data;
+        private Player player;
+
+        private void Start()
+        {
+            data = GetComponentInParent<CharacterData>();
+        }
+
+        private void Update()
+        {
+            if (!player)
+            {
+                if (!(data is null))
+                {
+                    player = data.player;
+                }
+
+            }
+        }
+
+        public override void WasDealtDamage(Vector2 damage, bool selfDamage)
+        {
+            var target = data.lastSourceOfDamage;
+
+            if (ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(target.data).isAIMinion)
+            {
+                target = ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(target.data).spawner;
+                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Runic Wards][Debugging] Player {data.lastSourceOfDamage.playerID} was an AI with player {target.playerID} as it's master.");
+            }
+
+            if (blockMono.damageTracker.Keys.ToArray().Contains(target))
+            {
+                blockMono.damageTracker[target] += damage.magnitude;
+            }
+            else
+            {
+                blockMono.damageTracker.Add(target, damage.magnitude);
             }
         }
     }
