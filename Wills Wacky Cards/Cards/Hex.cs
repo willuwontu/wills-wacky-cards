@@ -15,10 +15,11 @@ namespace WWC.Cards
 {
     class Hex : CustomCard
     {
+        internal static CardCategory curseSpawner = CustomCardCategories.instance.CardCategory("Grants Curses");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.GetAdditionalData().canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory, CurseManager.instance.curseSpawner };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

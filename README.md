@@ -47,6 +47,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Cleansing Ritual (Uncommon)
 
 ----
+## v 1.4.3
+- Various bug fixes.
+
+----
 ## v 1.4.2
 - Runic Wards now grants a curse for every 200 damage dealt to the card's holder. Yes, this includes self-damage. Quit hitting yourself.
 
