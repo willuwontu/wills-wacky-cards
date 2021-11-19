@@ -47,7 +47,7 @@ namespace WWC.Cards
                 ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardData, false, "", 2f, 2f, true);
             }
 
-            WillsWackyCards.remover.DelayedRemoveCard(player, GetTitle(), 20);
+            WillsWackyCards.remover.DelayedRemoveCard(player, GetTitle(), 40);
 
             //var cleaner = player.gameObject.GetOrAddComponent<UnstoppableForceCleanup_Mono>();
             //cleaner.player = player;

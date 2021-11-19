@@ -15,11 +15,12 @@ namespace WWC.Cards
 {
     class TableFlip : CustomCard
     {
-        internal static CardCategory tableFlipCategory = CustomCardCategories.instance.CardCategory("Table Flip");
+        internal static CardCategory rerollCategory = CustomCardCategories.instance.CardCategory("Rerollers");
+        internal static CardCategory tableFlipCategory = CustomCardCategories.instance.CardCategory("TableFlipCard");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.GetAdditionalData().canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { RerollManager.instance.NoFlip, tableFlipCategory };
+            cardInfo.categories = new CardCategory[] { RerollManager.instance.NoFlip, rerollCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -47,7 +48,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Rare;
+            return WillsWackyCards.secondHalfTableFlip.Value ? CardInfo.Rarity.Uncommon : CardInfo.Rarity.Rare;
         }
         protected override CardInfoStat[] GetStats()
         {

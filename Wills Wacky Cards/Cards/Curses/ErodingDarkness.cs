@@ -38,7 +38,7 @@ namespace WWC.Cards.Curses
         }
         protected override string GetDescription()
         {
-            return "Gain a new curse every other round.";
+            return "Sometimes you come back with more than you left with.";
         }
         protected override GameObject GetCardArt()
         {
@@ -52,7 +52,13 @@ namespace WWC.Cards.Curses
         {
             return new CardInfoStat[]
             {
-
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Every Other Round",
+                    amount = "+1 Curse",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()

@@ -20,6 +20,7 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.allowMultiple = false;
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -27,9 +28,6 @@ namespace WWC.Cards
         {
             WillsWackyCards.instance.ExecuteAfterFrames(20, () => CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); }));
             var blockMono = player.gameObject.GetOrAddComponent<RunicWardsBlock_Mono>();
-            var wasHitMono = player.gameObject.GetOrAddComponent<RunicWards_WasHitMono>();
-            blockMono.wasHitMono = wasHitMono;
-            wasHitMono.blockMono = blockMono;
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -90,8 +88,6 @@ namespace WWC.Cards
     [DisallowMultipleComponent]
     class RunicWardsBlock_Mono : Hooked_Mono
     {
-        internal RunicWards_WasHitMono wasHitMono;
-
         public int shields = 0;
         public int additionalBlocks = 0;
         private bool increased;
@@ -100,6 +96,7 @@ namespace WWC.Cards
         private CharacterData data;
         private Player player;
         private Block block;
+        private CharacterStatModifiers stats;
 
         private void Start()
         {
@@ -115,6 +112,8 @@ namespace WWC.Cards
                 {
                     player = data.player;
                     block = data.block;
+                    stats = data.stats;
+                    stats.WasDealtDamageAction += OnWasDealtDamage;
                 }
 
             }
@@ -135,6 +134,28 @@ namespace WWC.Cards
             if (!haveCard)
             {
                 UnityEngine.GameObject.Destroy(this);
+            }
+        }
+
+        private void OnWasDealtDamage(Vector2 damage, bool selfDamage)
+        {
+            var target = data.lastSourceOfDamage;
+
+            if (ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(target.data).isAIMinion)
+            {
+                target = ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(target.data).spawner;
+                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Runic Wards][Debugging] Player {data.lastSourceOfDamage.playerID} was an AI with player {target.playerID} as it's master.");
+            }
+
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Runic Wards][Debugging] Player {player.playerID} was damaged for {damage.magnitude} by player {target.playerID}");
+
+            if (damageTracker.Keys.ToArray().Contains(target))
+            {
+                damageTracker[target] += damage.magnitude;
+            }
+            else
+            {
+                damageTracker.Add(target, damage.magnitude);
             }
         }
 
@@ -203,54 +224,7 @@ namespace WWC.Cards
                 increased = false;
                 block.additionalBlocks -= additionalBlocks;
             }
-
-            UnityEngine.GameObject.Destroy(wasHitMono);
-        }
-    }
-
-    [DisallowMultipleComponent]
-    class RunicWards_WasHitMono : ModdingUtils.RoundsEffects.WasHitEffect
-    {
-        internal RunicWardsBlock_Mono blockMono;
-
-        private CharacterData data;
-        private Player player;
-
-        private void Start()
-        {
-            data = GetComponentInParent<CharacterData>();
-        }
-
-        private void Update()
-        {
-            if (!player)
-            {
-                if (!(data is null))
-                {
-                    player = data.player;
-                }
-
-            }
-        }
-
-        public override void WasDealtDamage(Vector2 damage, bool selfDamage)
-        {
-            var target = data.lastSourceOfDamage;
-
-            if (ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(target.data).isAIMinion)
-            {
-                target = ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(target.data).spawner;
-                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Runic Wards][Debugging] Player {data.lastSourceOfDamage.playerID} was an AI with player {target.playerID} as it's master.");
-            }
-
-            if (blockMono.damageTracker.Keys.ToArray().Contains(target))
-            {
-                blockMono.damageTracker[target] += damage.magnitude;
-            }
-            else
-            {
-                blockMono.damageTracker.Add(target, damage.magnitude);
-            }
+            stats.WasDealtDamageAction -= OnWasDealtDamage;
         }
     }
 

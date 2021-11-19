@@ -37,7 +37,7 @@ namespace WWC.Cards
             if (!MomentumTracker.createdDefenseCards.TryGetValue(stacks, out var cardData))
             {
                 CustomCard.BuildCard<BuildImmovableObject>(cardInfo => { 
-                    MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); 
+                    MomentumTracker.createdDefenseCards.Add(stacks, cardInfo);
                     ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);
                     ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardInfo, false, "", 2f, 2f, true);
                 });
@@ -47,7 +47,7 @@ namespace WWC.Cards
                 ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, cardData, false, "", 2f, 2f, true);
             }
 
-            WillsWackyCards.remover.DelayedRemoveCard(player, GetTitle(), 20);
+            WillsWackyCards.remover.DelayedRemoveCard(player, GetTitle(), 40);
 
             //var cleaner = player.gameObject.GetOrAddComponent<ImmovableObjectCleanup_Mono>();
             //cleaner.player = player;

@@ -17,7 +17,7 @@ namespace WWC.Cards.Curses
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             gun.ammo = -2;
-            gun.reloadTimeAdd = 0.5f;
+            gun.reloadTimeAdd = 0.25f;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
@@ -57,7 +57,7 @@ namespace WWC.Cards.Curses
                 {
                     positive = false,
                     stat = "Reload Time",
-                    amount = "+0.5s",
+                    amount = "+0.25s",
                     simepleAmount = CardInfoStat.SimpleAmount.aLotOf
                 },
                 new CardInfoStat()

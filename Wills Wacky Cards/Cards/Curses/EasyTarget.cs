@@ -16,8 +16,8 @@ namespace WWC.Cards.Curses
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.sizeMultiplier = 3f;
-            statModifiers.GetAdditionalData().MassModifier = 1f / 5f;
+            statModifiers.sizeMultiplier = 2.5f;
+            statModifiers.GetAdditionalData().MassModifier = 1f / 2.5f;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
@@ -44,7 +44,7 @@ namespace WWC.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Rare;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -54,7 +54,7 @@ namespace WWC.Cards.Curses
                 {
                     positive = false,
                     stat = "Size",
-                    amount = "+200%",
+                    amount = "+150%",
                     simepleAmount = CardInfoStat.SimpleAmount.aLotOf
                 }
             };

@@ -18,7 +18,7 @@ namespace WWC.Cards.Curses
         {
             gun.projectileSize = 0.7f;
             gun.spread = 0.3f;
-            gun.reflects = -1;
+            gun.reflects = -2;
 
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
@@ -70,7 +70,7 @@ namespace WWC.Cards.Curses
                 {
                     positive = false,
                     stat = "Bounces",
-                    amount = "-1",
+                    amount = "-2",
                     simepleAmount = CardInfoStat.SimpleAmount.slightlyLower
                 }
             };
