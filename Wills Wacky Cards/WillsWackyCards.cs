@@ -49,6 +49,8 @@ namespace WWC
         public static WillsWackyCards instance { get; private set; }
         public static CardRemover remover;
 
+        private CardInfo tableFlipCard;
+
         void Awake()
         {
             var harmony = new Harmony(ModId);
@@ -61,8 +63,8 @@ namespace WWC
             instance = this;
             instance.gameObject.name = "WillsWackyCards";
 
-            enableTableFlip = Config.Bind("Wills Wacky Cards", "TableFlipAllowed", true, "Enable table flip and reroll.");
-            secondHalfTableFlip = Config.Bind("Wills Wacky Cards", "TableFlipSecondHalf", true, "Makes Table Flip an Uncommon and only able to appear in the second half.");
+            enableTableFlip = Config.Bind("Wills Wacky Cards", "TableFlipAllowed", false, "Enable table flip and reroll.");
+            secondHalfTableFlip = Config.Bind("Wills Wacky Cards", "TableFlipSecondHalf", false, "Makes Table Flip an Uncommon and only able to appear in the second half.");
 
             gameObject.AddComponent<HookedMonoManager>();
             remover = gameObject.AddComponent<CardRemover>();
@@ -81,7 +83,7 @@ namespace WWC
             CustomCard.BuildCard<PastaShells>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<CrookedLegs>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<ErodingDarkness>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            //CustomCard.BuildCard<ErodingDarkness>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<DrivenToEarth>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<Misfire>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<SlowReflexes>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
@@ -96,8 +98,8 @@ namespace WWC
             CustomCard.BuildCard<UnstoppableForce>();
             CustomCard.BuildCard<ImmovableObject>();
             CustomCard.BuildCard<HotPotato>();
-            CustomCard.BuildCard<TableFlip>(CardInfo => RerollManager.instance.tableFlipCard = CardInfo);
-            CustomCard.BuildCard<Reroll>(CardInfo => RerollManager.instance.rerollCard = CardInfo);
+            CustomCard.BuildCard<TableFlip>((cardInfo) => { tableFlipCard = cardInfo; RerollManager.instance.tableFlipCard = cardInfo; });
+            CustomCard.BuildCard<Reroll>((cardInfo) => RerollManager.instance.rerollCard = cardInfo);
             CustomCard.BuildCard<MomentaryConfusion>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<SavageWounds>();
             CustomCard.BuildCard<RitualisticSacrifice>();
@@ -163,14 +165,14 @@ namespace WWC
             {
                 yield return WaitFor.Frames(20);
 
-                if (originalBoard[triggeringPlayer][i].categories.Contains(TableFlip.tableFlipCategory))
+                if (originalBoard[triggeringPlayer][i].categories.Contains(TableFlip.rerollCategory))
                 {
                     continue;
                 }
 
                 var currentOptions = originalBoard.Where((kvp) => kvp.Value.Length > i).ToDictionary((kvp) => kvp.Key, (kvp) => kvp.Value[i]).Where(
                     (kvp) => 
-                        !kvp.Value.categories.Contains(TableFlip.tableFlipCategory) && 
+                        !kvp.Value.categories.Contains(TableFlip.rerollCategory) && 
                         (
                             ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(triggeringPlayer, kvp.Value) || 
                             kvp.Key == triggeringPlayer
@@ -238,18 +240,23 @@ namespace WWC
         {
             MenuHandler.CreateText($"{ModName} Options", menu, out TextMeshProUGUI _);
             MenuHandler.CreateText(" ", menu, out TextMeshProUGUI _);
+            
+            
+
+            var enable = MenuHandler.CreateToggle(enableTableFlip.Value, "Enable Table Flip and Reroll", menu, null);
             var secondHalf = MenuHandler.CreateToggle(secondHalfTableFlip.Value, "Table Flip becomes uncommon, and can only show up when someone has half the rounds needed to win.", menu, value => { secondHalfTableFlip.Value = value; OnHandShakeCompleted(); });
             var toggle = secondHalf.GetComponent<Toggle>();
-            var enable = MenuHandler.CreateToggle(enableTableFlip.Value, "Enable Table Flip and Reroll", menu, value => 
+
+            enable.GetComponent<Toggle>().onValueChanged.AddListener(value =>
+            {
+                secondHalf.SetActive(value);
+                if (!value)
                 {
-                    if (!value)
-                    {
-                        toggle.isOn = false;
-                        toggle.enabled = false;
-                    }
-                    enableTableFlip.Value = value; 
-                    OnHandShakeCompleted(); 
-                } );
+                    toggle.isOn = false;
+                }
+                enableTableFlip.Value = value;
+                OnHandShakeCompleted();
+            });
 
             MenuHandler.CreateText(" ", menu, out TextMeshProUGUI _);
         }
@@ -368,6 +375,38 @@ namespace WWC
             {
                 hookedMono.OnPickStart();
             }
+
+            if (secondHalfTableFlip.Value)
+            {
+                tableFlipCard.rarity = CardInfo.Rarity.Uncommon;
+
+                var roundsToWin = (int) gm.Settings["roundsToWinGame"];
+                var pickable = false;
+
+                foreach (var player in PlayerManager.instance.players)
+                {
+                    if (gm.GetTeamScore(player.teamID).rounds > ((roundsToWin / 2) + 1 * roundsToWin % 2))
+                    {
+                        pickable = true;
+                    }
+                }
+
+                foreach (var player in PlayerManager.instance.players)
+                {
+                    if (!pickable)
+                    {
+                        if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(TableFlip.tableFlipCategory))
+                        {
+                            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(TableFlip.tableFlipCategory);
+                        }
+                    }
+                    else
+                    {
+                        ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll((category) => category == TableFlip.tableFlipCategory);
+                    }
+                }
+            }
+
             yield break;
         }
 
@@ -417,14 +456,14 @@ namespace WWC
                 }
                 if (!enableTableFlip.Value)
                 {
-                    if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(TableFlip.tableFlipCategory))
+                    if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(TableFlip.rerollCategory))
                     {
-                        ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(TableFlip.tableFlipCategory);
+                        ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(TableFlip.rerollCategory);
                     }                    
                 }
                 else
                 {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll((category) => category == TableFlip.tableFlipCategory);
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll((category) => category == TableFlip.rerollCategory);
                 }
             }
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
