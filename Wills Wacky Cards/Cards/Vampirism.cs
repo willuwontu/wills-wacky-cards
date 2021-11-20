@@ -18,9 +18,9 @@ namespace WWC.Cards
         {
             statModifiers.gravity = 0.7f;
             gun.projectileColor = Color.red;
-            statModifiers.lifeSteal = 1.5f;
+            statModifiers.lifeSteal = 2f;
             statModifiers.jump = 1.15f;
-            statModifiers.movementSpeed = 1.15f;
+            statModifiers.movementSpeed = 1.25f;
             gun.damage = 1.2f;
 
             cardInfo.allowMultiple = false;
@@ -74,7 +74,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Life Steal",
-                    amount = "+150%",
+                    amount = "+200%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -88,7 +88,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Move Speed",
-                    amount = "+15%",
+                    amount = "+25%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

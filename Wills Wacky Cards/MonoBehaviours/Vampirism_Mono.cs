@@ -61,5 +61,9 @@ namespace WWC.MonoBehaviours
         {
             UnityEngine.Object.Destroy(this);
         }
+        private void OnDestroy()
+        {
+            HookedMonoManager.instance.hookedMonos.Remove(this);
+        }
     }
 }

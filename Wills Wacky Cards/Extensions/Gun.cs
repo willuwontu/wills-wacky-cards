@@ -24,6 +24,8 @@ namespace WWC.Extensions
         public bool useMinimumAttackSpeed;
         public float chargeTime;
         public bool beginCharge;
+        public float frequency;
+        public float amplitude;
 
         public GunAdditionalData()
         {
@@ -42,6 +44,8 @@ namespace WWC.Extensions
             minimumReloadSpeed = 1f;
             chargeTime = 1f;
             beginCharge = false;
+            frequency = 1f;
+            amplitude = 1f;
         }
     }
     public static class GunExtension
@@ -84,6 +88,8 @@ namespace WWC.Extensions
             __instance.GetAdditionalData().minimumReloadSpeed = 1f;
             __instance.GetAdditionalData().chargeTime = 1f;
             __instance.GetAdditionalData().beginCharge = false;
+            __instance.GetAdditionalData().frequency = 1f;
+            __instance.GetAdditionalData().amplitude = 1f;
         }
     }
 }
