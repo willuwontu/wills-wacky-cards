@@ -5,18 +5,21 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using WWC.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using WillsWackyManagers.Utils;
 using UnityEngine;
 
 namespace WWC.Cards.Curses
 {
-    class PastaShells : CustomCard
+    class UncomfortableDefense : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.damage = 0.8f;
-            gun.drag = 0.75f;
+            var block = cardInfo.gameObject.GetOrAddComponent<Block>();
+            block.InvokeMethod("ResetStats");
+            block.cdMultiplier = 1.2f;
+            block.additionalBlocks = -1;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
@@ -31,11 +34,11 @@ namespace WWC.Cards.Curses
 
         protected override string GetTitle()
         {
-            return "Pasta Shells";
+            return "Uncomfortable Defense";
         }
         protected override string GetDescription()
         {
-            return "Abracadoodle, your bullets are now a noodle.";
+            return "Bim bung, you're now aware of your tongue.";
         }
         protected override GameObject GetCardArt()
         {
@@ -52,22 +55,22 @@ namespace WWC.Cards.Curses
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Damage",
-                    amount = "-20%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                    stat = "Block Cooldown",
+                    amount = "+20%",
+                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
                 },
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Bullet Drag",
-                    amount = "Increased",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
-                },
+                    stat = "Additional Blocks",
+                    amount = "-1",
+                    simepleAmount = CardInfoStat.SimpleAmount.lower
+                }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.MagicPink;
+            return CardThemeColor.CardThemeColorType.TechWhite;
         }
         public override string GetModName()
         {

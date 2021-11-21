@@ -44,8 +44,8 @@ namespace WWC.Extensions
             minimumReloadSpeed = 1f;
             chargeTime = 1f;
             beginCharge = false;
-            frequency = 1f;
-            amplitude = 1f;
+            frequency = 0.5f;
+            amplitude = 0.5f;
         }
     }
     public static class GunExtension
@@ -88,8 +88,8 @@ namespace WWC.Extensions
             __instance.GetAdditionalData().minimumReloadSpeed = 1f;
             __instance.GetAdditionalData().chargeTime = 1f;
             __instance.GetAdditionalData().beginCharge = false;
-            __instance.GetAdditionalData().frequency = 1f;
-            __instance.GetAdditionalData().amplitude = 1f;
+            __instance.GetAdditionalData().frequency = 0.5f;
+            __instance.GetAdditionalData().amplitude = 0.5f;
         }
     }
 }

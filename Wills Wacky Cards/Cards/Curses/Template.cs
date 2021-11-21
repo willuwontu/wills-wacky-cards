@@ -54,13 +54,13 @@ namespace WWC.Cards.Curses
                     positive = false,
                     stat = "Effect",
                     amount = "No",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.DestructiveRed;
+            return CardThemeColor.CardThemeColorType.EvilPurple;
         }
         public override string GetModName()
         {

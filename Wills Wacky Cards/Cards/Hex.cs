@@ -15,24 +15,25 @@ namespace WWC.Cards
 {
     class Hex : CustomCard
     {
-        internal static CardCategory curseSpawner = CustomCardCategories.instance.CardCategory("Grants Curses");
+        internal static CardCategory curseSpawnerCategory = CustomCardCategories.instance.CardCategory("Grants Curses");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.GetAdditionalData().canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawner };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             if (CurseManager.instance.GetRaw().Count() > 0)
             {
-                var curses = CurseManager.instance.GetRaw().Intersect(CardManager.cards.Values.ToArray().Where((card) => card.enabled).Select(card => card.cardInfo).ToArray()).ToList();
                 UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Hex] Player {player.teamID} Cursing Enemies");
-
-                foreach (var item in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
+                WillsWackyCards.instance.ExecuteAfterFrames(20, () =>
                 {
-                    CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse); }); 
-                }
+                    foreach (var person in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
+                    {
+                        CurseManager.instance.CursePlayer(person, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(person, curse); });
+                    }
+                });
             }
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} added to Player {player.playerID}");
         }

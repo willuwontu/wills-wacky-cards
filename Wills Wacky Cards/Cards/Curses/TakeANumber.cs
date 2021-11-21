@@ -6,20 +6,18 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using WWC.MonoBehaviours;
 using WillsWackyManagers.Utils;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WWC.Cards.Curses
 {
-    class SlowReflexes : CustomCard
+    class TakeANumber : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            var block = cardInfo.gameObject.GetOrAddComponent<Block>();
-            block.InvokeMethod("ResetStats");
-            block.cdMultiplier = 2.5f;
-            block.additionalBlocks = -1;
+            gun.timeBetweenBullets = 0.5f;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
@@ -34,11 +32,11 @@ namespace WWC.Cards.Curses
 
         protected override string GetTitle()
         {
-            return "Uncomfortable Defense";
+            return "Take A Number";
         }
         protected override string GetDescription()
         {
-            return "Bim bung, you're now aware of your tongue.";
+            return "Now serving 5A at window number 3.";
         }
         protected override GameObject GetCardArt()
         {
@@ -46,7 +44,7 @@ namespace WWC.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Common;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -55,22 +53,15 @@ namespace WWC.Cards.Curses
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Block Cooldown",
-                    amount = "+150%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotOf
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Additional Blocks",
-                    amount = "-1",
-                    simepleAmount = CardInfoStat.SimpleAmount.lower
+                    stat = "Between Bursts",
+                    amount = "+.05s",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.TechWhite;
+            return CardThemeColor.CardThemeColorType.EvilPurple;
         }
         public override string GetModName()
         {

@@ -32,7 +32,7 @@ namespace WWC.Cards.Curses
             var backwards = player.gameObject.GetComponent<Backwards_Mono>();
             if (backwards)
             {
-                backwards.backwardsChance += 10; 
+                backwards.backwardsChance -= 10; 
             }
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} removed from Player {player.playerID}");
         }

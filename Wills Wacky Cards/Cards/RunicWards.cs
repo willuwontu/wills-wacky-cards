@@ -20,7 +20,7 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawner };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
             ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -41,7 +41,7 @@ namespace WWC.Cards
         }
         protected override string GetDescription()
         {
-            return "For every 200 points of damage a person deals to you, they get a curse.";
+            return "For every 600 points of damage a person deals to you, they get a curse.";
         }
         protected override GameObject GetCardArt()
         {
@@ -59,6 +59,13 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Block per Curse",
+                    amount = "+1",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Autoblock per Curse",
                     amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
@@ -92,6 +99,7 @@ namespace WWC.Cards
         public int additionalBlocks = 0;
         private bool increased;
         internal Dictionary<Player, float> damageTracker = new Dictionary<Player, float>();
+        private float damageNeeded = 600f;
 
         private CharacterData data;
         private Player player;
@@ -139,23 +147,45 @@ namespace WWC.Cards
 
         private void OnWasDealtDamage(Vector2 damage, bool selfDamage)
         {
+            try
+            {
+                RecordDealtDamage(damage);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
+            }
+        }
+
+        private void RecordDealtDamage(Vector2 damage)
+        {
             var target = data.lastSourceOfDamage;
+
+            if (!target)
+            {
+                return;
+            }
+
+            if (target == null)
+            {
+                return;
+            }
 
             if (ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(target.data).isAIMinion)
             {
                 target = ModdingUtils.AIMinion.Extensions.CharacterDataExtension.GetAdditionalData(target.data).spawner;
-                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Runic Wards][Debugging] Player {data.lastSourceOfDamage.playerID} was an AI with player {target.playerID} as it's master.");
+                //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Runic Wards][Debugging] Player {data.lastSourceOfDamage.playerID} was an AI with player {target.playerID} as it's master.");
             }
 
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Runic Wards][Debugging] Player {player.playerID} was damaged for {damage.magnitude} by player {target.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Runic Wards][Debugging] Player {player.playerID} was damaged for {damage.magnitude} by player {target.playerID}");
 
             if (damageTracker.Keys.ToArray().Contains(target))
             {
-                damageTracker[target] += damage.magnitude;
+                damageTracker[target] += Mathf.Clamp(damage.magnitude, 0f, data.maxHealth);
             }
             else
             {
-                damageTracker.Add(target, damage.magnitude);
+                damageTracker.Add(target, Mathf.Clamp(damage.magnitude, 0f, data.maxHealth));
             }
         }
 
@@ -207,10 +237,10 @@ namespace WWC.Cards
             var person = PlayerManager.instance.GetPlayerWithID(id);
             var counter = amount;
 
-            while (counter >= 200f)
+            while (counter >= damageNeeded)
             {
                 CurseManager.instance.CursePlayer(person, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(person, curse); });
-                counter -= 200f;
+                counter -= damageNeeded;
             }
 
             damageTracker[person] = counter;

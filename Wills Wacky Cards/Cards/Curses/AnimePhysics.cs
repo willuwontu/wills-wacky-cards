@@ -5,18 +5,19 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using WWC.Extensions;
+using WWC.MonoBehaviours;
 using WillsWackyManagers.Utils;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WWC.Cards.Curses
 {
-    class PastaShells : CustomCard
+    class AnimePhysics : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.damage = 0.8f;
-            gun.drag = 0.75f;
+            gun.projectielSimulatonSpeed = 0.75f;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
@@ -31,11 +32,11 @@ namespace WWC.Cards.Curses
 
         protected override string GetTitle()
         {
-            return "Pasta Shells";
+            return "Anime Physics";
         }
         protected override string GetDescription()
         {
-            return "Abracadoodle, your bullets are now a noodle.";
+            return "Somehow bullets travel slow enough for that one scene. Yes. That one.";
         }
         protected override GameObject GetCardArt()
         {
@@ -43,7 +44,7 @@ namespace WWC.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Common;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -52,22 +53,15 @@ namespace WWC.Cards.Curses
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Damage",
-                    amount = "-20%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Bullet Drag",
-                    amount = "Increased",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
-                },
+                    stat = "Projectile Speed",
+                    amount = "-25%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.MagicPink;
+            return CardThemeColor.CardThemeColorType.DestructiveRed;
         }
         public override string GetModName()
         {

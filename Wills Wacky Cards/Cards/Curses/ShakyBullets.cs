@@ -22,8 +22,8 @@ namespace WWC.Cards.Curses
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            gun.GetAdditionalData().amplitude += 1.5f;
-            gun.GetAdditionalData().frequency += 0.5f;
+            gun.GetAdditionalData().amplitude += 0.25f;
+            gun.GetAdditionalData().frequency += 0.125f;
             player.gameObject.GetOrAddComponent<WaveMover_Mono>();
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }

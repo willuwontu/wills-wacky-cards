@@ -15,8 +15,8 @@ namespace WWC.Cards.Curses
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.gravity = 1.75f;
-            statModifiers.jump = 0.75f;
+            statModifiers.gravity = 1.25f;
+            statModifiers.jump = 0.80f;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
@@ -43,7 +43,7 @@ namespace WWC.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Rare;
+            return CardInfo.Rarity.Uncommon;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -53,14 +53,14 @@ namespace WWC.Cards.Curses
                 {
                     positive = false,
                     stat = "Jump Height",
-                    amount = "-25%",
+                    amount = "-20%",
                     simepleAmount = CardInfoStat.SimpleAmount.aLotLower
                 },
                 new CardInfoStat()
                 {
                     positive = false,
                     stat = "Gravity",
-                    amount = "+75%",
+                    amount = "+25%",
                     simepleAmount = CardInfoStat.SimpleAmount.aHugeAmountOf
                 }
             };

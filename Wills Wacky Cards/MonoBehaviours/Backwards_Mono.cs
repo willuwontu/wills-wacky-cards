@@ -10,6 +10,10 @@ namespace WWC.MonoBehaviours
     {
         private void Start()
         {
+            if (gameObject.transform.parent == null)
+            {
+                return;
+            }
             var move = base.GetComponentInParent<MoveTransform>();
             //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}] Bullet Velocity is ({move.velocity.x}, {move.velocity.y}, {move.velocity.z}) with a magnitude of {move.velocity.magnitude}.");
             move.velocity *= -1;

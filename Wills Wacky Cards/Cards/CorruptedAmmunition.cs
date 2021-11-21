@@ -20,7 +20,7 @@ namespace WWC.Cards
         {
             cardInfo.allowMultiple = false;
             ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawner };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -40,7 +40,7 @@ namespace WWC.Cards
         }
         protected override string GetDescription()
         {
-            return "Fire a number of corrupted bullets equal to curses each battle. An enemy who is hit 5 times by them gains a random curse.";
+            return "Fire a number of corrupted bullets equal to curses each battle. An enemy who is hit 7 times by them gains a random curse.";
         }
         protected override GameObject GetCardArt()
         {
@@ -131,6 +131,7 @@ namespace WWC.Cards
         private GameObject bulletMono = new GameObject("CorruptedBullet", typeof(CorruptionHitEffect));
         public Dictionary<Player, int> corruptionTracker = new Dictionary<Player, int>();
         private bool increased = false;
+        private int hitsNeeded = 7;
 
         private CharacterData data;
         private Player player;
@@ -208,13 +209,13 @@ namespace WWC.Cards
             foreach (var person in tracked)
             {
                 UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Corrupted Ammunition][Debugging] Player {person.playerID} has {corruptionTracker[person]} corruption from player {player.playerID}.");
-                while (corruptionTracker[person] > 4)
+                while (corruptionTracker[person] > (hitsNeeded - 1))
                 {
                     if (this.photonView.IsMine)
                     {
                         this.photonView.RPC(nameof(RPCA_CursePlayer), RpcTarget.All, person.playerID);
                     }
-                    corruptionTracker[person] -= 5;
+                    corruptionTracker[person] -= hitsNeeded;
                 }
             }
 
@@ -235,13 +236,13 @@ namespace WWC.Cards
             foreach (var person in tracked)
             {
                 UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Corrupted Ammunition][Debugging] Player {person.playerID} has {corruptionTracker[person]} corruption from player {player.playerID}.");
-                while (corruptionTracker[person] > 4)
+                while (corruptionTracker[person] > (hitsNeeded - 1))
                 {
                     if (this.photonView.IsMine)
                     {
                         this.photonView.RPC(nameof(RPCA_CursePlayer), RpcTarget.All, person.playerID);
                     }
-                    corruptionTracker[person] -= 5;
+                    corruptionTracker[person] -= hitsNeeded;
                 }
             }
         }

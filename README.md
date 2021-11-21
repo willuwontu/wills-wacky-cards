@@ -25,6 +25,9 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Wild Shots (Curse)
   - Momentary Confusion (Curse)
   - Eroding Darkness (Curse)
+  - Shaky Bullets (Curse)
+  - Rabbit's Foot (Curse)
+  - Lucky Clover (Curse)
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
@@ -45,6 +48,20 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Corrupted Ammunition (Rare)
 - Runic Wards (Rare)
 - Cleansing Ritual (Uncommon)
+
+----
+## v 1.4.5
+- Fixed a bug with Runic Wards keping people from dying when they hit the floor and walls.
+- Runic Shields now triggers on 600 damage taken instead of 200.
+- Did a balancing pass on curses.
+- Added 10 new curses (Defective Trigger, Misaligned Sights, Damnation, Fragile Body, Ammo Regulations, Air Resistance, Lead Bullets, Anime Physics, Take A Number, Heavy Shields)
+- Added 2 new curses (Rabbit's Foot, Lucky Clover). These ones actually buff those who get them.
+- Purifying Light only grants commons now.
+
+----
+## v 1.4.4
+- Various Curse Rebalancing
+- New Curse (Shaky Bullets)
 
 ----
 ## v 1.4.3
