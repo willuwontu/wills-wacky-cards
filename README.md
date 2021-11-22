@@ -28,6 +28,16 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Shaky Bullets (Curse)
   - Rabbit's Foot (Curse)
   - Lucky Clover (Curse)
+  - Defective Trigger (Curse)
+  - Misaligned Sights (Curse)
+  - Damnation (Curse)
+  - Fragile Body (Curse)
+  - Ammo Regulations (Curse)
+  - Air Resistance (Curse)
+  - Lead Bullets (Curse)
+  - Anime Physics (Curse)
+  - Take A Number (Curse)
+  - Heavy Shields (Curse)
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
@@ -48,6 +58,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Corrupted Ammunition (Rare)
 - Runic Wards (Rare)
 - Cleansing Ritual (Uncommon)
+
+----
+## v 1.4.6
+- Fixed a bug where Wild Shots would stick around after being removed.
 
 ----
 ## v 1.4.5

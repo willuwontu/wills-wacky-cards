@@ -23,13 +23,13 @@ namespace WWC.Cards.Curses
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var backwards = player.gameObject.GetOrAddComponent<Backwards_Mono>();
+            var backwards = player.gameObject.GetOrAddComponent<WildShots_Mono>();
             backwards.backwardsChance += 10;
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var backwards = player.gameObject.GetComponent<Backwards_Mono>();
+            var backwards = player.gameObject.GetComponent<WildShots_Mono>();
             if (backwards)
             {
                 backwards.backwardsChance -= 10; 

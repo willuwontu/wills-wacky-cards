@@ -6,7 +6,7 @@ using System;
 
 namespace WWC.MonoBehaviours
 {
-    public class BackwardsBullet_Mono : MonoBehaviour
+    public class WildShotsBullet_Mono : MonoBehaviour
     {
         private void Start()
         {
@@ -20,9 +20,9 @@ namespace WWC.MonoBehaviours
             Destroy(this);
         }
     }
-    public class Backwards_Mono : MonoBehaviour
+    public class WildShots_Mono : MonoBehaviour
     {
-        private GameObject bulletMono = new GameObject("Backwards", typeof(BackwardsBullet_Mono));
+        private GameObject bulletMono = new GameObject("Backwards", typeof(WildShotsBullet_Mono));
         public int backwardsChance = 0;
         private static System.Random random = new System.Random();
         private bool coroutineStarted;
