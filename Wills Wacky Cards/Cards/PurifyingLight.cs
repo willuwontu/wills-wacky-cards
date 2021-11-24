@@ -24,29 +24,38 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
+            WillsWackyCards.instance.ExecuteAfterFrames(40, () => {
+                var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
 
-            foreach (var curse in curses)
-            {
-                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][{GetTitle()}] Player {player.playerID} has {curse.cardName} on them.");
-            }
-
-            WillsWackyCards.instance.ExecuteAfterFrames(40, () => { 
-                StartCoroutine(IReplaceCurses(curses, player, gun, gunAmmo, data, health, gravity, block, characterStats)); 
+                foreach (var curse in curses)
+                {
+                    UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][{GetTitle()}] Player {player.playerID} has {curse.cardName} on them.");
+                }
+                WillsWackyCards.instance.StartCoroutine(IReplaceCurses(player, gun, gunAmmo, data, health, gravity, block, characterStats)); 
             });
 
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
-        private IEnumerator IReplaceCurses(CardInfo[] curses, Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
+        private IEnumerator IReplaceCurses(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
+
             foreach (var curse in curses)
             {
-                var replacement = ModdingUtils.Utils.Cards.instance.GetRandomCardWithCondition(player, gun, gunAmmo, data, health, gravity, block, characterStats, CommonCondition);
+                try
+                {
+                    var replacement = ModdingUtils.Utils.Cards.instance.GetRandomCardWithCondition(player, gun, gunAmmo, data, health, gravity, block, characterStats, CommonCondition);
 
-                ModdingUtils.Utils.Cards.instance.ReplaceCard(player, curse, replacement, "", 2f, 2f, ModdingUtils.Utils.Cards.SelectionType.Random, true);
+                    ModdingUtils.Utils.Cards.instance.ReplaceCard(player, curse, replacement, "", 2f, 2f, ModdingUtils.Utils.Cards.SelectionType.Random, true);
 
-                ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, replacement, 3f);
+                    ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, replacement, 3f);
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
+
                 yield return WillsWackyCards.WaitFor.Frames(40);
             }
 

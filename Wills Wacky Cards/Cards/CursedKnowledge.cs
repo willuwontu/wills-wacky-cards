@@ -23,11 +23,14 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            WillsWackyCards.instance.ExecuteAfterFrames(10, () => CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); }));
-
-            var rare = ModdingUtils.Utils.Cards.instance.GetRandomCardWithCondition(player, gun, gunAmmo, data, health, gravity, block, characterStats, RareCondition);
-
-            WillsWackyCards.instance.ExecuteAfterFrames(10, () => ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, rare, false, "", 2f, 2f, true));
+            WillsWackyCards.instance.ExecuteAfterFrames(20, () => {
+                var rare = ModdingUtils.Utils.Cards.instance.GetRandomCardWithCondition(player, gun, gunAmmo, data, health, gravity, block, characterStats, RareCondition);
+                ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, rare, false, "", 2f, 2f, true);
+                ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, rare, 3f);
+                CurseManager.instance.CursePlayer(player, (curse) => { 
+                    ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f); 
+                });
+            });
 
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }

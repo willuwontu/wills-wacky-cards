@@ -33,7 +33,7 @@ namespace WWC.Cards.Curses
 
         protected override string GetTitle()
         {
-            return "Rabbit's Foot";
+            return "Rabbits Foot";
         }
         protected override string GetDescription()
         {
