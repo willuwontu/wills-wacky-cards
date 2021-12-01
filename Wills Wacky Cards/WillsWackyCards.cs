@@ -38,7 +38,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.4.8"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.4.9"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -116,7 +116,7 @@ namespace WWC
             CustomCard.BuildCard<CorruptedAmmunition>();
             CustomCard.BuildCard<HolyWater>();
             CustomCard.BuildCard<CleansingRitual>();
-            UnityEngine.Debug.Log("[WWC] Cards Built");
+            UnityEngine.Debug.Log("[WWC] All Cards Built");
             
 
             this.ExecuteAfterSeconds(0.4f, ChangeCards);
@@ -153,14 +153,17 @@ namespace WWC
         IEnumerator BuildMomentumCards()
         {
             var stacks = 0;
+            var buildingCard = false;
             yield return StartCoroutine(WaitFor.Frames(7));
             while (stacks <= 20)
             {
                 MomentumTracker.stacks = stacks;
+                buildingCard = true;
                 //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] {cardInfo.cardName} assigned to slot {MomentumTracker.stacks}"); 
                 CustomCard.BuildCard<BuildImmovableObject>(cardInfo => { MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-                CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.createdOffenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-                yield return StartCoroutine(WaitFor.Frames(7));
+                CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.createdOffenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); buildingCard = false; });
+                yield return new WaitUntil(() => !buildingCard);
+                yield return StartCoroutine(WaitFor.Frames(2));
                 stacks++;
             }
             yield return StartCoroutine(WaitFor.Frames(7));
@@ -223,16 +226,6 @@ namespace WWC
 
         IEnumerator PointEnd(IGameModeHandler gm)
         {
-            foreach (var player in PlayerManager.instance.players)
-            {
-                var plasma = player.gameObject.GetComponent<PlasmaWeapon_Mono>();
-                if (plasma)
-                {
-                    plasma.canShoot = false;
-                    player.data.weaponHandler.gun.GetAdditionalData().beginCharge = false;
-                    player.data.weaponHandler.gun.currentCharge = 0f;
-                }
-            }
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
             {
                 //UnityEngine.Debug.Log($"[{ModInitials}][Debugging] Running OnPointEnd");
@@ -291,11 +284,6 @@ namespace WWC
                     player.data.weaponHandler.gun.GetAdditionalData().overHeated = false;
                     var gunAmmo = player.data.weaponHandler.gun.GetComponentInChildren<GunAmmo>();
                     gunAmmo.ReloadAmmo();
-                }
-                var plasma = player.gameObject.GetComponent<PlasmaWeapon_Mono>();
-                if (plasma)
-                {
-                    plasma.canShoot = true;
                 }
             }
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)

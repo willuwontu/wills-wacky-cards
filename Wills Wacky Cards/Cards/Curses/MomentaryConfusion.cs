@@ -27,6 +27,7 @@ namespace WWC.Cards.Curses
             confuzzle.bufferTime = Mathf.Max(2, confuzzle.bufferTime - 2f);
             confuzzle.duration += 2f;
             confuzzle.timeBetweenChecks = Mathf.Max(0.2f, confuzzle.timeBetweenChecks - 0.2f);
+            confuzzle.cardName = GetTitle();
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

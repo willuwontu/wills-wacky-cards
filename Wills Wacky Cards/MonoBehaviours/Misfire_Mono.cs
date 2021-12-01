@@ -74,7 +74,7 @@ namespace WWC.MonoBehaviours
             var haveMisfire = false;
             for (int i = 0; i < player.data.currentCards.Count; i++)
             {
-                if (player.data.currentCards[i].cardName == "Misfire")
+                if (player.data.currentCards[i].cardName.ToLower() == "Misfire".ToLower())
                 {
                     haveMisfire = true;
                     break;

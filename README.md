@@ -60,6 +60,11 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Cleansing Ritual (Uncommon)
 
 ----
+## v 1.4.9
+- Purifying light should work now.
+- Some more bug fixes.
+
+----
 ## v 1.4.8
 - Renamed Rabbit's Foot to Rabbits Foot since `'` breaks the game.
 

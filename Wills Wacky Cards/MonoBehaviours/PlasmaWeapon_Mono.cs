@@ -11,7 +11,7 @@ using Photon.Pun;
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    public class PlasmaWeapon_Mono : MonoBehaviourPun
+    public class PlasmaWeapon_Mono : Hooked_Mono
     {
         public float chargeToUse = 0f;
         public bool canShoot = true;
@@ -35,11 +35,12 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
+            HookedMonoManager.instance.hookedMonos.Add(this);
             data = GetComponentInParent<CharacterData>();
             chargeBarObj = gameObject.transform.Find("WobbleObjects/ChargeBar").gameObject;
         }
 
-        private void Update()
+        private void FixedUpdate()
         {
             if (!player)
             {
@@ -58,7 +59,6 @@ namespace WWC.MonoBehaviours
             if (!(player is null) && player.gameObject.activeInHierarchy && !coroutineStarted)
             {
                 coroutineStarted = true;
-                InvokeRepeating(nameof(CheckIfValid), 0, 1f);
                 StartCoroutine(PeriodicSync());
             }
 
@@ -135,7 +135,7 @@ namespace WWC.MonoBehaviours
                 {
                     if (gun.GetAdditionalData().beginCharge && gun.currentCharge < 1f)
                     {
-                        gun.currentCharge = Mathf.Clamp(gun.currentCharge + TimeHandler.fixedDeltaTime / gun.GetAdditionalData().chargeTime, 0f, 1f);
+                        gun.currentCharge = Mathf.Clamp(gun.currentCharge + TimeHandler.deltaTime / gun.GetAdditionalData().chargeTime, 0f, 1f);
                         //UnityEngine.Debug.Log(string.Format("[WWC][Plasma Weapon] Gun is currently {0:F1}% charged.", gun.currentCharge * 100f)); 
                     }
                 }
@@ -213,6 +213,22 @@ namespace WWC.MonoBehaviours
             }
         }
 
+        public override void OnBattleStart()
+        {
+            canShoot = true;
+        }
+
+        public override void OnPointEnd()
+        {
+            gun.currentCharge = 0f;
+            gun.GetAdditionalData().beginCharge = false;
+        }
+
+        public override void OnPointStart()
+        {
+            CheckIfValid();
+        }
+
         private void CheckIfValid()
         {
             var haveCard = false;
@@ -235,6 +251,8 @@ namespace WWC.MonoBehaviours
 
         private void OnDestroy()
         {
+            HookedMonoManager.instance.hookedMonos.Remove(this);
+            gun.useCharge = false;
             gun.ShootPojectileAction -= OnShootProjectileAction;
             Destroy(chargeBarObj);
         }

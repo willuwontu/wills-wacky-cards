@@ -15,6 +15,7 @@ namespace WWC.MonoBehaviours
         public float duration = 0f;
         public float bufferTime = 8f;
         public float timeBetweenChecks = 2f;
+        public string cardName;
 
         private static System.Random random = new System.Random();
         private bool swapped = false;
@@ -87,14 +88,48 @@ namespace WWC.MonoBehaviours
 
                 if (swapTimeLeft <= 0)
                 {
-                    UndoSwap();
+                    try
+                    {
+                        UndoSwap();
+                    }
+                    catch (NullReferenceException e)
+                    {
+                        swapped = false;
+                    }
+                    catch (Exception e)
+                    {
+                        UnityEngine.Debug.LogException(e);
+                    }
                 }
+            }
+        }
+
+        private void CheckIfValid()
+        {
+            var haveCard = false;
+            for (int i = 0; i < player.data.currentCards.Count; i++)
+            {
+                if (player.data.currentCards[i].cardName.ToLower() == cardName.ToLower())
+                {
+                    haveCard = true;
+                    break;
+                }
+            }
+
+            if (!haveCard)
+            {
+                UnityEngine.GameObject.Destroy(this);
             }
         }
 
         public override void OnPointEnd()
         {
             battleStarted = false;
+        }
+
+        public override void OnPointStart()
+        {
+            CheckIfValid();
         }
 
         public override void OnBattleStart()

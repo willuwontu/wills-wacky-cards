@@ -66,11 +66,7 @@ namespace WWC.Cards
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            gun.chargeNumberOfProjectilesTo -= 10;
             gun.chargeSpreadTo -= 0.5f;
-            gun.useCharge = false;
-            var plasmaShotgun = player.gameObject.GetOrAddComponent<PlasmaWeapon_Mono>();
-            Destroy(plasmaShotgun);
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 

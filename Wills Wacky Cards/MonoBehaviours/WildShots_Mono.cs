@@ -76,7 +76,7 @@ namespace WWC.MonoBehaviours
             var haveCard = false;
             for (int i = 0; i < player.data.currentCards.Count; i++)
             {
-                if (player.data.currentCards[i].cardName == "Wild Shots")
+                if (player.data.currentCards[i].cardName.ToLower() == "Wild Shots".ToLower())
                 {
                     haveCard = true;
                     break;
