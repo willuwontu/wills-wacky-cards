@@ -342,34 +342,6 @@ namespace WWC
             {
                 switch (info.cardInfo.cardName.ToUpper())
                 {
-                    case "DECAY":
-                        {
-                            UnityEngine.Debug.Log("[WWC] Found Decay");
-                            if (info.cardInfo.categories != null)
-                            {
-                                categories = new List<CardCategory>();
-                                for (int i = 0; i < info.cardInfo.categories.Length; i++)
-                                {
-                                    categories.Add(info.cardInfo.categories[i]);
-                                }
-                                categories.Add(CustomCardCategories.instance.CardCategory("Decay"));
-                                info.cardInfo.categories = categories.ToArray();
-                                categories = new List<CardCategory>();
-                                for (int i = 0; i < info.cardInfo.blacklistedCategories.Length; i++)
-                                {
-                                    categories.Add(info.cardInfo.blacklistedCategories[i]);
-                                }
-                                categories.Add(CustomCardCategories.instance.CardCategory("Decay"));
-                                info.cardInfo.blacklistedCategories = categories.ToArray();
-                            }
-                            else
-                            {
-                                info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Decay") };
-                                info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Decay") }; 
-                            }
-                            UnityEngine.Debug.Log("[WWC] Modified Decay");
-                            break;
-                        }
                     case "FLAMETHROWER":
                         {
                             UnityEngine.Debug.Log("[WWC] Found Flamethrower");

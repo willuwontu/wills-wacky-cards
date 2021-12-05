@@ -54,7 +54,7 @@ namespace WWC.MonoBehaviours
             multiplier = 1f;
             foreach (var card in player.data.currentCards.Where((cardInfo) => cardInfo.cardName.ToLower() == "Hiltless Blade".ToLower()))
             {
-                multiplier += 2f;
+                multiplier += 1.5f;
             }
             gun.damage *= multiplier;
         }

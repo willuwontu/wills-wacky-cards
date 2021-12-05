@@ -22,7 +22,6 @@ namespace WWC.Cards
             gun.slow = 0.3f;
             statModifiers.health = 1.1f;
            
-            cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Decay") };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Decay") };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");

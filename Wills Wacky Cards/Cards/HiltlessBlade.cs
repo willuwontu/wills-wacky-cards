@@ -59,7 +59,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Damage",
-                    amount = "+200%",
+                    amount = "+150%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
