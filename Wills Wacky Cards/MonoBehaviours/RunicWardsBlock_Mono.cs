@@ -59,7 +59,7 @@ namespace WWC.MonoBehaviours
 
             if (!haveCard)
             {
-                Destroy(this);
+                UnityEngine.GameObject.Destroy(this);
             }
         }
 

@@ -52,10 +52,25 @@ namespace WWC.Cards
                 var nameLabel = chargeBar.transform.Find("Canvas/PlayerName").gameObject;
                 var crown = chargeBar.transform.Find("Canvas/CrownPos").gameObject;
 
+                var grid = chargeBar.transform.Find("Canvas/Image/Grid");
+                grid.gameObject.SetActive(true);
+                grid.localScale = new Vector3(1f, .4f, 1f);
+
+                var gridBox = Instantiate(grid.transform.Find("Grid (8)"), grid);
+                gridBox.name = "Grid (9)";
+
+                for (int i = 1; i <= 9; i++)
+                {
+                    gridBox = grid.transform.Find($"Grid ({i})");
+                    gridBox.localScale = new Vector3(2f, 1f, 1f);
+                    if (i > 4)
+                    {
+                        gridBox.gameObject.SetActive(false);
+                    }
+                }
+
                 plasmaShotgun.chargeImage = chargeBar.transform.Find("Canvas/Image/Health").GetComponent<Image>();
-                plasmaShotgun.whiteImage = chargeBar.transform.Find("Canvas/Image/White").GetComponent<Image>();
-                plasmaShotgun.whiteImage.SetAlpha(0);
-                plasmaShotgun.whiteImage.name = "Charge";
+                plasmaShotgun.chargeImage.name = "Charge";
                 plasmaShotgun.chargeImage.color = new Color(255, 255, 255);
                 plasmaShotgun.chargeImage.SetAlpha(1);
                 Destroy(nameLabel);

@@ -129,7 +129,14 @@ namespace WWC.MonoBehaviours
         public override void OnPointStart()
         {
             CheckIfValid();
-            CheckCorruption();
+            try
+            {
+                CheckCorruption();
+            }
+            catch
+            {
+
+            }
 
             gun.projectileColor = new Color(58f / 255f, 34f / 255f, 66f / 255f, 1f);
             var curses = CurseManager.instance.GetAllCursesOnPlayer(player);

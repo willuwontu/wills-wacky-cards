@@ -11,12 +11,14 @@ namespace WWC.Extensions
         public bool Vampire;
         public float MassModifier;
         public float Bleed;
+        public float DamageReduction;
 
         public CharacterStatModifiersAdditionalData()
         {
             Vampire = false;
             MassModifier = 1f;
             Bleed = 0f;
+            DamageReduction = 0f;
         }
     }
     public static class CharacterStatModifiersExtension
@@ -46,6 +48,7 @@ namespace WWC.Extensions
             __instance.GetAdditionalData().Vampire = false;
             __instance.GetAdditionalData().MassModifier = 1f;
             __instance.GetAdditionalData().Bleed = 0f;
+            __instance.GetAdditionalData().DamageReduction = 0f;
         }
     }
 }

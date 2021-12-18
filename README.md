@@ -55,9 +55,30 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Endurance Training (Uncommon)
 - Hiltless Blade (Common)
 - Holy Water (Common)
-- Corrupted Ammunition (Rare)
-- Runic Wards (Rare)
 - Cleansing Ritual (Uncommon)
+- Curse Eater (Common)
+  - Corrupted Ammunition (Uncommon)
+  - Runic Wards (Uncommon)
+  - Ghostly Body (Uncommon)
+  - Shadow Bullets (Uncommon)
+  - Siphon Curses (Common)
+- Bullet Powered Jetpack (Common)
+
+----
+## v 1.5.0
+- 5 New Cards (Curse Eater, Ghostly Body, Shadow Bullets, Siphon Curses, Bullet Powered Jetpack)
+- Plasma Weapons should be more responsive now, along with a couple other changes to their code.
+- Slow Death is no longer exclusive with decay and can be taken multiple times.
+- Curse Eater is a class focused about having curses, and Runic Wards and Corrupted Ammunition have been turned into cards for it.
+  - Ghostly Body and Runic Wards are mutually exclusive defensive options for the class.
+  - Corrupted Ammunition and Shadow Bullets are mutually exclusive options for the class.
+  - Siphon Curses can be taken as many times as possible, but only shows up when other players have at least 3 curses between them.
+
+----
+## v 1.4.10
+- Hiltless Blade is nerfed to only give +150% damage.
+- Corrupted Ammunition should now properly reset itself each match.
+- Miscellaneous Code Patching
 
 ----
 ## v 1.4.9

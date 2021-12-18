@@ -38,7 +38,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.4.9"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.5.0"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -116,6 +116,11 @@ namespace WWC
             CustomCard.BuildCard<CorruptedAmmunition>();
             CustomCard.BuildCard<HolyWater>();
             CustomCard.BuildCard<CleansingRitual>();
+            CustomCard.BuildCard<BulletPoweredJetpack>();
+            CustomCard.BuildCard<CurseEater>();
+            CustomCard.BuildCard<GhostlyBody>();
+            CustomCard.BuildCard<ShadowBullets>();
+            CustomCard.BuildCard<SiphonCurses>();
             UnityEngine.Debug.Log("[WWC] All Cards Built");
             
 
@@ -138,6 +143,8 @@ namespace WWC
             var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
             networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
             networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
+
+            
         }
 
         private void OnJoinedRoomAction()
@@ -163,7 +170,7 @@ namespace WWC
                 CustomCard.BuildCard<BuildImmovableObject>(cardInfo => { MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
                 CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.createdOffenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); buildingCard = false; });
                 yield return new WaitUntil(() => !buildingCard);
-                yield return StartCoroutine(WaitFor.Frames(2));
+                yield return WaitFor.Frames(2);
                 stacks++;
             }
             yield return StartCoroutine(WaitFor.Frames(7));
@@ -240,6 +247,32 @@ namespace WWC
             {
                 hookedMono.OnPlayerPickStart();
             }
+            foreach (var player in PlayerManager.instance.players)
+            {
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(SiphonCurses.siphonCard))
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(SiphonCurses.siphonCard);
+                }
+                int otherCurses = 0;
+
+                foreach (var person in PlayerManager.instance.players.Where((pl) => pl.playerID != player.playerID).ToArray())
+                {
+                    var curses = CurseManager.instance.GetAllCursesOnPlayer(person);
+
+                    otherCurses += curses.Count();
+
+                    if (otherCurses > 2)
+                    {
+                        break;
+                    }
+                }
+
+                if (otherCurses > 2)
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category => category == SiphonCurses.siphonCard);
+                    UnityEngine.Debug.Log($"[WWM] Player {player.playerID} can siphon cards");
+                }
+            }
             yield break;
         }
 
@@ -301,6 +334,10 @@ namespace WWC
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(Minigun.componentCategory))
                 {
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(Minigun.componentCategory);
+                }
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseEater.CurseEaterClass))
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseEater.CurseEaterClass);
                 }
             }
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)

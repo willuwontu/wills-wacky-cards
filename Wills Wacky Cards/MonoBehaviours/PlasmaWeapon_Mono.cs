@@ -29,7 +29,6 @@ namespace WWC.MonoBehaviours
         // Heat Bar stuff, god bless Boss Sloth
         private GameObject chargeBarObj;
         public Image chargeImage;
-        public Image whiteImage;
         private float chargeTarget;
         //private HeatBar heatBar;
 
@@ -40,7 +39,7 @@ namespace WWC.MonoBehaviours
             chargeBarObj = gameObject.transform.Find("WobbleObjects/ChargeBar").gameObject;
         }
 
-        private void FixedUpdate()
+        private void Update()
         {
             if (!player)
             {
@@ -157,7 +156,6 @@ namespace WWC.MonoBehaviours
         {
             chargeTarget = gun.currentCharge;
             chargeImage.fillAmount = chargeTarget;
-            whiteImage.fillAmount = chargeTarget;
             chargeImage.color = new Color(Mathf.Clamp(0.5f - chargeTarget, 0f, 1f), 1f - (chargeTarget) * 0.85f, chargeTarget, 1f);
         }
 

@@ -21,9 +21,7 @@ namespace WWC.Cards
             statModifiers.gravity = 0.85f;
             gun.slow = 0.3f;
             statModifiers.health = 1.1f;
-           
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Decay") };
-            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Decay") };
+
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
