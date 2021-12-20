@@ -92,7 +92,7 @@ namespace WWC.MonoBehaviours
                     {
                         UndoSwap();
                     }
-                    catch (NullReferenceException e)
+                    catch (NullReferenceException)
                     {
                         swapped = false;
                     }

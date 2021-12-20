@@ -17,34 +17,34 @@ namespace WWC.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            var drillCard = UnboundLib.Utils.CardManager.cards.Values.Where((card) => card.cardInfo.cardName.ToLower() == "Drill Ammo".ToLower()).Select((card) => card.cardInfo).FirstOrDefault();
-
-            var drillGun = drillCard.gameObject.GetComponent<Gun>();
-
             GameObject drill = null;
 
             drill = GameObject.Find("A_ShadowBullet");
 
             if (!drill)
             {
+                var drillCard = UnboundLib.Utils.CardManager.cards.Values.Where((card) => card.cardInfo.cardName.ToLower() == "Drill Ammo".ToLower()).Select((card) => card.cardInfo).FirstOrDefault();
+
+                var drillGun = drillCard.gameObject.GetComponent<Gun>();
+
                 drill = Instantiate(drillGun.objectsToSpawn[0].AddToProjectile);
                 drill.name = "A_ShadowBullet";
 
                 var drillRay = drill.GetComponent<RayHitDrill>();
 
                 drillRay.metersOfDrilling = 5000f;
-                drillRay.speedModFlat = 2f;
-                drillRay.speedMod = 0.1f; 
+                drillRay.speedModFlat = 0.9f;
+                drillRay.speedMod = 0.05f; 
             }
 
             gun.objectsToSpawn = new ObjectsToSpawn[] { new ObjectsToSpawn { AddToProjectile = drill } };
 
             gun.unblockable = true;
-            //gun.projectileColor = new Color(46f / 255f, 46f / 255f, 46f / 255f, 0.3f);
             gun.bulletDamageMultiplier = 0.75f;
-            gun.reloadTimeAdd = 0.5f;
-            gun.attackSpeed = 1.3f;
+            gun.reloadTimeAdd = 0.75f;
+            gun.attackSpeed = 1.4f;
             gun.gravity = 0f;
+            gun.projectielSimulatonSpeed = .65f;
 
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory, CurseEater.CurseEaterClass, CustomCardCategories.instance.CardCategory("Shadow Bullets") };
@@ -54,7 +54,8 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            gun.projectileColor = new Color(10f / 255f, 10f / 255f, 10f / 255f, 0.5f);
+            //gun.projectileColor = new Color(10f / 255f, 10f / 255f, 10f / 255f, 0.1f);
+            var mono = player.gameObject.GetOrAddComponent<WWC.MonoBehaviours.ShadowBullets_Mono>();
             //WillsWackyCards.instance.ExecuteAfterFrames(20, () => CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); }));
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
@@ -108,14 +109,14 @@ namespace WWC.Cards
                 {
                     positive = false,
                     stat = "Attack Speed",
-                    amount = "-30%",
+                    amount = "-40%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = false,
                     stat = "Reload Time",
-                    amount = "+0.5s",
+                    amount = "+0.75s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
@@ -131,6 +132,105 @@ namespace WWC.Cards
         public override bool GetEnabled()
         {
             return true;
+        }
+    }
+}
+
+namespace WWC.MonoBehaviours
+{
+    [DisallowMultipleComponent]
+    class ShadowBullets_Mono : Hooked_Mono
+    {
+        private CharacterData data;
+        private Player player;
+        private Gun gun;
+
+        private void Start()
+        {
+            HookedMonoManager.instance.hookedMonos.Add(this);
+            data = GetComponentInParent<CharacterData>();
+        }
+
+        private void Update()
+        {
+            if (!player)
+            {
+                if (!(data is null))
+                {
+                    player = data.player;
+                    gun = data.weaponHandler.gun;
+
+                    gun.ShootPojectileAction += OnShootProjectileAction;
+                }
+
+            }
+        }
+
+        private void OnShootProjectileAction(GameObject obj)
+        {
+            var shadowColor = new Color(10f / 255f, 10f / 255f, 10f / 255f, 0f / 255f);
+
+            ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
+
+            bullet.projectileColor = shadowColor;
+
+            var spawnedAttack = obj.GetComponent<SpawnedAttack>();
+            spawnedAttack.SetColor(shadowColor);
+
+            foreach (Transform child in obj.transform)
+            {
+                var particles = child.gameObject.GetComponentsInChildren<ParticleSystem>();
+                var renderers = child.gameObject.GetComponentsInChildren<ParticleSystemRenderer>();
+
+                foreach (var particle in particles)
+                {
+                    particle.gameObject.SetActive(false);
+                }
+
+                foreach (var renderer in renderers)
+                {
+                    renderer.gameObject.SetActive(false);
+                }
+            }
+        }
+
+        private void CheckIfValid()
+        {
+            var haveCard = false;
+            for (int i = 0; i < player.data.currentCards.Count; i++)
+            {
+                if (player.data.currentCards[i].cardName.ToLower() == "Shadow Bullets".ToLower())
+                {
+                    haveCard = true;
+                    break;
+                }
+            }
+
+            if (!haveCard)
+            {
+                UnityEngine.GameObject.Destroy(this);
+            }
+        }
+
+        public override void OnPointStart()
+        {
+            CheckIfValid();
+        }
+
+        public override void OnGameStart()
+        {
+            UnityEngine.GameObject.Destroy(this);
+        }
+
+        private void OnDestroy()
+        {
+            gun.ShootPojectileAction -= OnShootProjectileAction;
+            HookedMonoManager.instance.hookedMonos.Remove(this);
+        }
+
+        public void Destroy()
+        {
+            UnityEngine.Object.Destroy(this);
         }
     }
 }

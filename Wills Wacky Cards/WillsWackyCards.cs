@@ -38,13 +38,15 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.5.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.5.2"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
 
         public static WillsWackyCards instance { get; private set; }
         public static CardRemover remover;
+
+        public static bool battleStarted = false;
 
         void Awake()
         {
@@ -233,6 +235,7 @@ namespace WWC
 
         IEnumerator PointEnd(IGameModeHandler gm)
         {
+            battleStarted = false;
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
             {
                 //UnityEngine.Debug.Log($"[{ModInitials}][Debugging] Running OnPointEnd");
@@ -307,6 +310,7 @@ namespace WWC
 
         IEnumerator BattleStart(IGameModeHandler gm)
         {
+            battleStarted = true;
             foreach (var player in PlayerManager.instance.players)
             {
                 var minigun = player.gameObject.GetComponent<Minigun_Mono>();

@@ -65,6 +65,14 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Bullet Powered Jetpack (Common)
 
 ----
+## v 1.5.2
+- Quick fix of an issue that slipped through the earlier patch.
+
+----
+## v 1.5.1
+- Minor Code Fixes and adjustment to card stats.
+
+----
 ## v 1.5.0
 - 5 New Cards (Curse Eater, Ghostly Body, Shadow Bullets, Siphon Curses, Bullet Powered Jetpack)
 - Plasma Weapons should be more responsive now, along with a couple other changes to their code.

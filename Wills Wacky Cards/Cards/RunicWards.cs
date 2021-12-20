@@ -55,7 +55,7 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Block per Curse",
+                    stat = "Block per 2 Curses",
                     amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },

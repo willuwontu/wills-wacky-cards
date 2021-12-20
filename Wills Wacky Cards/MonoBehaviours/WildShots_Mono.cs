@@ -6,7 +6,7 @@ using System;
 
 namespace WWC.MonoBehaviours
 {
-    public class WildShotsBullet_Mono : MonoBehaviour
+    public class WildShotsBullet_Mono : UnityEngine.MonoBehaviour
     {
         private void Start()
         {
@@ -20,6 +20,12 @@ namespace WWC.MonoBehaviours
             Destroy(this);
         }
     }
+
+public class Test
+{
+    private Gun gun;
+}
+
     public class WildShots_Mono : MonoBehaviour
     {
         private GameObject bulletMono = new GameObject("Backwards", typeof(WildShotsBullet_Mono));

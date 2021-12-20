@@ -28,7 +28,7 @@ namespace WWC.Cards
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.Add(CustomCardCategories.instance.CardCategory("Class"));
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == CurseEaterClass);
 
-            player.gameObject.GetOrAddComponent<CurseEater_Mono>();
+            var mono = player.gameObject.GetOrAddComponent<CurseEater_Mono>();
 
             WillsWackyCards.instance.ExecuteAfterFrames(20, () => CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); }));
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -123,6 +123,39 @@ namespace WWC.MonoBehaviours
             }
         }
 
+        private void CheckIfValid()
+        {
+            var haveCard = false;
+            for (int i = 0; i < player.data.currentCards.Count; i++)
+            {
+                if (player.data.currentCards[i].cardName.ToLower() == "Curse Eater".ToLower())
+                {
+                    haveCard = true;
+                    break;
+                }
+            }
+
+            if (!haveCard)
+            {
+                UnityEngine.GameObject.Destroy(this);
+            }
+        }
+
+        public override void OnPlayerPickStart()
+        {
+            if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.Contains(CustomCardCategories.instance.CardCategory("Class")))
+            {
+                ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.Add(CustomCardCategories.instance.CardCategory("Class"));
+            }
+            if (ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.Contains(WWC.Cards.CurseEater.CurseEaterClass))
+            {
+                ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.RemoveAll((category) => category == WWC.Cards.CurseEater.CurseEaterClass);
+            }
+
+
+            CheckIfValid();
+        }
+
         public override void OnPointStart()
         {
             if (!increased)
@@ -132,6 +165,8 @@ namespace WWC.MonoBehaviours
                 multiplier = 0.1f * curses;
                 stats.lifeSteal += multiplier;
             }
+
+            CheckIfValid();
         }
 
         public override void OnPointEnd()
@@ -151,6 +186,8 @@ namespace WWC.MonoBehaviours
         private void OnDestroy()
         {
             OnPointEnd();
+            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Class"));
+            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.Add(WWC.Cards.CurseEater.CurseEaterClass);
             HookedMonoManager.instance.hookedMonos.Remove(this);
         }
 

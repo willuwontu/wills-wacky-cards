@@ -125,13 +125,19 @@ namespace WWC.MonoBehaviours
             if (!increased)
             {
                 increased = true;
-                additionalBlocks = curses.Count();
+                additionalBlocks = curses.Count() / 2;
                 block.additionalBlocks -= additionalBlocks;
             }
         }
 
         public override void OnPointEnd()
         {
+            if (increased)
+            {
+                increased = false;
+                block.additionalBlocks -= additionalBlocks;
+            }
+
             if (PhotonNetwork.OfflineMode || photonView.IsMine)
             {
                 var blah = damageTracker.ToDictionary((kvp) => kvp.Key, (kvp) => kvp.Value);

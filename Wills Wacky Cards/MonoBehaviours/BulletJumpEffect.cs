@@ -31,7 +31,7 @@ namespace WWC.MonoBehaviours
         public override void OnUpdate()
         {
             // do not engage unless the player is out of normal jumps, and a bunch of other conditions are met
-            if (data.currentJumps <= 0 && (int) gunAmmo.GetFieldValue("currentAmmo") > 0 && data.sinceJump >= interval && data.sinceGrounded > minTimeFromGround && (data.playerActions.Jump.WasPressed || (continuous_trigger && data.playerActions.Jump.IsPressed)))
+            if (data.currentJumps <= 0 && (int) gunAmmo.GetFieldValue("currentAmmo") > 0 && WillsWackyCards.battleStarted && data.sinceJump >= interval && data.sinceGrounded > minTimeFromGround && (data.playerActions.Jump.WasPressed || (continuous_trigger && data.playerActions.Jump.IsPressed)))
             {
 				continuous_trigger = !(gun.attackSpeed / data.stats.attackSpeedMultiplier >= 0.3f || gun.useCharge || gun.dontAllowAutoFire);
 				CopyGunStats(gun, jumpGun);
