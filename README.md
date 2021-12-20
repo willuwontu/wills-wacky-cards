@@ -50,10 +50,9 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Ritualistic Sacrifice (Rare)
 - Forbidden Magics (Rare)
 - Purifying Light (Rare)
-- Cursed Knowledge (Common)
 - Adrenaline Rush (Uncommon)
+- Cursed Knowledge (Common)
 - Endurance Training (Uncommon)
-- Hiltless Blade (Common)
 - Holy Water (Common)
 - Cleansing Ritual (Uncommon)
 - Curse Eater (Common)
@@ -62,7 +61,16 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Ghostly Body (Uncommon)
   - Shadow Bullets (Uncommon)
   - Siphon Curses (Common)
+  - Flagellation (Common)
+  - Hiltless Blade (Common)
 - Bullet Powered Jetpack (Common)
+
+----
+## v 1.5.3
+- 1 New Card (Flagellation) for the Curse Eater class.
+- Hiltless Blade is now part of the Curse Eater class.
+- Bullet Powered Jetpack now only works after a battle has started.
+- Shadow Bullets have had some minor adjustments made to them.
 
 ----
 ## v 1.5.2

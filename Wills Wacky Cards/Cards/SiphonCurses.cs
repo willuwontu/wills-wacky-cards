@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using WWC.Extensions;
+using WWC.MonoBehaviours;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
@@ -19,7 +19,6 @@ namespace WWC.Cards
         {
             ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
             cardInfo.categories = new CardCategory[] { CurseEater.CurseEaterClass, siphonCard};
-            statModifiers.health = 1.2f;
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -28,6 +27,7 @@ namespace WWC.Cards
             {
                 int cursesToFind = 3;
                 int cursesFound = 0;
+                player.gameObject.GetOrAddComponent<SiphonCurses_Mono>();
                 Dictionary<Player, List<int>> curseIndeces = new Dictionary<Player, List<int>>();
                 List<Player> allyPlayers = PlayerManager.instance.players.Where((pl) => pl.playerID != player.playerID && pl.teamID == player.teamID).ToList();
                 List<Player> enemyPlayers = PlayerManager.instance.players.Where((pl) => pl.playerID != player.playerID && pl.teamID != player.teamID).ToList();
@@ -137,8 +137,8 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Health",
-                    amount = "+20%",
+                    stat = "Move Speed",
+                    amount = "+25%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

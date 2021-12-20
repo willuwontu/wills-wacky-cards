@@ -6,41 +6,42 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
-using WWC.MonoBehaviours;
+using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WWC.Cards
 {
-    class BulletPoweredJetpack : CustomCard
+    class Flagellation : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.allowMultiple = false;
-            gun.reloadTime = 0.8f;
+            ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory, CurseEater.CurseEaterClass };
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
-            var jetpack = player.gameObject.GetOrAddComponent<BulletJumpEffect>();
-            jetpack.SetInterval(0.15f);
+            WillsWackyCards.instance.ExecuteAfterFrames(20, () => {
+                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
+                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
+                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
+            });
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var jetpack = player.gameObject.GetOrAddComponent<BulletJumpEffect>();
-            UnityEngine.GameObject.Destroy(jetpack);
+            //Drives me crazy
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Bullet Powered Jetpack";
+            return "Flagellation";
         }
         protected override string GetDescription()
         {
-            return "Why worry about fuel, when you can use bullets instead?\n\n<i>Ammunition sold separately.</i>";
+            return "Train your body to endure the horrors it contains.";
         }
         protected override GameObject GetCardArt()
         {
@@ -56,16 +57,23 @@ namespace WWC.Cards
             {
                 new CardInfoStat()
                 {
-                    positive = true,
-                    stat = "Reload Time",
-                    amount = "-20%",
+                    positive = false,
+                    stat = "HP",
+                    amount = "+30%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Curses",
+                    amount = "+3",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.DestructiveRed;
+            return CardThemeColor.CardThemeColorType.EvilPurple;
         }
         public override string GetModName()
         {

@@ -192,6 +192,8 @@ namespace WWC.MonoBehaviours
                     renderer.gameObject.SetActive(false);
                 }
             }
+
+            obj.AddComponent<ShadowMovement_BulletMono>();
         }
 
         private void CheckIfValid()
@@ -212,6 +214,11 @@ namespace WWC.MonoBehaviours
             }
         }
 
+        //public override void OnBattleStart()
+        //{
+        //    gun.spread = Mathf.Clamp(gun.spread, 0.01f, float.PositiveInfinity);
+        //}
+
         public override void OnPointStart()
         {
             CheckIfValid();
@@ -231,6 +238,88 @@ namespace WWC.MonoBehaviours
         public void Destroy()
         {
             UnityEngine.Object.Destroy(this);
+        }
+
+        class ShadowMovement_BulletMono : MonoBehaviour
+        {
+            private Vector3 prevPosition;
+            private Vector3 prevPoint = Vector3.zero;
+            private float distanceTraveled = 0f;
+            List<Vector3[]> curves = new List<Vector3[]>();
+            private bool goToZero = false;
+
+            private void Start()
+            {
+                prevPosition = base.transform.root.position;
+                curves.Add(GenerateCurves());
+            }
+
+            private void Update()
+            {
+                distanceTraveled += Vector3.Distance(base.transform.root.position, prevPosition);
+                float percent = distanceTraveled / curves[0][3].x;
+                if (percent >= 1f)
+                {
+                    distanceTraveled -= curves[0][3].x;
+                    curves.Add(GenerateCurves());
+                    curves.Remove(curves[0]);
+                    percent = distanceTraveled / curves[0][3].x;
+                }
+                Vector3 point = BezierCurve.CubicBezier(curves[0][0], curves[0][1], curves[0][2], curves[0][3], percent);
+                var dy = (point - prevPoint).y;
+                prevPoint = point;
+
+                base.transform.root.position += base.transform.right * dy;
+                prevPosition = base.transform.root.position;
+            }
+
+            Vector3[] GenerateCurves()
+            {
+                List<Vector3> output = new List<Vector3>();
+                Vector3[] prev;
+                Vector3 point;
+                if (curves.Count > 0)
+                {
+                    prev = curves[0];
+                    output.Add(prev[3]);
+                    output.Add(2f * prev[3] - prev[2]);
+                }
+                else
+                {
+                    output.Add(Vector3.zero);
+                }
+
+                while (output.Count() < 3)
+                {
+                    point = new Vector3(output[output.Count - 1].x + UnityEngine.Random.Range(4f, 6f), UnityEngine.Random.Range(0.25f, 1.75f) * (UnityEngine.Random.Range(0, 2) * 2 - 1), 0f);
+                    output.Add(point);
+                }
+
+                if (goToZero)
+                {
+                    point = new Vector3(output[output.Count - 1].x + UnityEngine.Random.Range(4f, 6f), 0f, 0f);
+                    goToZero = false;
+                }
+                else
+                {
+                    point = new Vector3(output[output.Count - 1].x + UnityEngine.Random.Range(4f, 6f), UnityEngine.Random.Range(0.25f, 1.75f) * (UnityEngine.Random.Range(0, 2) * 2 - 1), 0f);
+                    goToZero = true;
+                }
+
+                output.Add(point);
+
+                if (output[0].x > 0f)
+                {
+                    var x = output[0].x;
+
+                    for (int i = 0; i < output.Count; i++)
+                    {
+                        output[i] -= new Vector3(x, 0f, 0f);
+                    }
+                }
+
+                return output.ToArray();
+            }
         }
     }
 }

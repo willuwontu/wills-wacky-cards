@@ -38,7 +38,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.5.2"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.5.3"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -123,6 +123,7 @@ namespace WWC
             CustomCard.BuildCard<GhostlyBody>();
             CustomCard.BuildCard<ShadowBullets>();
             CustomCard.BuildCard<SiphonCurses>();
+            CustomCard.BuildCard<Flagellation>();
             UnityEngine.Debug.Log("[WWC] All Cards Built");
             
 
@@ -145,8 +146,6 @@ namespace WWC
             var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
             networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
             networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
-
-            
         }
 
         private void OnJoinedRoomAction()
