@@ -66,6 +66,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Bullet Powered Jetpack (Common)
 
 ----
+## v 1.5.4
+- Quick Bug Catch
+
+----
 ## v 1.5.3
 - 1 New Card (Flagellation) for the Curse Eater class.
 - Hiltless Blade is now part of the Curse Eater class.
