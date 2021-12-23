@@ -10,6 +10,7 @@ using WWC.Extensions;
 using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using HarmonyLib;
 
 namespace WWC.Cards
 {
@@ -177,21 +178,50 @@ namespace WWC.MonoBehaviours
             var spawnedAttack = obj.GetComponent<SpawnedAttack>();
             spawnedAttack.SetColor(shadowColor);
 
-            foreach (Transform child in obj.transform)
+            this.ExecuteAfterFrames(1, () =>
             {
-                var particles = child.gameObject.GetComponentsInChildren<ParticleSystem>();
-                var renderers = child.gameObject.GetComponentsInChildren<ParticleSystemRenderer>();
-
-                foreach (var particle in particles)
+                foreach (Transform child in obj.transform)
                 {
-                    particle.gameObject.SetActive(false);
+                    var particles = child.gameObject.GetComponentsInChildren<ParticleSystem>();
+                    var renderers = child.gameObject.GetComponentsInChildren<ParticleSystemRenderer>();
+
+                    foreach (var particle in particles)
+                    {
+                        var main = particle.main;
+                        main.startColor = shadowColor;
+                        var colorOverLifeTime = particle.colorOverLifetime;
+                        Gradient gradient = new Gradient();
+
+                        gradient.SetKeys(
+                            new GradientColorKey[] { new GradientColorKey(shadowColor, 0f), new GradientColorKey(shadowColor, 1f) }, new GradientAlphaKey[] { new GradientAlphaKey(0f, 0f), new GradientAlphaKey(0f, 0f) }
+                            );
+
+                        colorOverLifeTime.color = new ParticleSystem.MinMaxGradient(gradient);
+
+                        particle.gameObject.SetActive(false);
+                    }
+
+                    foreach (var renderer in renderers)
+                    {
+
+                        renderer.gameObject.SetActive(false);
+                    }
+
+                    var remover = obj.GetComponent<RemoveAfterSeconds>();
+                    remover.seconds += 120;
+                    //remover.enabled = false;
                 }
 
-                foreach (var renderer in renderers)
-                {
-                    renderer.gameObject.SetActive(false);
-                }
-            }
+                var colliderObj = obj.transform.Find("Collider").gameObject;
+                var collider = colliderObj.GetComponent<ProjectileCollision>();
+
+                collider.sparkObject = new GameObject();
+                collider.sparkObject.transform.parent = collider.transform;
+                collider.sparkObject.name = "E_BulletHitBullet_Dummy";
+                //var remove = collider.sparkObject.AddComponent<RemoveAfterSeconds>();
+                //remove.seconds = 0.1f;
+
+            });
 
             obj.AddComponent<ShadowMovement_BulletMono>();
         }
@@ -239,87 +269,119 @@ namespace WWC.MonoBehaviours
         {
             UnityEngine.Object.Destroy(this);
         }
+    }
+    public class ShadowMovement_BulletMono : MonoBehaviour
+    {
+        private Vector3 prevPosition;
+        private Vector3 prevPoint = Vector3.zero;
+        private float distanceTraveled = 0f;
+        List<Vector3[]> curves = new List<Vector3[]>();
+        private bool goToZero = false;
 
-        class ShadowMovement_BulletMono : MonoBehaviour
+        private void Start()
         {
-            private Vector3 prevPosition;
-            private Vector3 prevPoint = Vector3.zero;
-            private float distanceTraveled = 0f;
-            List<Vector3[]> curves = new List<Vector3[]>();
-            private bool goToZero = false;
+            prevPosition = base.transform.root.position;
+            curves.Add(GenerateCurves());
+        }
 
-            private void Start()
+        private void Update()
+        {
+            distanceTraveled += Vector3.Distance(base.transform.root.position, prevPosition);
+            float percent = distanceTraveled / curves[0][3].x;
+            if (percent >= 1f)
             {
-                prevPosition = base.transform.root.position;
+                distanceTraveled -= curves[0][3].x;
                 curves.Add(GenerateCurves());
+                curves.Remove(curves[0]);
+                percent = distanceTraveled / curves[0][3].x;
+            }
+            Vector3 point = BezierCurve.CubicBezier(curves[0][0], curves[0][1], curves[0][2], curves[0][3], percent);
+            var dy = (point - prevPoint).y;
+            prevPoint = point;
+
+            base.transform.root.position += base.transform.right * dy;
+            prevPosition = base.transform.root.position;
+        }
+
+
+        Vector3[] GenerateCurves()
+        {
+            List<Vector3> output = new List<Vector3>();
+            Vector3[] prev;
+            Vector3 point;
+            if (curves.Count > 0)
+            {
+                prev = curves[0];
+                output.Add(prev[3]);
+                output.Add(2f * prev[3] - prev[2]);
+            }
+            else
+            {
+                output.Add(Vector3.zero);
             }
 
-            private void Update()
+            while (output.Count() < 3)
             {
-                distanceTraveled += Vector3.Distance(base.transform.root.position, prevPosition);
-                float percent = distanceTraveled / curves[0][3].x;
-                if (percent >= 1f)
-                {
-                    distanceTraveled -= curves[0][3].x;
-                    curves.Add(GenerateCurves());
-                    curves.Remove(curves[0]);
-                    percent = distanceTraveled / curves[0][3].x;
-                }
-                Vector3 point = BezierCurve.CubicBezier(curves[0][0], curves[0][1], curves[0][2], curves[0][3], percent);
-                var dy = (point - prevPoint).y;
-                prevPoint = point;
-
-                base.transform.root.position += base.transform.right * dy;
-                prevPosition = base.transform.root.position;
-            }
-
-            Vector3[] GenerateCurves()
-            {
-                List<Vector3> output = new List<Vector3>();
-                Vector3[] prev;
-                Vector3 point;
-                if (curves.Count > 0)
-                {
-                    prev = curves[0];
-                    output.Add(prev[3]);
-                    output.Add(2f * prev[3] - prev[2]);
-                }
-                else
-                {
-                    output.Add(Vector3.zero);
-                }
-
-                while (output.Count() < 3)
-                {
-                    point = new Vector3(output[output.Count - 1].x + UnityEngine.Random.Range(4f, 6f), UnityEngine.Random.Range(0.25f, 1.75f) * (UnityEngine.Random.Range(0, 2) * 2 - 1), 0f);
-                    output.Add(point);
-                }
-
-                if (goToZero)
-                {
-                    point = new Vector3(output[output.Count - 1].x + UnityEngine.Random.Range(4f, 6f), 0f, 0f);
-                    goToZero = false;
-                }
-                else
-                {
-                    point = new Vector3(output[output.Count - 1].x + UnityEngine.Random.Range(4f, 6f), UnityEngine.Random.Range(0.25f, 1.75f) * (UnityEngine.Random.Range(0, 2) * 2 - 1), 0f);
-                    goToZero = true;
-                }
-
+                point = new Vector3(output[output.Count - 1].x + UnityEngine.Random.Range(5f, 8f), UnityEngine.Random.Range(0.25f, 1.75f) * (UnityEngine.Random.Range(0, 2) * 2 - 1), 0f);
                 output.Add(point);
-
-                if (output[0].x > 0f)
-                {
-                    var x = output[0].x;
-
-                    for (int i = 0; i < output.Count; i++)
-                    {
-                        output[i] -= new Vector3(x, 0f, 0f);
-                    }
-                }
-
-                return output.ToArray();
             }
+
+            if (goToZero)
+            {
+                point = new Vector3(output[output.Count - 1].x + UnityEngine.Random.Range(5f, 8f), 0f, 0f);
+                goToZero = false;
+            }
+            else
+            {
+                point = new Vector3(output[output.Count - 1].x + UnityEngine.Random.Range(5f, 8f), UnityEngine.Random.Range(0.25f, 1.75f) * (UnityEngine.Random.Range(0, 2) * 2 - 1), 0f);
+                goToZero = true;
+            }
+
+            output.Add(point);
+
+            if (output[0].x > 0f)
+            {
+                var x = output[0].x;
+
+                for (int i = 0; i < output.Count; i++)
+                {
+                    output[i] -= new Vector3(x, 0f, 0f);
+                }
+            }
+
+            return output.ToArray();
+        }
+    }
+}
+
+namespace WWC.Patches
+{
+    [HarmonyPatch(typeof(DynamicParticles))]
+    class DynamicParticles_Patch
+    {
+        [HarmonyPrefix]
+        [HarmonyPriority(Priority.First)]
+        [HarmonyPatch("PlayBulletHit")]
+        private static bool NoSurfaceHitEffect(DynamicParticles __instance, float damage, Transform spawnerTransform, HitInfo hit, Color projectielColor, ref int ___spawnsThisFrame, out int __state)
+        {
+            __state = ___spawnsThisFrame;
+            var shadow = spawnerTransform.gameObject.GetComponent<ShadowMovement_BulletMono>();
+            if (shadow)
+            {
+                ___spawnsThisFrame = 100;
+                UnityEngine.Debug.Log("Found Shadow Movement");
+                return false;
+            }
+
+            return true;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPriority(Priority.First)]
+        [HarmonyPatch("PlayBulletHit")]
+        private static void NoSurfaceHitEffectTwo(DynamicParticles __instance, float damage, Transform spawnerTransform, HitInfo hit, Color projectielColor, ref int ___spawnsThisFrame, int __state)
+        {
+            ___spawnsThisFrame = __state;
         }
     }
 }

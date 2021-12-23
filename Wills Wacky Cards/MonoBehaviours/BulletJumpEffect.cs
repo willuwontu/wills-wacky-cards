@@ -6,6 +6,7 @@ using HarmonyLib;
 
 namespace WWC.MonoBehaviours
 {
+	[DisallowMultipleComponent]
     public class BulletJumpEffect : ReversibleEffect
     {
         private float interval;
@@ -30,8 +31,33 @@ namespace WWC.MonoBehaviours
 		}
         public override void OnUpdate()
         {
-            // do not engage unless the player is out of normal jumps, and a bunch of other conditions are met
-            if (data.currentJumps <= 0 && (int) gunAmmo.GetFieldValue("currentAmmo") > 0 && WillsWackyCards.battleStarted && data.sinceJump >= interval && data.sinceGrounded > minTimeFromGround && (data.playerActions.Jump.WasPressed || (continuous_trigger && data.playerActions.Jump.IsPressed)))
+			// If we still have normal jumps
+			if (data.currentJumps > 0)
+            {
+				return;
+            }
+			// If we have no ammo
+			if ((int)gunAmmo.GetFieldValue("currentAmmo") <= 0)
+            {
+				return;
+            }
+			// If we've jumped recently
+			if (data.sinceJump < interval)
+            {
+				return;
+            }
+			// If we just left the ground
+			if (data.sinceGrounded <= minTimeFromGround)
+            {
+				return;
+            }
+			// If we haven't pressed jump or aren't allowed to jump while holding it down
+			if (!(data.playerActions.Jump.WasPressed || (continuous_trigger && data.playerActions.Jump.IsPressed)))
+            {
+				return;
+            }
+            // If the battle has started or we're in sandbox
+            if (WillsWackyCards.battleStarted || (GM_Test.instance != null && GM_Test.instance.gameObject.activeInHierarchy))
             {
 				continuous_trigger = !(gun.attackSpeed / data.stats.attackSpeedMultiplier >= 0.3f || gun.useCharge || gun.dontAllowAutoFire);
 				CopyGunStats(gun, jumpGun);

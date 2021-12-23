@@ -66,6 +66,16 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Bullet Powered Jetpack (Common)
 
 ----
+## v 1.5.6
+- Small code logic changes
+
+----
+## v 1.5.5
+- Bullet Powered Jetpack now works in sandbox.
+- Added Testing cards, not going to list them here. They cannot be options in a match and can only be taken in sandbox.
+- Minor Code changes
+
+----
 ## v 1.5.4
 - Quick Bug Catch
 

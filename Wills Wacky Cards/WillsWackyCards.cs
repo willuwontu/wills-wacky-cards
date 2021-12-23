@@ -17,6 +17,7 @@ using UnboundLib.Utils;
 using UnboundLib.Networking;
 using WWC.Cards;
 using WWC.Cards.Curses;
+using WWC.Cards.Testing;
 using WWC.Extensions;
 using WillsWackyManagers.Utils;
 using WWC.MonoBehaviours;
@@ -38,10 +39,13 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.5.4"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.5.6"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
+        public const string TestingInitials = "Testing";
+
+        public static CardCategory TestCardCategory;
 
         public static WillsWackyCards instance { get; private set; }
         public static CardRemover remover;
@@ -124,6 +128,39 @@ namespace WWC
             CustomCard.BuildCard<ShadowBullets>();
             CustomCard.BuildCard<SiphonCurses>();
             CustomCard.BuildCard<Flagellation>();
+
+            { // Build Testing Cards
+                TestCardCategory = CustomCardCategories.instance.CardCategory("Testing Cards");
+
+                CustomCard.BuildCard<RemoveAll>();
+                CustomCard.BuildCard<RemoveTestingCards>();
+                CustomCard.BuildCard<RemoveLast>();
+                CustomCard.BuildCard<RemoveFirst>();
+
+                CustomCard.BuildCard<DoRoundStart>();
+                CustomCard.BuildCard<DoGameStart>();
+                CustomCard.BuildCard<DoBattleStart>();
+                CustomCard.BuildCard<DoPointStart>();
+                CustomCard.BuildCard<DoPickStart>();
+                CustomCard.BuildCard<DoPlayerPickStart>();
+                CustomCard.BuildCard<DoRoundEnd>();
+                CustomCard.BuildCard<DoGameEnd>();
+                CustomCard.BuildCard<DoPointEnd>();
+                CustomCard.BuildCard<DoPickEnd>();
+                CustomCard.BuildCard<DoPlayerPickEnd>();
+                CustomCard.BuildCard<DoInitStart>();
+                CustomCard.BuildCard<DoInitEnd>();
+                CustomCard.BuildCard<SimulateRoundStart>();
+                CustomCard.BuildCard<SimulateRoundEnd>();
+                CustomCard.BuildCard<SimulateRound>();
+                CustomCard.BuildCard<SimulatePickPhase>();
+
+                
+                //CustomCard.BuildCard<AddPointToTeam>();
+                //CustomCard.BuildCard<AddRoundToTeam>();
+                //CustomCard.BuildCard<ResetTeamScores>(); 
+                
+            }
             UnityEngine.Debug.Log("[WWC] All Cards Built");
             
 
@@ -156,6 +193,17 @@ namespace WWC
         private void OnLeftRoomAction()
         {
 
+        }
+
+        public void TriggerGameModeHook(string key)
+        {
+            StartCoroutine(ITriggerGameModeHook(key));
+        }
+
+        private IEnumerator ITriggerGameModeHook(string key)
+        {
+            yield return GameModeManager.TriggerHook(key);
+            yield break;
         }
 
         IEnumerator BuildMomentumCards()
@@ -341,6 +389,10 @@ namespace WWC
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseEater.CurseEaterClass))
                 {
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseEater.CurseEaterClass);
+                }
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(TestCardCategory))
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(TestCardCategory);
                 }
             }
             foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
