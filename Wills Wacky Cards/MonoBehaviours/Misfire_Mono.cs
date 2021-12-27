@@ -51,7 +51,7 @@ namespace WWC.MonoBehaviours
             var roll = random.Next(100);
             if (roll < misfireChance)
             {
-                this.photonView.RPC("RPCA_Misfire", RpcTarget.All, roll );
+                this.photonView.RPC(nameof(RPCA_Misfire), RpcTarget.All, roll );
             }
         }
 

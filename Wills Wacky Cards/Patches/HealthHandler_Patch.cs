@@ -24,6 +24,7 @@ namespace WWC.Patches
         }
 
         [HarmonyPostfix]
+        [HarmonyPriority(Priority.Last)]
         [HarmonyPatch("CallTakeDamage")]
         static void BleedEffect(HealthHandler __instance, Vector2 damage, Vector2 position, Player damagingPlayer, Player ___player)
         {
