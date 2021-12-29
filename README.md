@@ -66,6 +66,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Bullet Powered Jetpack (Common)
 
 ----
+## v 1.5.7
+- Changes to card building logic.
+
+----
 ## v 1.5.6
 - Small code logic changes
 

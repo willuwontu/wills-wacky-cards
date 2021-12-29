@@ -39,7 +39,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.5.6"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.5.7"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -53,6 +53,8 @@ namespace WWC
         public static bool battleStarted = false;
 
         GameObject ColorTester;
+
+        private bool debug = false;
 
         void Awake()
         {
@@ -69,68 +71,280 @@ namespace WWC
             gameObject.AddComponent<HookedMonoManager>();
             remover = gameObject.AddComponent<CardRemover>();
 
-            UnityEngine.Debug.Log("[WWC] Loading Cards");
-            CustomCard.BuildCard<AmmoCache>();
-            CustomCard.BuildCard<Shotgun>();
-            CustomCard.BuildCard<SlowDeath>();
-            CustomCard.BuildCard<Vampirism>();
-            CustomCard.BuildCard<FastBall>();
-            CustomCard.BuildCard<SlowBall>();
-            //CustomCard.BuildCard<Minigun>();
-            CustomCard.BuildCard<WildAim>();
-            CustomCard.BuildCard<RunningShoes>();
-            CustomCard.BuildCard<JumpingShoes>();
-            CustomCard.BuildCard<PastaShells>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<CrookedLegs>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            //CustomCard.BuildCard<ErodingDarkness>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<DrivenToEarth>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<Misfire>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<UncomfortableDefense>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<CounterfeitAmmo>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<NeedleBullets>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<EasyTarget>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<WildShots>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<ShakyBullets>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<RabbitsFoot>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<LuckyClover>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<DefectiveTrigger>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<MisalignedSights>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<Damnation>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<FragileBody>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<AmmoRegulations>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<AirResistance>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<LeadBullets>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<AnimePhysics>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<TakeANumber>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<HeavyShields>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<Hex>();
-            CustomCard.BuildCard<Gatling>();
-            CustomCard.BuildCard<PlasmaRifle>();
-            CustomCard.BuildCard<PlasmaShotgun>();
-            CustomCard.BuildCard<UnstoppableForce>();
-            CustomCard.BuildCard<ImmovableObject>();
-            CustomCard.BuildCard<HotPotato>();
-            CustomCard.BuildCard<MomentaryConfusion>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            CustomCard.BuildCard<SavageWounds>();
-            CustomCard.BuildCard<RitualisticSacrifice>();
-            CustomCard.BuildCard<ForbiddenMagics>();
-            CustomCard.BuildCard<PurifyingLight>();
-            CustomCard.BuildCard<CursedKnowledge>();
-            CustomCard.BuildCard<EnduranceTraining>();
-            CustomCard.BuildCard<AdrenalineRush>();
-            CustomCard.BuildCard<RunicWards>();
-            CustomCard.BuildCard<HiltlessBlade>();
-            CustomCard.BuildCard<CorruptedAmmunition>();
-            CustomCard.BuildCard<HolyWater>();
-            CustomCard.BuildCard<CleansingRitual>();
-            CustomCard.BuildCard<BulletPoweredJetpack>();
-            CustomCard.BuildCard<CurseEater>();
-            CustomCard.BuildCard<GhostlyBody>();
-            CustomCard.BuildCard<ShadowBullets>();
-            CustomCard.BuildCard<SiphonCurses>();
-            CustomCard.BuildCard<Flagellation>();
+            this.ExecuteAfterSeconds(2f, () => { StartCoroutine(IBuildCards()); });
 
+            UnityEngine.Debug.Log("[WWC] All Cards Built");
+            
+
+            this.ExecuteAfterSeconds(0.4f, ChangeCards);
+
+            GameModeManager.AddHook(GameModeHooks.HookGameEnd, GameEnd);
+            GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
+            GameModeManager.AddHook(GameModeHooks.HookBattleStart, BattleStart);
+            GameModeManager.AddHook(GameModeHooks.HookPlayerPickStart, PlayerPickStart);
+            GameModeManager.AddHook(GameModeHooks.HookPlayerPickEnd, PlayerPickEnd);
+            GameModeManager.AddHook(GameModeHooks.HookPointStart, PointStart);
+            GameModeManager.AddHook(GameModeHooks.HookPointEnd, PointEnd);
+            GameModeManager.AddHook(GameModeHooks.HookPickStart, PickStart);
+            GameModeManager.AddHook(GameModeHooks.HookPickEnd, PickEnd);
+            GameModeManager.AddHook(GameModeHooks.HookRoundStart, RoundStart);
+            GameModeManager.AddHook(GameModeHooks.HookRoundEnd, RoundEnd);
+
+            var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
+            networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
+            networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
+
+            //ColorTester = CreateColorTester();
+        }
+
+        private IEnumerator IBuildCards()
+        {
+            var buildingCard = false;
+            UnityEngine.Debug.Log("[WWC] Loading Cards");
+
+            // build regular cards
+            buildingCard = true;
+            CustomCard.BuildCard<AmmoCache>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<Shotgun>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<SlowDeath>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<Vampirism>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<FastBall>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<SlowBall>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            //CustomCard.BuildCard<Minigun>((card) => { buildingCard = false; });
+            CustomCard.BuildCard<WildAim>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<RunningShoes>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<JumpingShoes>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<Hex>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<Gatling>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<PlasmaRifle>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<PlasmaShotgun>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<UnstoppableForce>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<ImmovableObject>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<HotPotato>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<SavageWounds>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<RitualisticSacrifice>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<ForbiddenMagics>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<PurifyingLight>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<CursedKnowledge>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<EnduranceTraining>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<AdrenalineRush>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<RunicWards>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<HiltlessBlade>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<CorruptedAmmunition>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<HolyWater>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<CleansingRitual>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<BulletPoweredJetpack>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<CurseEater>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<GhostlyBody>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<ShadowBullets>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<SiphonCurses>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<Flagellation>((card) => { buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+
+            // Build Curses
+            CustomCard.BuildCard<PastaShells>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<CrookedLegs>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            //CustomCard.BuildCard<ErodingDarkness>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<DrivenToEarth>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<Misfire>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<UncomfortableDefense>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<CounterfeitAmmo>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<NeedleBullets>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<EasyTarget>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<WildShots>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<ShakyBullets>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<RabbitsFoot>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<LuckyClover>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<DefectiveTrigger>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<MisalignedSights>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<Damnation>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<FragileBody>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<AmmoRegulations>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<AirResistance>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<LeadBullets>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<AnimePhysics>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<TakeANumber>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<HeavyShields>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+            CustomCard.BuildCard<MomentaryConfusion>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); buildingCard = false; });
+            yield return new WaitUntil(() => !buildingCard);
+            yield return WaitFor.Frames(2);
+            buildingCard = true;
+
+            if (debug)
             { // Build Testing Cards
                 TestCardCategory = CustomCardCategories.instance.CardCategory("Testing Cards");
 
@@ -157,36 +371,16 @@ namespace WWC
                 CustomCard.BuildCard<SimulateRound>();
                 CustomCard.BuildCard<SimulatePickPhase>();
 
-                
+
                 //CustomCard.BuildCard<AddPointToTeam>();
                 //CustomCard.BuildCard<AddRoundToTeam>();
                 //CustomCard.BuildCard<ResetTeamScores>(); 
-                
-            }
-            UnityEngine.Debug.Log("[WWC] All Cards Built");
-            
 
-            this.ExecuteAfterSeconds(0.4f, ChangeCards);
+            }
 
             StartCoroutine(BuildMomentumCards());
 
-            GameModeManager.AddHook(GameModeHooks.HookGameEnd, GameEnd);
-            GameModeManager.AddHook(GameModeHooks.HookGameStart, GameStart);
-            GameModeManager.AddHook(GameModeHooks.HookBattleStart, BattleStart);
-            GameModeManager.AddHook(GameModeHooks.HookPlayerPickStart, PlayerPickStart);
-            GameModeManager.AddHook(GameModeHooks.HookPlayerPickEnd, PlayerPickEnd);
-            GameModeManager.AddHook(GameModeHooks.HookPointStart, PointStart);
-            GameModeManager.AddHook(GameModeHooks.HookPointEnd, PointEnd);
-            GameModeManager.AddHook(GameModeHooks.HookPickStart, PickStart);
-            GameModeManager.AddHook(GameModeHooks.HookPickEnd, PickEnd);
-            GameModeManager.AddHook(GameModeHooks.HookRoundStart, RoundStart);
-            GameModeManager.AddHook(GameModeHooks.HookRoundEnd, RoundEnd);
-
-            var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
-            networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
-            networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
-
-            ColorTester = CreateColorTester();
+            yield break;
         }
 
         private void OnJoinedRoomAction()
