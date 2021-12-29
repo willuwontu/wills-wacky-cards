@@ -847,6 +847,7 @@ namespace WWC
                 scrollScroll.inertia = false;
                 scrollScroll.movementType = ScrollRect.MovementType.Clamped;
                 scrollScroll.horizontal = false;
+                scrollScroll.scrollSensitivity = 50f;
 
                 // Scrollbar
                 {
@@ -1045,9 +1046,6 @@ namespace WWC
                         text.color = textColor;
 
                         text.text = string.Format("{0:F1} : 1", ColorContrast(textColor, color));
-
-                        var outline = colorContrast.AddComponent<Outline>();
-                        var shadow = colorContrast.AddComponent<Shadow>();
                     }
 
                     return rect;
