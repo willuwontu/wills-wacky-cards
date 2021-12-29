@@ -1046,8 +1046,8 @@ namespace WWC
 
                         text.text = string.Format("{0:F1} : 1", ColorContrast(textColor, color));
 
-                        colorContrast.AddComponent<Outline>();
-                        colorContrast.AddComponent<Shadow>();
+                        var outline = colorContrast.AddComponent<Outline>();
+                        var shadow = colorContrast.AddComponent<Shadow>();
                     }
 
                     return rect;
