@@ -45,11 +45,10 @@ namespace WWC.MonoBehaviours
             }
         }
 
-
         private void OnShootProjectileAction(GameObject obj)
         {
             var roll = random.Next(100);
-            if (roll < misfireChance)
+            if (roll < misfireChance && this.photonView.IsMine)
             {
                 this.photonView.RPC(nameof(RPCA_Misfire), RpcTarget.All, roll );
             }
@@ -83,8 +82,7 @@ namespace WWC.MonoBehaviours
 
             if (!haveMisfire)
             {
-                gun.ShootPojectileAction -= OnShootProjectileAction;
-                Destroy(this);
+                UnityEngine.GameObject.Destroy(this);
             }
         }
 
