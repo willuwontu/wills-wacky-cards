@@ -12,6 +12,7 @@ namespace WWC.Extensions
         public float MassModifier;
         public float Bleed;
         public float DamageReduction;
+        public bool isBanished;
 
         public CharacterStatModifiersAdditionalData()
         {
@@ -19,6 +20,7 @@ namespace WWC.Extensions
             MassModifier = 1f;
             Bleed = 0f;
             DamageReduction = 0f;
+            isBanished = false;
         }
     }
     public static class CharacterStatModifiersExtension
@@ -49,6 +51,7 @@ namespace WWC.Extensions
             __instance.GetAdditionalData().MassModifier = 1f;
             __instance.GetAdditionalData().Bleed = 0f;
             __instance.GetAdditionalData().DamageReduction = 0f;
+            __instance.GetAdditionalData().isBanished = false;
         }
     }
 }

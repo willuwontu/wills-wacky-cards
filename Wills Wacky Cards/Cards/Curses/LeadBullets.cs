@@ -19,7 +19,7 @@ namespace WWC.Cards.Curses
         {
             gun.gravity = 1.25f;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

@@ -16,7 +16,7 @@ namespace WWC.Cards
         {
             gun.GetAdditionalData().speedDamageMultiplier -= 0.15f;
             gun.reloadTimeAdd = 0.15f;
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

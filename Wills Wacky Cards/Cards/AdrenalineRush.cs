@@ -17,7 +17,7 @@ namespace WWC.Cards
             var cardMono = gameObject.GetOrAddComponent<PointCard_Mono>();
             cardMono.multiplierPerPoint = -0.2f;
             cardMono.startValue = 1.30f;
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
