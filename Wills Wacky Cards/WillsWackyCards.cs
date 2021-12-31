@@ -186,7 +186,7 @@ namespace WWC
             networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
             networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
 
-            ColorTester = CreateColorTester();
+            //ColorTester = CreateColorTester();
         }
 
         private void OnJoinedRoomAction()
@@ -1029,7 +1029,12 @@ namespace WWC
 
                 RectTransform CreateColorBox(GameObject parent, Color textColor, string textColorType, Color color, string colorColorType)
                 {
-                    var colors = GetContrastingColors(textColor, color);
+                    var colors = GetContrastingColors(textColor, color, 3f);
+
+                    if (RelativeLuminance(textColor) < RelativeLuminance(color))
+                    {
+                        colors = new Color[] { colors[1], colors[0] };
+                    }
 
                     // Box container is a Vertical Layout Group for its children
                     var box = new GameObject();
@@ -1245,7 +1250,7 @@ namespace WWC
         /// <param name="backgroundColor">The background color for the text to go on.</param>
         /// <param name="textColor">The intended text color.</param>
         /// <returns>A pair of contrasting colors, the lightest as the first color.</returns>
-        public Color[] GetContrastingColors(Color backgroundColor, Color textColor)
+        public Color[] GetContrastingColors(Color backgroundColor, Color textColor, float ratio)
         {
             Color[] colors = new Color[2];
 
@@ -1264,39 +1269,30 @@ namespace WWC
             }
 
             // See if we have good enough contrast already
-            if (!(ColorContrast(backgroundColor, textColor) < 4.5f))
+            if (!(ColorContrast(backgroundColor, textColor) < ratio))
             {
                 return colors;
             }
 
-            var ratio = 3.0f;
             Color.RGBToHSV(colors[0], out var lightH, out var lightS, out var lightV);
             Color.RGBToHSV(colors[1], out var darkH, out var darkS, out var darkV);
 
-            // If the brightest color can be brightened enough to have enough contrast.
-            if (ColorContrast(colors[1], Color.HSVToRGB(lightH, lightS, 1f)) >= ratio)
+            // If the darkest color can be darkened enough to have enough contrast after brightening the color.
+            if (ColorContrast(Color.HSVToRGB(darkH, darkS, 0f), Color.HSVToRGB(lightH, lightS, 1f)) >= ratio)
             {
-                var darkL = RelativeLuminance(colors[1]);
+                var lightDiff = 1f - lightV;
+                var darkDiff = darkV;
 
-                while (ColorContrast(darkL, Color.HSVToRGB(lightH, lightS, lightV)) < ratio)
+                var lightRatio = 0.01f * (lightDiff / (lightDiff + darkDiff));
+                var darkRatio = 0.01f * (darkDiff / (lightDiff + darkDiff));
+
+                while (ColorContrast(Color.HSVToRGB(lightH, lightS, lightV), Color.HSVToRGB(darkH, darkS, darkV)) < ratio)
                 {
-                    lightV += 0.01f;
+                    lightV += lightRatio;
+                    darkV -= darkRatio;
                 }
 
                 colors[0] = Color.HSVToRGB(lightH, lightS, lightV);
-            }
-            // If the darkest color can be darkened enough to have enough contrast after brightening the color.
-            else if (ColorContrast(Color.HSVToRGB(darkH, darkS, 0f), Color.HSVToRGB(lightH, lightS, 1f)) >= ratio)
-            {
-                colors[0] = Color.HSVToRGB(lightH, lightS, 1f);
-
-                var lightL = RelativeLuminance(colors[0]);
-
-                while (ColorContrast(lightL, Color.HSVToRGB(darkH, darkS, darkV)) < ratio)
-                {
-                    darkV -= 0.01f;
-                }
-
                 colors[1] = Color.HSVToRGB(darkH, darkS, darkV);
             }
             // Fall back to using white.
