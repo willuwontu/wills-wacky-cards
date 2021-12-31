@@ -39,7 +39,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.5.8"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.5.9"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -166,7 +166,7 @@ namespace WWC
                 //CustomCard.BuildCard<ResetTeamScores>(); 
             }
 
-            StartCoroutine(BuildMomentumCards());
+            this.ExecuteAfterSeconds(0.4f, () => { StartCoroutine(BuildMomentumCards()); });
 
             this.ExecuteAfterSeconds(0.4f, ChangeCards);
 
@@ -182,11 +182,28 @@ namespace WWC
             GameModeManager.AddHook(GameModeHooks.HookRoundStart, RoundStart);
             GameModeManager.AddHook(GameModeHooks.HookRoundEnd, RoundEnd);
 
-            var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
-            networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
-            networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
+            //var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
+            //networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
+            //networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
+
+            var pingMonitor = gameObject.AddComponent<PingMonitor>();
+            pingMonitor.PingUpdateAction += ReportPingUpdate;
 
             //ColorTester = CreateColorTester();
+        }
+
+        private void ReportPingUpdate(int playerActorNumber, int ping)
+        {
+            UnityEngine.Debug.Log($"Actor {playerActorNumber} has a ping of {ping}");
+
+            var pingMonitor = gameObject.GetComponent<PingMonitor>();
+
+            var players = pingMonitor.GetPlayersWithActorNumber(playerActorNumber);
+
+            foreach (var player in players)
+            {
+                UnityEngine.Debug.Log($"Player {player.playerID} has a ping of {ping}");
+            }
         }
 
         private void OnJoinedRoomAction()
@@ -226,19 +243,6 @@ namespace WWC
                 yield return WaitFor.Frames(2);
                 stacks++;
             }
-            yield return StartCoroutine(WaitFor.Frames(7));
-
-            MomentumTracker.stacks = 0;
-
-            CustomCard.BuildCard<UnstoppableForce>((card) => { buildingCard = false; });
-            yield return new WaitUntil(() => !buildingCard);
-            yield return WaitFor.Frames(2);
-            buildingCard = true;
-            CustomCard.BuildCard<ImmovableObject>((card) => { buildingCard = false; });
-            yield return new WaitUntil(() => !buildingCard);
-            yield return WaitFor.Frames(2);
-            buildingCard = true;
-
             yield return StartCoroutine(WaitFor.Frames(7));
 
             MomentumTracker.stacks = 0;
