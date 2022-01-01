@@ -186,24 +186,7 @@ namespace WWC
             //networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
             //networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
 
-            var pingMonitor = gameObject.AddComponent<PingMonitor>();
-            pingMonitor.PingUpdateAction += ReportPingUpdate;
-
             //ColorTester = CreateColorTester();
-        }
-
-        private void ReportPingUpdate(int playerActorNumber, int ping)
-        {
-            UnityEngine.Debug.Log($"Actor {playerActorNumber} has a ping of {ping}");
-
-            var pingMonitor = gameObject.GetComponent<PingMonitor>();
-
-            var players = pingMonitor.GetPlayersWithActorNumber(playerActorNumber);
-
-            foreach (var player in players)
-            {
-                UnityEngine.Debug.Log($"Player {player.playerID} has a ping of {ping}");
-            }
         }
 
         private void OnJoinedRoomAction()
