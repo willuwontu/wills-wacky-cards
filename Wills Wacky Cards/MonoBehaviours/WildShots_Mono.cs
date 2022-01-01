@@ -21,11 +21,6 @@ namespace WWC.MonoBehaviours
         }
     }
 
-public class Test
-{
-    private Gun gun;
-}
-
     public class WildShots_Mono : MonoBehaviour
     {
         private GameObject bulletMono = new GameObject("Backwards", typeof(WildShotsBullet_Mono));
