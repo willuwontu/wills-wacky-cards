@@ -64,6 +64,13 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Flagellation (Common)
   - Hiltless Blade (Common)
 - Bullet Powered Jetpack (Common)
+- Banishment (Uncommon)
+
+----
+## v 1.5.10
+- 1 new card (Resolute)
+- Fixed issue where banishment could sometimes speed up a player.
+- Gatling now has a damage penalty.
 
 ----
 ## v 1.5.9

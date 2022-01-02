@@ -145,6 +145,19 @@ namespace WWC.MonoBehaviours
             silenceHandler.RPCA_AddSilence(duration);
 
             StartBanish(attacker, duration);
+
+            //this.photonView.RPC(nameof(RPCA_StartBanish), RpcTarget.All, attacker.playerID);
+        }
+
+        [PunRPC]
+        private void RPCA_StartBanish(int attackerID)
+        {
+            var attacker = PlayerManager.instance.GetPlayerWithID(attackerID);
+
+            var silenceHandler = attacker.GetComponent<SilenceHandler>();
+            silenceHandler.RPCA_AddSilence(duration);
+
+            StartBanish(attacker, duration);
         }
 
         private void StartBanish(Player attacker, float f)
@@ -154,7 +167,6 @@ namespace WWC.MonoBehaviours
                 if (!(banished[attacker] > 0f))
                 {
                     attacker.data.stats.GetAdditionalData().isBanished = true;
-                    attacker.data.stats.movementSpeed *= slow;
                     if (attacker.data.view.IsMine)
                     {
                         camera.enabled = true;
@@ -166,17 +178,22 @@ namespace WWC.MonoBehaviours
             {
                 attacker.data.stats.GetAdditionalData().isBanished = true;
                 banished.Add(attacker, f);
+                
                 if (attacker.data.view.IsMine)
                 {
                     camera.enabled = true;
                 }
             }
+            var banish = attacker.gameObject.GetOrAddComponent<BanishedPlayer_Mono>();
+            banish.duration += f;
+            banish.go = true;
         }
 
         private void StopBanish(Player attacker)
         {
             attacker.data.stats.GetAdditionalData().isBanished = false;
-            attacker.data.stats.movementSpeed /= slow;
+            var banish = attacker.gameObject.GetOrAddComponent<BanishedPlayer_Mono>();
+            UnityEngine.GameObject.Destroy(banish);
             banished.Remove(attacker);
             if (attacker.data.view.IsMine)
             {
@@ -222,5 +239,60 @@ namespace WWC.MonoBehaviours
         }
     }
 
+    [DisallowMultipleComponent]
+    public class BanishedPlayer_Mono : Hooked_Mono
+    {
+        public float duration = 0f;
+        public bool go = false;
 
+        public float slow = 0.7f;
+        private Dictionary<Player, float> banished = new Dictionary<Player, float>();
+
+        private CharacterData data;
+        private Player player;
+        private CharacterStatModifiers stats;
+
+        private void Start()
+        {
+            HookedMonoManager.instance.hookedMonos.Add(this);
+            data = GetComponentInParent<CharacterData>();
+            player = data.player;
+            stats = data.stats;
+            stats.movementSpeed *= slow;
+        }
+
+        private void Update()
+        {
+            if (go)
+            {
+                duration -= Time.deltaTime;
+            }
+
+            if (duration <= 0f)
+            {
+                UnityEngine.GameObject.Destroy(this);
+            }
+        }
+
+        public override void OnPointEnd()
+        {
+            UnityEngine.GameObject.Destroy(this);
+        }
+
+        public override void OnGameStart()
+        {
+            UnityEngine.GameObject.Destroy(this);
+        }
+
+        private void OnDestroy()
+        {
+            stats.movementSpeed /= slow;
+            HookedMonoManager.instance.hookedMonos.Remove(this);
+        }
+
+        public void Destroy()
+        {
+            UnityEngine.Object.Destroy(this);
+        }
+    }
 }

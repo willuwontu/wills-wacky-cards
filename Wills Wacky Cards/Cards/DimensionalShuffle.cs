@@ -12,31 +12,32 @@ using UnityEngine;
 
 namespace WWC.Cards
 {
-    class Template : CustomCard
+    class DimensionalShuffle : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
+            statModifiers.health = 0.7f;
             //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
+            var mono = player.gameObject.GetOrAddComponent<DimensionalShuffle_Mono>();
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            //Drives me crazy
+            var mono = player.gameObject.GetOrAddComponent<DimensionalShuffle_Mono>();
+            UnityEngine.GameObject.Destroy(mono);
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Card Name";
+            return "Dimensional Shuffle";
         }
         protected override string GetDescription()
         {
-            return "Card Description";
+            return "When you block, each player's position is randomly swapped to another's.";
         }
         protected override GameObject GetCardArt()
         {
@@ -52,9 +53,9 @@ namespace WWC.Cards
             {
                 new CardInfoStat()
                 {
-                    positive = true,
-                    stat = "Effect",
-                    amount = "No",
+                    positive = false,
+                    stat = "HP",
+                    amount = "-30%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
@@ -70,6 +71,60 @@ namespace WWC.Cards
         public override bool GetEnabled()
         {
             return true;
+        }
+    }
+}
+
+namespace WWC.MonoBehaviours
+{
+    [DisallowMultipleComponent]
+    public class DimensionalShuffle_Mono : Hooked_Mono
+    {
+        private CharacterData data;
+        private Player player;
+        private Block block;
+
+        private void Start()
+        {
+            HookedMonoManager.instance.hookedMonos.Add(this);
+            data = GetComponentInParent<CharacterData>();
+            player = data.player;
+            block = data.block;
+            block.BlockAction += OnBlock;
+        }
+
+        private void OnBlock(BlockTrigger.BlockTriggerType blockTrigger)
+        {
+            if (blockTrigger == BlockTrigger.BlockTriggerType.Default)
+            {
+                var livingPlayers = PlayerManager.instance.players.Where((person) => !person.data.dead).ToArray();
+                var playerPositions = livingPlayers.Select((person) => person.transform.position).ToList();
+
+                foreach (var person in livingPlayers)
+                {
+                    var index = UnityEngine.Random.Range(0, playerPositions.Count);
+                    person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
+                    person.transform.position = playerPositions[index];
+
+                    playerPositions.RemoveAt(index);
+                }
+            }
+        }
+
+        public override void OnGameStart()
+        {
+            UnityEngine.GameObject.Destroy(this);
+        }
+
+        private void OnDestroy()
+        {
+            block.BlockAction -= OnBlock;
+            HookedMonoManager.instance.hookedMonos.Remove(this);
+        }
+
+        public void Destroy()
+        {
+            UnityEngine.Object.Destroy(this);
         }
     }
 }

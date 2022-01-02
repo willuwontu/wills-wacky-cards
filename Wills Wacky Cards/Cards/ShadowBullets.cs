@@ -369,7 +369,6 @@ namespace WWC.Patches
             if (shadow)
             {
                 ___spawnsThisFrame = 100;
-                UnityEngine.Debug.Log("Found Shadow Movement");
                 return false;
             }
 

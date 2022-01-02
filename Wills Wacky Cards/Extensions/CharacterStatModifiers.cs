@@ -13,6 +13,7 @@ namespace WWC.Extensions
         public float Bleed;
         public float DamageReduction;
         public bool isBanished;
+        public float willpower;
 
         public CharacterStatModifiersAdditionalData()
         {
@@ -21,6 +22,7 @@ namespace WWC.Extensions
             Bleed = 0f;
             DamageReduction = 0f;
             isBanished = false;
+            willpower = 0f;
         }
     }
     public static class CharacterStatModifiersExtension
@@ -52,6 +54,7 @@ namespace WWC.Extensions
             __instance.GetAdditionalData().Bleed = 0f;
             __instance.GetAdditionalData().DamageReduction = 0f;
             __instance.GetAdditionalData().isBanished = false;
+            __instance.GetAdditionalData().willpower = 0f;
         }
     }
 }

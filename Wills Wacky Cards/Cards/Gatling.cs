@@ -20,6 +20,7 @@ namespace WWC.Cards
             gun.spread = 0.35f;
             gun.reloadTimeAdd = 0.5f;
             gun.attackSpeed = 1.25f;
+            gun.bulletDamageMultiplier = 0.8f;
 
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType"), CustomCardCategories.instance.CardCategory("WWC Gun Type") };
@@ -76,6 +77,13 @@ namespace WWC.Cards
                     positive = false,
                     stat = "Spread",
                     amount = "+30%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Damage",
+                    amount = "-20%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

@@ -6,22 +6,22 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
-using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WWC.Cards
 {
-    class Template : CustomCard
+    class Resolute : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
+            statModifiers.health = 1.5f;
             //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
+            statModifiers.GetAdditionalData().willpower += 1f;
+            statModifiers.GetAdditionalData().MassModifier *= 2000f;
             UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -32,11 +32,11 @@ namespace WWC.Cards
 
         protected override string GetTitle()
         {
-            return "Card Name";
+            return "Resolute";
         }
         protected override string GetDescription()
         {
-            return "Card Description";
+            return "Stuns and silences are less effective on you.";
         }
         protected override GameObject GetCardArt()
         {
@@ -53,8 +53,15 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Effect",
-                    amount = "No",
+                    stat = "Willpower",
+                    amount = "+100%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "HP",
+                    amount = "+50%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
