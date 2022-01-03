@@ -17,8 +17,8 @@ namespace WWC.Cards.Curses
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.numberOfJumps += 1;
-            statModifiers.movementSpeed += 1.1f;
+            statModifiers.numberOfJumps = 1;
+            statModifiers.movementSpeed = 1.1f;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }

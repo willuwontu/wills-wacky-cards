@@ -65,6 +65,13 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Hiltless Blade (Common)
 - Bullet Powered Jetpack (Common)
 - Banishment (Uncommon)
+- Resolute (Uncommon)
+- Dimensional Shuffle (Uncommon)
+
+----
+## v 1.5.11
+- 1 new card (Dimensional Shuffle)
+- Fixed a few issues with cards. Runic Wards now actually grants additional blocks instead of just removing them.
 
 ----
 ## v 1.5.10

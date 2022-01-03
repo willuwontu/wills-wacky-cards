@@ -126,7 +126,7 @@ namespace WWC.MonoBehaviours
             {
                 increased = true;
                 additionalBlocks = curses.Count();
-                block.additionalBlocks -= additionalBlocks;
+                block.additionalBlocks += additionalBlocks;
             }
         }
 

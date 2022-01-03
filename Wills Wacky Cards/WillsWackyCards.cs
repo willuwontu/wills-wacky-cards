@@ -133,7 +133,6 @@ namespace WWC
             CustomCard.BuildCard<Flagellation>();
             CustomCard.BuildCard<Banishment>();
             CustomCard.BuildCard<Resolute>();
-            CustomCard.BuildCard<BoundByBlood>();
             CustomCard.BuildCard<DimensionalShuffle>();
 
             if (debug)

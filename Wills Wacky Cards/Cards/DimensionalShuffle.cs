@@ -16,6 +16,7 @@ namespace WWC.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
+            cardInfo.allowMultiple = false;
             statModifiers.health = 0.7f;
             //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -95,19 +96,16 @@ namespace WWC.MonoBehaviours
 
         private void OnBlock(BlockTrigger.BlockTriggerType blockTrigger)
         {
-            if (blockTrigger == BlockTrigger.BlockTriggerType.Default)
+            var livingPlayers = PlayerManager.instance.players.Where((person) => !person.data.dead).ToArray();
+            var playerPositions = livingPlayers.Select((person) => person.transform.position).ToList();
+
+            foreach (var person in livingPlayers)
             {
-                var livingPlayers = PlayerManager.instance.players.Where((person) => !person.data.dead).ToArray();
-                var playerPositions = livingPlayers.Select((person) => person.transform.position).ToList();
+                var index = UnityEngine.Random.Range(0, playerPositions.Count);
+                person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
+                person.transform.position = playerPositions[index];
 
-                foreach (var person in livingPlayers)
-                {
-                    var index = UnityEngine.Random.Range(0, playerPositions.Count);
-                    person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
-                    person.transform.position = playerPositions[index];
-
-                    playerPositions.RemoveAt(index);
-                }
+                playerPositions.RemoveAt(index);
             }
         }
 
