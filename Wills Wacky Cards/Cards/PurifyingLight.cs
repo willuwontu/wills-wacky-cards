@@ -28,27 +28,54 @@ namespace WWC.Cards
                 WillsWackyCards.instance.StartCoroutine(IReplaceCurses(player, gun, gunAmmo, data, health, gravity, block, characterStats)); 
             });
 
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         private IEnumerator IReplaceCurses(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
+            var curseIndeces = Enumerable.Range(0, player.data.currentCards.Count()).Where((index) => CurseManager.instance.IsCurse(player.data.currentCards[index])).ToList();
+
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseManager.instance.curseInteractionCategory);
-            foreach (var curse in curses)
+
+            var replacements = new List<CardInfo>();
+
+            foreach (int index in curseIndeces)
             {
-                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][{GetTitle()}] Player {player.playerID} has {curse.cardName} on them.");
-                yield return WillsWackyCards.WaitFor.Frames(80);
+                Func<CardInfo, Player, Gun, GunAmmo, CharacterData, HealthHandler, Gravity, Block, CharacterStatModifiers, bool> condition = (card, player, g, ga, d, h, gr, b, s) =>
+                {
+                    var result = true;
 
-                var replacement = ModdingUtils.Utils.Cards.instance.GetRandomCardWithCondition(player, gun, gunAmmo, data, health, gravity, block, characterStats, CommonCondition);
+                    if (card.rarity != CardInfo.Rarity.Common)
+                    {
+                        result = false;
+                    }
 
-                UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][{GetTitle()}] Attempting to replace {curse.cardName} on Player {player.playerID} with {replacement.cardName}. If this doesn't work, blame Pykess.");
+                    if (card.categories.Contains(CurseManager.instance.curseInteractionCategory))
+                    {
+                        result = false;
+                    }
 
-                yield return ModdingUtils.Utils.Cards.instance.ReplaceCard(player, curse, replacement, "", 2f, 2f, ModdingUtils.Utils.Cards.SelectionType.Oldest, true);
+                    if (!ModdingUtils.Utils.Cards.instance.CardDoesNotConflictWithCards(card, replacements.ToArray()))
+                    {
+                        result = false;
+                    }
 
-                ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, replacement, 3f);
+                    if (!ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(card).canBeReassigned)
+                    {
+                        result = false;
+                    }
 
+                    return result;
+                };
+
+                var replacement = ModdingUtils.Utils.Cards.instance.GetRandomCardWithCondition(player, gun, gunAmmo, data, health, gravity, block, characterStats, condition);
+
+                replacements.Add(replacement);
             }
+
+            yield return ModdingUtils.Utils.Cards.instance.ReplaceCards(player, curseIndeces.ToArray(), replacements.ToArray(), null, true);
+
+            yield return ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, replacements.ToArray(), 2f);
 
             yield break;
         }
@@ -84,8 +111,21 @@ namespace WWC.Cards
 
         private bool CommonCondition(CardInfo card, Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            var result = true;
 
-            return card.rarity == CardInfo.Rarity.Common && !card.categories.Contains(CurseManager.instance.curseInteractionCategory);
+            if (card.rarity != CardInfo.Rarity.Common)
+            {
+                result = false;
+            }
+
+            if (card.categories.Contains(CurseManager.instance.curseInteractionCategory))
+            {
+                result = false;
+            }
+
+
+
+            return result;
         }
         private bool UncommonCondition(CardInfo card, Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -101,7 +141,7 @@ namespace WWC.Cards
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             //Drives me crazy
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()

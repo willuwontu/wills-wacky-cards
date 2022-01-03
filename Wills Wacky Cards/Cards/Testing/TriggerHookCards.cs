@@ -20,7 +20,7 @@ namespace WWC.Cards.Testing
             WillsWackyCards.instance.ExecuteAfterFrames(40,
                 () => WillsWackyCards.instance.StartCoroutine(ISimulateRoundEnd())
                 );
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         private IEnumerator ISimulateRoundEnd()
         {
@@ -44,7 +44,7 @@ namespace WWC.Cards.Testing
             WillsWackyCards.instance.ExecuteAfterFrames(40,
                 () => WillsWackyCards.instance.StartCoroutine(ISimulateRoundStart())
                 );
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         private IEnumerator ISimulateRoundStart()
         {
@@ -69,7 +69,7 @@ namespace WWC.Cards.Testing
             WillsWackyCards.instance.ExecuteAfterFrames(40, 
                 () => WillsWackyCards.instance.StartCoroutine(ISimulatePick())
                 );
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         private IEnumerator ISimulatePick()
         {
@@ -97,7 +97,7 @@ namespace WWC.Cards.Testing
             WillsWackyCards.instance.ExecuteAfterFrames(40,
                 () => WillsWackyCards.instance.StartCoroutine(ISimulateRound())
                 );
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         private IEnumerator ISimulateRound()
         {
@@ -125,7 +125,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookInitStart));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -142,7 +142,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookInitEnd));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -159,7 +159,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookPlayerPickEnd));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -176,7 +176,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookPlayerPickStart));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -193,7 +193,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookPickEnd));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -210,7 +210,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookPickStart));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -227,7 +227,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookBattleStart));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -244,7 +244,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookPointEnd));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -261,7 +261,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookPointStart));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -278,7 +278,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookRoundStart));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -295,7 +295,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookRoundEnd));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -312,7 +312,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(GameModeHooks.HookGameEnd));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -329,7 +329,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(40, () => WillsWackyCards.instance.TriggerGameModeHook(UnboundLib.GameModes.GameModeHooks.HookGameStart));
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()

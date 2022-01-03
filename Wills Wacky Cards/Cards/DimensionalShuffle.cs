@@ -9,6 +9,7 @@ using WWC.Extensions;
 using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using Photon.Pun;
 
 namespace WWC.Cards
 {
@@ -23,13 +24,13 @@ namespace WWC.Cards
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var mono = player.gameObject.GetOrAddComponent<DimensionalShuffle_Mono>();
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var mono = player.gameObject.GetOrAddComponent<DimensionalShuffle_Mono>();
             UnityEngine.GameObject.Destroy(mono);
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -84,6 +85,7 @@ namespace WWC.MonoBehaviours
         private CharacterData data;
         private Player player;
         private Block block;
+        int layerMask;
 
         private void Start()
         {
@@ -92,20 +94,58 @@ namespace WWC.MonoBehaviours
             player = data.player;
             block = data.block;
             block.BlockAction += OnBlock;
+            layerMask = ~LayerMask.GetMask("BackgroundObject", "Player");
         }
 
         private void OnBlock(BlockTrigger.BlockTriggerType blockTrigger)
         {
-            var livingPlayers = PlayerManager.instance.players.Where((person) => !person.data.dead).ToArray();
-            var playerPositions = livingPlayers.Select((person) => person.transform.position).ToList();
-
-            foreach (var person in livingPlayers)
+            if (this.photonView.IsMine)
             {
-                var index = UnityEngine.Random.Range(0, playerPositions.Count);
-                person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
-                person.transform.position = playerPositions[index];
+                var livingPlayers = PlayerManager.instance.players.Where((person) => !person.data.dead).ToArray();
+                var playerPositions = livingPlayers.Select((person) => person.transform.position).ToList();
 
-                playerPositions.RemoveAt(index);
+                livingPlayers.Shuffle();
+
+                for (int index = 0; index < livingPlayers.Count(); index++)
+                {
+                    var person = livingPlayers[index];
+
+                    var angle = UnityEngine.Random.Range(0f, 360f);
+                    var distance = player.transform.localScale.x * 2f;
+                    var direction = (new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad))).normalized;
+                    Vector3 destination = playerPositions[index];
+                    var hit = Physics2D.Raycast(destination, direction, distance);
+                    var bounces = 0;
+
+                    while (hit && distance >= 0f && bounces < 1000)
+                    {
+                        bounces++;
+                        distance -= hit.distance;
+                        destination = hit.point;
+                        direction = Vector2.Reflect(direction, hit.normal);
+                        hit = Physics2D.Raycast(destination, direction, distance);
+
+                    }
+
+                    destination += (Vector3)Vector2.ClampMagnitude((direction.normalized * distance), distance);
+
+                    playerPositions[index] = destination;
+                }
+
+                this.photonView.RPC(nameof(RPCA_NewPositions), RpcTarget.AllViaServer, livingPlayers.Select(person => person.playerID).ToArray(), playerPositions.ToArray());
+            }
+        }
+
+        [PunRPC]
+        private void RPCA_NewPositions(int[] playerIDs, Vector3[] positions)
+        {
+            for (int index = 0; index < playerIDs.Count(); index++)
+            {
+                var playerID = playerIDs[index];
+                var person = PlayerManager.instance.GetPlayerWithID(playerID);
+
+                person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
+                person.transform.position = positions[index];
             }
         }
 

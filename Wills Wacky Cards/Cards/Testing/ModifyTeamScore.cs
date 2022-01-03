@@ -22,7 +22,7 @@ namespace WWC.Cards.Testing
                 GameModeManager.CurrentHandler.SetTeamScore(person.teamID, new TeamScore(0, 0));
             }
 
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
 
             RemoveTestingCards(player);
         }
@@ -44,7 +44,7 @@ namespace WWC.Cards.Testing
             GameModeManager.CurrentHandler.SetTeamScore(player.teamID, new TeamScore(score.points, score.rounds + 1));
             score = GameModeManager.CurrentHandler.GetTeamScore(player.teamID);
             UnityEngine.Debug.Log($"Team {player.teamID} now has a total of {score.rounds} rounds.");
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
 
             RemoveTestingCards(player);
         }
@@ -66,7 +66,7 @@ namespace WWC.Cards.Testing
             GameModeManager.CurrentHandler.SetTeamScore(player.teamID, new TeamScore(score.points + 1, score.rounds));
             score = GameModeManager.CurrentHandler.GetTeamScore(player.teamID);
             UnityEngine.Debug.Log($"Team {player.teamID} now has a total of {score.points} Points.");
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
 
             RemoveTestingCards(player);
         }

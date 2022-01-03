@@ -69,6 +69,11 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Dimensional Shuffle (Uncommon)
 
 ----
+## v 1.5.12
+- Added a bit of a jitter to Dimensional Shuffle's effect to make it more obvious when a player gets to stay in place through it.
+- Purifying light's code has been further refined, hopefully it won't murder the game anymore.
+
+----
 ## v 1.5.11
 - 1 new card (Dimensional Shuffle)
 - Fixed a few issues with cards. Runic Wards now actually grants additional blocks instead of just removing them.
