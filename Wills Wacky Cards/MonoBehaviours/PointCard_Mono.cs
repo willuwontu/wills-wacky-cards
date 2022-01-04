@@ -145,7 +145,7 @@ namespace WWC.MonoBehaviours
             {
                 currentScore.Add(GameModeManager.CurrentHandler.GetTeamScore(player.teamID));
 
-                //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] Team {player.teamID} has {GameModeManager.CurrentHandler.GetTeamScore(player.teamID).points} points.");
+                WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Debugging] Team {player.teamID} has {GameModeManager.CurrentHandler.GetTeamScore(player.teamID).points} points.");
             }
 
             totalPointsEarned = 0;
@@ -155,7 +155,7 @@ namespace WWC.MonoBehaviours
                 totalPointsEarned += score.points;
             }
 
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] Current number of points is {totalPointsEarned}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Debugging] Current number of points is {totalPointsEarned}");
         }
     }
 }

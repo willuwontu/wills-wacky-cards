@@ -21,19 +21,19 @@ namespace WWC.Cards
             block.InvokeMethod("ResetStats");
             block.cdMultiplier = 0.65f;
 
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var mono = player.gameObject.GetOrAddComponent<Banishment_Mono>();
             mono.duration += 3f;
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var mono = player.gameObject.GetOrAddComponent<Banishment_Mono>();
             UnityEngine.GameObject.Destroy(mono);
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -87,7 +87,6 @@ namespace WWC.MonoBehaviours
     {
         public float duration = 0f;
 
-        private float slow = 0.7f;
         private Dictionary<Player, float> banished = new Dictionary<Player, float>();
 
         private Camera camera;

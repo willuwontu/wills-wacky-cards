@@ -24,7 +24,7 @@ namespace WWC.Cards.Testing
 
                     ModdingUtils.Utils.Cards.instance.RemoveCardsFromPlayer(player, indices);
                 });
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         protected override string GetTitle()
         {
@@ -48,7 +48,7 @@ namespace WWC.Cards.Testing
 
                     ModdingUtils.Utils.Cards.instance.RemoveCardsFromPlayer(player, indices);
                 });
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         protected override string GetTitle()
         {
@@ -64,7 +64,7 @@ namespace WWC.Cards.Testing
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(20, () => ModdingUtils.Utils.Cards.instance.RemoveAllCardsFromPlayer(player, true));
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         protected override string GetTitle()
         {
@@ -91,7 +91,7 @@ namespace WWC.Cards.Testing
 
                 ModdingUtils.Utils.Cards.instance.RemoveCardsFromPlayer(player, testCards.ToArray(), ModdingUtils.Utils.Cards.SelectionType.All , true);
             });
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
         protected override string GetTitle()

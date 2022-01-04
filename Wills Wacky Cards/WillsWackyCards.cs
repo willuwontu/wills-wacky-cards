@@ -39,7 +39,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.5.10"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.5.12"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -134,6 +134,7 @@ namespace WWC
             CustomCard.BuildCard<Banishment>();
             CustomCard.BuildCard<Resolute>();
             CustomCard.BuildCard<DimensionalShuffle>();
+            CustomCard.BuildCard<Boomerang>();
 
             if (debug)
             { 
@@ -201,6 +202,14 @@ namespace WWC
 
         }
 
+        public void DebugLog(object message)
+        {
+            if (debug)
+            {
+                UnityEngine.Debug.Log(message);
+            }
+        }
+
         public void TriggerGameModeHook(string key)
         {
             StartCoroutine(ITriggerGameModeHook(key));
@@ -221,7 +230,6 @@ namespace WWC
             {
                 MomentumTracker.stacks = stacks;
                 buildingCard = true;
-                //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] {cardInfo.cardName} assigned to slot {MomentumTracker.stacks}"); 
                 CustomCard.BuildCard<BuildImmovableObject>(cardInfo => { MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
                 CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.createdOffenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); buildingCard = false; });
                 yield return new WaitUntil(() => !buildingCard);
@@ -1272,13 +1280,20 @@ namespace WWC
                 var lightDiff = 1f - lightV;
                 var darkDiff = darkV;
 
-                var lightRatio = 0.01f * (lightDiff / (lightDiff + darkDiff));
-                var darkRatio = 0.01f * (darkDiff / (lightDiff + darkDiff));
+                var steps = new float[] { 0.12f, 0.1f, 0.08f, 0.05f, 0.04f, 0.03f, 0.02f, 0.01f, 0.005f };
+                var step = 0;
+
+                var lightRatio = (lightDiff / (lightDiff + darkDiff));
+                var darkRatio = (darkDiff / (lightDiff + darkDiff));
 
                 while (ColorContrast(Color.HSVToRGB(lightH, lightS, lightV), Color.HSVToRGB(darkH, darkS, darkV)) < ratio)
                 {
-                    lightV += lightRatio;
-                    darkV -= darkRatio;
+                    while (ColorContrast(Color.HSVToRGB(lightH, lightS, lightV + lightRatio * steps[step]), Color.HSVToRGB(darkH, darkS, darkV - darkRatio * steps[step])) > ratio && step < steps.Length - 1)
+                    {
+                        step++;
+                    }
+                    lightV += lightRatio * steps[step];
+                    darkV -= darkRatio * steps[step];
                 }
 
                 colors[0] = Color.HSVToRGB(lightH, lightS, lightV);

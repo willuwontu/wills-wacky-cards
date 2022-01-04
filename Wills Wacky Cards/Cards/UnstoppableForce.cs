@@ -24,12 +24,12 @@ namespace WWC.Cards
 
             var stacks = MomentumTracker.stacks = Math.Max(MomentumTracker.stacks, 1);
 
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {stacks} Momentum Stacks built up");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {stacks} Momentum Stacks built up");
 
             cardInfo.cardStats = MomentumTracker.GetOffensiveMomentumStats(stacks);
             tracker.updated = true;
 
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
@@ -53,7 +53,7 @@ namespace WWC.Cards
             //cleaner.player = player;
 
             //cleaner.CleanUp();
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
                 
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -121,7 +121,7 @@ namespace WWC.Cards
             cardInfo.cardStats = MomentumTracker.GetOffensiveMomentumStats(stacks);
             tracker.updated = true;
 
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

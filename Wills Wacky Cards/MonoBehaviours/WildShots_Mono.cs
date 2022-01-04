@@ -15,7 +15,6 @@ namespace WWC.MonoBehaviours
                 return;
             }
             var move = base.GetComponentInParent<MoveTransform>();
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}] Bullet Velocity is ({move.velocity.x}, {move.velocity.y}, {move.velocity.z}) with a magnitude of {move.velocity.magnitude}.");
             move.velocity *= -1;
             Destroy(this);
         }
@@ -63,7 +62,7 @@ namespace WWC.MonoBehaviours
 
         private void OnShootProjectileAction(GameObject obj)
         {
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}] Player Velocity is ({((Vector2)data.playerVel.GetFieldValue("velocity")).x}, {((Vector2)data.playerVel.GetFieldValue("velocity")).y}) with a magnitude of {((Vector2)data.playerVel.GetFieldValue("velocity")).magnitude}.");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Player Velocity is ({((Vector2)data.playerVel.GetFieldValue("velocity")).x}, {((Vector2)data.playerVel.GetFieldValue("velocity")).y}) with a magnitude of {((Vector2)data.playerVel.GetFieldValue("velocity")).magnitude}.");
             var roll = random.Next(100);
             if (roll < backwardsChance)
             {

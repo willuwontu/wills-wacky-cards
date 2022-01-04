@@ -19,18 +19,18 @@ namespace WWC.Cards
         {
             cardInfo.allowMultiple = false;
             statModifiers.health = 0.7f;
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var mono = player.gameObject.GetOrAddComponent<DimensionalShuffle_Mono>();
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var mono = player.gameObject.GetOrAddComponent<DimensionalShuffle_Mono>();
             UnityEngine.GameObject.Destroy(mono);
-            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
@@ -59,6 +59,13 @@ namespace WWC.Cards
                     stat = "HP",
                     amount = "-30%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Ability Cooldown",
+                    amount = "5s",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
@@ -82,6 +89,10 @@ namespace WWC.MonoBehaviours
     [DisallowMultipleComponent]
     public class DimensionalShuffle_Mono : Hooked_Mono
     {
+        private float lastUsed;
+        private bool canTrigger = true;
+        private float cooldown = 5f;
+
         private CharacterData data;
         private Player player;
         private Block block;
@@ -97,9 +108,20 @@ namespace WWC.MonoBehaviours
             layerMask = ~LayerMask.GetMask("BackgroundObject", "Player");
         }
 
+        private void Update()
+        {
+            if (!canTrigger)
+            {
+                if ((Time.time >= lastUsed + cooldown))
+                {
+                    canTrigger = true;
+                }
+            }
+        }
+
         private void OnBlock(BlockTrigger.BlockTriggerType blockTrigger)
         {
-            if (this.photonView.IsMine)
+            if (this.photonView.IsMine && canTrigger)
             {
                 var livingPlayers = PlayerManager.instance.players.Where((person) => !person.data.dead).ToArray();
                 var playerPositions = livingPlayers.Select((person) => person.transform.position).ToList();
@@ -133,6 +155,9 @@ namespace WWC.MonoBehaviours
                 }
 
                 this.photonView.RPC(nameof(RPCA_NewPositions), RpcTarget.AllViaServer, livingPlayers.Select(person => person.playerID).ToArray(), playerPositions.ToArray());
+
+                lastUsed = Time.time;
+                canTrigger = false;
             }
         }
 
@@ -144,9 +169,18 @@ namespace WWC.MonoBehaviours
                 var playerID = playerIDs[index];
                 var person = PlayerManager.instance.GetPlayerWithID(playerID);
 
+                var prevGrav = person.GetComponent<Gravity>().gravityForce;
+                person.GetComponent<Gravity>().gravityForce = 0;
                 person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
                 person.transform.position = positions[index];
+
+                this.ExecuteAfterFrames(2, () => { person.GetComponent<Gravity>().gravityForce = prevGrav; });
             }
+        }
+
+        public override void OnBattleStart()
+        {
+            canTrigger = true;
         }
 
         public override void OnGameStart()
