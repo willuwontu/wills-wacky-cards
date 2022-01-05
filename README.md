@@ -67,6 +67,12 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Banishment (Uncommon)
 - Resolute (Uncommon)
 - Dimensional Shuffle (Uncommon)
+- Boomerang (Common)
+
+----
+## v 1.6.1
+- 1 new card (Boomerang)
+- Dimensional Shuffle now has an ability cooldown.
 
 ----
 ## v 1.5.12

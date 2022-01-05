@@ -123,7 +123,7 @@ namespace WWC.MonoBehaviours
                 if (inputSync.shootWasPressed && (int)gunAmmo.GetFieldValue("currentAmmo") > 0 && canShoot)
                 {
                     gun.GetAdditionalData().beginCharge = true;
-                    UnityEngine.Debug.Log("[WWC][Plasma Weapon] Beginning to charge shot.");
+                    WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Plasma Weapon] Beginning to charge shot.");
                 }
                 else if (inputSync.shootWasPressed)
                 {

@@ -39,7 +39,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.5.12"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.6.1"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -335,7 +335,7 @@ namespace WWC
                 if (otherCurses > 2)
                 {
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category => category == SiphonCurses.siphonCard);
-                    UnityEngine.Debug.Log($"[WWM] Player {player.playerID} can siphon cards");
+                    WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Player {player.playerID} can siphon cards");
                 }
             }
             yield break;
@@ -441,7 +441,7 @@ namespace WWC
 
         private static void ChangeCards()
         {
-            UnityEngine.Debug.Log("[WWC] Modifying Cards");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modifying Cards");
             List<CardCategory> categories;
             //CardInfo cardtest = CardManager.cards.Values.First(card => card.cardInfo.name.ToUpper() == "PONG").cardInfo;
 
@@ -451,7 +451,7 @@ namespace WWC
                 {
                     case "FLAMETHROWER":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Flamethrower");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Flamethrower");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -474,12 +474,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") }; 
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Flamethrower");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Flamethrower");
                             break;
                         }
                     case "FIRE HYDRANT":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Fire Hydrant");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Fire Hydrant");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -502,12 +502,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Fire Hydrant");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Fire Hydrant");
                             break;
                         }
                     case "PONG":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Pong");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Pong");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -530,12 +530,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") }; 
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Pong");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Pong");
                             break;
                         }
                     case "COMB":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Comb");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Comb");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -558,12 +558,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Comb");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Comb");
                             break;
                         }
                     case "STAR":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Star");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Star");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -586,12 +586,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("No Minigun") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("No Minigun") };
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Star");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Star");
                             break;
                         }
                     case "HAWK":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Hawk");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Hawk");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -614,12 +614,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Hawk");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Hawk");
                             break;
                         }
                     case "ROLLING THUNDER":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Rolling Thunder");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Rolling Thunder");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -642,12 +642,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Rolling Thunder");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Rolling Thunder");
                             break;
                         }
                     case "LASER":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Laser");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Laser");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -670,12 +670,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Laserr");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Laserr");
                             break;
                         }
                     case "FRAGMENTATION":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Fragmentation");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Fragmentation");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -698,12 +698,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Fragmentation");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Fragmentation");
                             break;
                         }
                     case "FIREWORKS":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Fireworks");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Fireworks");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -726,12 +726,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Fireworks");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Fireworks");
                             break;
                         }
                     case "SPLITTING ROUNDS":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Splitting Rounds");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Splitting Rounds");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -754,12 +754,12 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("No Minigun") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("No Minigun") };
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Splitting Rounds");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Splitting Rounds");
                             break;
                         }
                     case "EMPOWER":
                         {
-                            UnityEngine.Debug.Log("[WWC] Found Empower");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Found Empower");
                             if (info.cardInfo.categories != null)
                             {
                                 categories = new List<CardCategory>();
@@ -782,13 +782,13 @@ namespace WWC
                                 info.cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
                                 info.cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("WWC Gun Type") };
                             }
-                            UnityEngine.Debug.Log("[WWC] Modified Empower");
+                            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Modified Empower");
                             break;
                         }
                 }
 
             }
-            UnityEngine.Debug.Log("[WWC] Cards Modified");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Cards Modified");
         }
         public class CardRemover : MonoBehaviour
         {

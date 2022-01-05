@@ -71,7 +71,7 @@ namespace WWC.Cards
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.EvilPurple;
+            return CardThemeColor.CardThemeColorType.TechWhite;
         }
         public override string GetModName()
         {
@@ -136,7 +136,7 @@ namespace WWC.MonoBehaviours
                     var distance = player.transform.localScale.x * 2f;
                     var direction = (new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad))).normalized;
                     Vector3 destination = playerPositions[index];
-                    var hit = Physics2D.Raycast(destination, direction, distance);
+                    var hit = Physics2D.Raycast(destination, direction, distance, layerMask);
                     var bounces = 0;
 
                     while (hit && distance >= 0f && bounces < 1000)
@@ -145,7 +145,7 @@ namespace WWC.MonoBehaviours
                         distance -= hit.distance;
                         destination = hit.point;
                         direction = Vector2.Reflect(direction, hit.normal);
-                        hit = Physics2D.Raycast(destination, direction, distance);
+                        hit = Physics2D.Raycast(destination, direction, distance, layerMask);
 
                     }
 
