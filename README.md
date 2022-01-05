@@ -70,6 +70,12 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Boomerang (Common)
 
 ----
+## v 1.6.3
+- Plasma weapons are no longer able to fire before round start.
+- Boomerang was nerfed slightly (stronger pullback, lower damage)
+
+
+----
 ## v 1.6.1
 - 1 new card (Boomerang)
 - Dimensional Shuffle now has an ability cooldown.

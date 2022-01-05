@@ -220,6 +220,7 @@ namespace WWC.MonoBehaviours
         {
             gun.currentCharge = 0f;
             gun.GetAdditionalData().beginCharge = false;
+            canShoot = false;
         }
 
         public override void OnPointStart()

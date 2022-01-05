@@ -104,8 +104,8 @@ namespace WWC.MonoBehaviours
             data = GetComponentInParent<CharacterData>();
             player = data.player;
             block = data.block;
-            block.BlockAction += OnBlock;
-            layerMask = ~LayerMask.GetMask("BackgroundObject", "Player");
+            block.SuperFirstBlockAction += OnBlock;
+            layerMask = ~LayerMask.GetMask("BackgroundObject", "Player", "Projectile");
         }
 
         private void Update()
@@ -169,12 +169,12 @@ namespace WWC.MonoBehaviours
                 var playerID = playerIDs[index];
                 var person = PlayerManager.instance.GetPlayerWithID(playerID);
 
-                var prevGrav = person.GetComponent<Gravity>().gravityForce;
-                person.GetComponent<Gravity>().gravityForce = 0;
+                //var prevGrav = person.GetComponent<Gravity>().gravityForce;
+                //person.GetComponent<Gravity>().gravityForce = 0;
                 person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
                 person.transform.position = positions[index];
 
-                this.ExecuteAfterFrames(2, () => { person.GetComponent<Gravity>().gravityForce = prevGrav; });
+                //this.ExecuteAfterFrames(2, () => { person.GetComponent<Gravity>().gravityForce = prevGrav; });
             }
         }
 

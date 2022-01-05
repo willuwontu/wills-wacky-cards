@@ -18,8 +18,9 @@ namespace WWC.Cards
         {
             gun.objectsToSpawn = new ObjectsToSpawn[] { new ObjectsToSpawn { AddToProjectile = new GameObject("A_Boomerang", new Type[] { typeof(BoomerangBullet_Mono) }) } };
             gun.ammo = 3;
-            gun.bulletDamageMultiplier = 1.7f;
+            gun.bulletDamageMultiplier = 1.5f;
             gun.gravity = 0f;
+            gun.reloadTimeAdd = 0.25f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -57,7 +58,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Damage",
-                    amount = "+70%",
+                    amount = "+50%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -72,6 +73,13 @@ namespace WWC.Cards
                     positive = true,
                     stat = "Bullet Gravity",
                     amount = "No",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Reload Time",
+                    amount = "+0.25s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
 
@@ -100,7 +108,7 @@ namespace WWC.MonoBehaviours
         Vector3 startPos;
         float creationTime;
 
-        float distanceMult = 0.015f;
+        float distanceMult = 0.025f;
         float speedMult = 0.01f;
         int layerMask;
 
