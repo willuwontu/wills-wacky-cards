@@ -213,9 +213,8 @@ namespace WWC.Patches
             if (hitInfo.transform)
             {
                 healthHandler = hitInfo.transform.GetComponent<HealthHandler>();
-                data = healthHandler.GetComponent<CharacterData>();
             }
-            if (healthHandler && data && healthHandler.GetComponent<Block>())
+            if (healthHandler && healthHandler.GetComponent<CharacterData>() && healthHandler.GetComponent<Block>())
             {
                 var warded = healthHandler.GetComponent<RunicWardsBlock_Mono>();
                 if (!warded)
@@ -223,16 +222,15 @@ namespace WWC.Patches
                     return;
                 }
                 Block block = healthHandler.GetComponent<Block>();
-                if (warded.shields > 0 && !block.IsBlocking() && !data.isSilenced && !data.isStunned)
+                if (warded.shields > 0 && !block.IsBlocking())
                 {
                     wasBlocked = true;
                     warded.shields--;
-                    if (data.view.IsMine)
+                    if (healthHandler.GetComponent<CharacterData>().view.IsMine)
                     {
                         block.CallDoBlock(true, true, BlockTrigger.BlockTriggerType.Default, default, false);
                     }
                 }
             }
-        }
     }
 }
