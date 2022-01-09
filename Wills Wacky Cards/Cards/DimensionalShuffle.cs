@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
@@ -64,7 +66,7 @@ namespace WWC.Cards
                 {
                     positive = false,
                     stat = "Ability Cooldown",
-                    amount = "5s",
+                    amount = "10s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
@@ -91,7 +93,7 @@ namespace WWC.MonoBehaviours
     {
         private float lastUsed;
         private bool canTrigger = true;
-        private float cooldown = 5f;
+        private float cooldown = 10f;
 
         private CharacterData data;
         private Player player;
@@ -171,11 +173,26 @@ namespace WWC.MonoBehaviours
 
                 //var prevGrav = person.GetComponent<Gravity>().gravityForce;
                 //person.GetComponent<Gravity>().gravityForce = 0;
-                person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
-                person.transform.position = positions[index];
+                //person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
+                //person.transform.position = positions[index];
 
-                //this.ExecuteAfterFrames(2, () => { person.GetComponent<Gravity>().gravityForce = prevGrav; });
+                PlayerManager.instance.StartCoroutine(MovePlayer(person, positions[index]));
             }
+        }
+
+        private IEnumerator MovePlayer(Player person, Vector3 position)
+        {
+            yield return (IEnumerator) typeof(PlayerManager).InvokeMember("Move",
+                    BindingFlags.Instance | BindingFlags.InvokeMethod |
+                    BindingFlags.NonPublic, null, PlayerManager.instance, new object[] { person.data.playerVel, position });
+
+            for (int i = 0; i < 2; i++)
+            {
+                person.gameObject.transform.position = position;
+                yield return null;
+            }
+
+            yield break;
         }
 
         public override void OnBattleStart()

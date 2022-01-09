@@ -14,6 +14,7 @@ using UnboundLib.Utils.UI;
 using UnboundLib.GameModes;
 using UnboundLib.Cards;
 using UnboundLib.Utils;
+using Jotunn.Utils;
 using UnboundLib.Networking;
 using WWC.Cards;
 using WWC.Cards.Curses;
@@ -52,6 +53,8 @@ namespace WWC
 
         public static bool battleStarted = false;
 
+        internal AssetBundle WWCCards;
+
         GameObject ColorTester;
 
         private bool debug = false;
@@ -70,6 +73,8 @@ namespace WWC
 
             gameObject.AddComponent<HookedMonoManager>();
             remover = gameObject.AddComponent<CardRemover>();
+
+            WWCCards = AssetUtils.LoadAssetBundleFromResources("wwccards", typeof(WillsWackyCards).Assembly);
 
             CustomCard.BuildCard<AmmoCache>();
             CustomCard.BuildCard<Shotgun>();
@@ -105,6 +110,8 @@ namespace WWC
             CustomCard.BuildCard<AnimePhysics>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<TakeANumber>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<HeavyShields>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<MomentaryConfusion>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            CustomCard.BuildCard<FumbledMags>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<Hex>();
             CustomCard.BuildCard<Gatling>();
             CustomCard.BuildCard<PlasmaRifle>();
@@ -112,7 +119,6 @@ namespace WWC
             CustomCard.BuildCard<UnstoppableForce>();
             CustomCard.BuildCard<ImmovableObject>();
             CustomCard.BuildCard<HotPotato>();
-            CustomCard.BuildCard<MomentaryConfusion>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             CustomCard.BuildCard<SavageWounds>();
             CustomCard.BuildCard<RitualisticSacrifice>();
             CustomCard.BuildCard<ForbiddenMagics>();

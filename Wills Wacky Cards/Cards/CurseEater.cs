@@ -65,7 +65,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Lifesteal per Curse",
-                    amount = "+10%",
+                    amount = "+20%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -162,7 +162,7 @@ namespace WWC.MonoBehaviours
             {
                 increased = true;
                 var curses = CurseManager.instance.GetAllCursesOnPlayer(player).Count();
-                multiplier = 0.1f * curses;
+                multiplier = 0.2f * curses;
                 stats.lifeSteal += multiplier;
             }
 
