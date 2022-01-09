@@ -19,7 +19,7 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             block.InvokeMethod("ResetStats");
-            block.cdMultiplier = 0.65f;
+            block.cdMultiplier = 1.1f;
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -60,7 +60,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Block Cooldown",
-                    amount = "-35%",
+                    amount = "+10%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

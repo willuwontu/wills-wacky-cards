@@ -38,6 +38,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Anime Physics (Curse)
   - Take A Number (Curse)
   - Heavy Shields (Curse)
+  - Fumbled Mags (Curse)
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
@@ -68,6 +69,13 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Resolute (Uncommon)
 - Dimensional Shuffle (Uncommon)
 - Boomerang (Common)
+
+----
+## v 1.6.5
+- Banishment nerfed
+- Dimensional Shuffle's movement has been reworked to more clearly signal your movement.
+- Runic Wards no longer block when silenced or stunned.
+- 1 new Curse (Fumbled Mags) Thanks Zom!
 
 ----
 ## v 1.6.3
