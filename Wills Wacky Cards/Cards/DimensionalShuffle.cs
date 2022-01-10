@@ -9,6 +9,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
+using WWC.UI;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using Photon.Pun;
@@ -195,9 +196,15 @@ namespace WWC.MonoBehaviours
 
         private IEnumerator Move(Player person, Vector3 targetPos)
         {
+            if (person.data.view.IsMine || PhotonNetwork.OfflineMode)
+            {
+                PlayerSpotlight.AddSpotToPlayer(person);
+                PlayerSpotlight.FadeIn(0f);
+                PlayerSpotlight.FadeOut();
+            }
+
             PlayerVelocity playerVel = person.data.playerVel;
             AnimationCurve playerMoveCurve = PlayerManager.instance.playerMoveCurve;
-            //person.data.isPlaying = false;
             playerVel.SetFieldValue("simulated", false);
             playerVel.SetFieldValue("isKinematic", true);
             Vector3 distance = targetPos - playerVel.transform.position;
@@ -212,10 +219,12 @@ namespace WWC.MonoBehaviours
                 playerVel.transform.position = targetStartPos + distance * playerMoveCurve.Evaluate(c);
                 yield return null;
             }
+
             col.SetFieldValue("lastPos", (Vector2)targetPos);
             col.checkForGoThroughWall = true;
             yield return null;
             yield return null;
+
             int frames = 0;
             while (frames < 10)
             {
@@ -223,6 +232,12 @@ namespace WWC.MonoBehaviours
                 frames++;
                 yield return null;
             }
+
+            if (person.data.view.IsMine || PhotonNetwork.OfflineMode)
+            {
+                PlayerSpotlight.FadeOut();
+            }
+
             playerVel.SetFieldValue("simulated", true);
             playerVel.SetFieldValue("isKinematic", false);
 
