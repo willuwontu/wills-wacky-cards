@@ -19,7 +19,7 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.GetAdditionalData().canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseInteractionCategory };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseInteractionCategory, RerollManager.instance.NoFlip };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -75,7 +75,7 @@ namespace WWC.Cards
 
             yield return ModdingUtils.Utils.Cards.instance.ReplaceCards(player, curseIndeces.ToArray(), replacements.ToArray(), null, true);
 
-            yield return ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, replacements.ToArray(), 2f);
+            // yield return ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, replacements.ToArray(), replacements.ToArray().Length * 1f);
 
             yield break;
         }

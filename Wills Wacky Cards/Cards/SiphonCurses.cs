@@ -138,7 +138,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Move Speed",
-                    amount = "+25%",
+                    amount = "+80%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

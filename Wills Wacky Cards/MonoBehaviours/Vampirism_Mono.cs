@@ -14,7 +14,7 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            data = GetComponentInParent<CharacterData>();
+            data = GetComponent<CharacterData>();
             HookedMonoManager.instance.hookedMonos.Add(this);
         }
 

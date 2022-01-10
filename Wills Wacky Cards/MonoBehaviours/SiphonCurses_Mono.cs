@@ -54,7 +54,7 @@ namespace WWC.MonoBehaviours
             multiplier = 1f;
             foreach (var card in player.data.currentCards.Where((cardInfo) => cardInfo.cardName.ToLower() == "Siphon Curses".ToLower()))
             {
-                multiplier *= 1.25f;
+                multiplier *= 1.8f;
             }
             stats.movementSpeed *= multiplier;
         }

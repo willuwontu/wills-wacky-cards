@@ -58,7 +58,7 @@ namespace WWC.Cards
             {
                 new CardInfoStat()
                 {
-                    positive = true,
+                    positive = false,
                     stat = "Block Cooldown",
                     amount = "+10%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned

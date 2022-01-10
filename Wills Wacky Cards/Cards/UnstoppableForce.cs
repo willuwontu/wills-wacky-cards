@@ -29,6 +29,8 @@ namespace WWC.Cards
             cardInfo.cardStats = MomentumTracker.GetOffensiveMomentumStats(stacks);
             tracker.updated = true;
 
+            cardInfo.categories = new CardCategory[] { WillsWackyManagers.Utils.RerollManager.instance.NoFlip };
+
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

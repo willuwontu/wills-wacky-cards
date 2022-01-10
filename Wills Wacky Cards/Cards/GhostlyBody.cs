@@ -102,25 +102,16 @@ namespace WWC.MonoBehaviours
         private Player player;
         private CharacterStatModifiers stats;
         private Gravity gravity;
+        private PlayerCollision col;
 
         private void Start()
         {
             HookedMonoManager.instance.hookedMonos.Add(this);
             data = GetComponentInParent<CharacterData>();
-        }
-
-        private void Update()
-        {
-            if (!player)
-            {
-                if (!(data is null))
-                {
-                    player = data.player;
-                    stats = data.stats;
-                    gravity = player.GetComponent<Gravity>();
-                }
-
-            }
+            player = data.player;
+            stats = data.stats;
+            gravity = player.GetComponent<Gravity>();
+            col = player.GetComponent<PlayerCollision>();
         }
 
         private void CheckIfValid()
@@ -163,6 +154,11 @@ namespace WWC.MonoBehaviours
                     changedGravity = true;
                 }
 
+                if (curseCount > 20)
+                {
+                    col.enabled = false;
+                }
+
                 if (multiplier >= 0.8f)
                 {
 
@@ -191,6 +187,11 @@ namespace WWC.MonoBehaviours
                 {
                     gravity.gravityForce = prevGravity;
                     changedGravity = false;
+                }
+
+                if (curseCount > 20)
+                {
+                    col.enabled = true;
                 }
 
                 if (multiplier >= 0.8f)
