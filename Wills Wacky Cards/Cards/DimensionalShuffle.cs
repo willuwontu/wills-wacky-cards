@@ -200,9 +200,11 @@ namespace WWC.MonoBehaviours
         {
             if (person.data.view.IsMine || PhotonNetwork.OfflineMode)
             {
-                PlayerSpotlight.AddSpotToPlayer(person);
+                if (!PlayerSpotlight.Group.GetComponentsInChildren<WWC.UI.FollowPlayer>().Select(spot => spot.player).ToArray().Contains(person))
+                {
+                    PlayerSpotlight.AddSpotToPlayer(person);
+                }
                 PlayerSpotlight.FadeIn(0.1f);
-                PlayerSpotlight.FadeOut();
             }
 
             PlayerVelocity playerVel = person.data.playerVel;
