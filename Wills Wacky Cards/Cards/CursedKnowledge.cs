@@ -18,7 +18,7 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.GetAdditionalData().canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory, RerollManager.instance.NoFlip };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -37,7 +37,7 @@ namespace WWC.Cards
 
         private bool RareCondition(CardInfo card, Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            return card.rarity == CardInfo.Rarity.Rare;
+            return card.rarity == CardInfo.Rarity.Rare && card.cardName != "Purifying Light";
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

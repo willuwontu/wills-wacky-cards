@@ -16,12 +16,12 @@ namespace WWC.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.gravity = 0.7f;
+            statModifiers.gravity = 0.5f;
             gun.projectileColor = Color.red;
             statModifiers.lifeSteal = 2f;
             statModifiers.jump = 1.15f;
             statModifiers.movementSpeed = 1.25f;
-            gun.damage = 1.2f;
+            gun.damage = 1.7f;
 
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CharacterCurse") };
@@ -30,9 +30,7 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var LifeDrain = new GameObject("LifeDrain");
-            var vampirism = LifeDrain.gameObject.AddComponent<Vampirism_Mono>();
-            statModifiers.AddObjectToPlayer = LifeDrain;
+            player.gameObject.AddComponent<Vampirism_Mono>();
             statModifiers.GetAdditionalData().Vampire = true;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
@@ -81,7 +79,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Gravity",
-                    amount = "-30%",
+                    amount = "-50%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -102,7 +100,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Damage",
-                    amount = "+20%",
+                    amount = "+70%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

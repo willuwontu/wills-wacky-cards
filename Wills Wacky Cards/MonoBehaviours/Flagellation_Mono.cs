@@ -54,7 +54,7 @@ namespace WWC.MonoBehaviours
             multiplier = 1f;
             foreach (var card in player.data.currentCards.Where((cardInfo) => cardInfo.cardName.ToLower() == "Flagellation".ToLower()))
             {
-                multiplier *= 1.3f;
+                multiplier *= 2f;
             }
             data.maxHealth *= multiplier;
             data.health = data.maxHealth;

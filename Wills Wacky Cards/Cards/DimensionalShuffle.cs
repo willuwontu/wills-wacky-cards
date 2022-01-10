@@ -123,7 +123,7 @@ namespace WWC.MonoBehaviours
 
         private void OnBlock(BlockTrigger.BlockTriggerType blockTrigger)
         {
-            if (this.photonView.IsMine && canTrigger)
+            if (canTrigger && (PhotonNetwork.OfflineMode || this.photonView.IsMine))
             {
                 var livingPlayers = PlayerManager.instance.players.Where((person) => !person.data.dead).ToArray();
                 var playerPositions = livingPlayers.Select((person) => person.transform.position).ToList();
@@ -141,6 +141,14 @@ namespace WWC.MonoBehaviours
                     var hit = Physics2D.Raycast(destination, direction, distance, layerMask);
                     var bounces = 0;
 
+                    // Check to make sure we're not in a wall.
+                    var overlap = Physics2D.OverlapPointAll(destination, layerMask);
+                    if (overlap.Length > 0)
+                    {
+                        destination = destination - (Vector3)direction * distance / 4;
+                        hit = Physics2D.Raycast(destination, direction, distance, layerMask);
+                    }
+
                     while (hit && distance >= 0f && bounces < 1000)
                     {
                         bounces++;
@@ -156,7 +164,14 @@ namespace WWC.MonoBehaviours
                     playerPositions[index] = destination;
                 }
 
-                this.photonView.RPC(nameof(RPCA_NewPositions), RpcTarget.AllViaServer, livingPlayers.Select(person => person.playerID).ToArray(), playerPositions.ToArray());
+                if (PhotonNetwork.OfflineMode)
+                {
+                    RPCA_NewPositions(livingPlayers.Select(person => person.playerID).ToArray(), playerPositions.ToArray());
+                }
+                else
+                {
+                    this.photonView.RPC(nameof(RPCA_NewPositions), RpcTarget.AllViaServer, livingPlayers.Select(person => person.playerID).ToArray(), playerPositions.ToArray());
+                }
 
                 lastUsed = Time.time;
                 canTrigger = false;
@@ -171,21 +186,51 @@ namespace WWC.MonoBehaviours
                 var playerID = playerIDs[index];
                 var person = PlayerManager.instance.GetPlayerWithID(playerID);
 
-                //var prevGrav = person.GetComponent<Gravity>().gravityForce;
-                //person.GetComponent<Gravity>().gravityForce = 0;
                 //person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
                 //person.transform.position = positions[index];
 
-                PlayerManager.instance.StartCoroutine(MovePlayer(person, positions[index]));
+                StartCoroutine(Move(person, positions[index]));
             }
         }
 
-        private IEnumerator MovePlayer(Player person, Vector3 position)
+        private IEnumerator Move(Player person, Vector3 targetPos)
         {
-            yield return (IEnumerator) typeof(PlayerManager).InvokeMember("Move",
-                    BindingFlags.Instance | BindingFlags.InvokeMethod |
-                    BindingFlags.NonPublic, null, PlayerManager.instance, new object[] { person.data.playerVel, position });
+            PlayerVelocity playerVel = person.data.playerVel;
+            AnimationCurve playerMoveCurve = PlayerManager.instance.playerMoveCurve;
+            //person.data.isPlaying = false;
+            playerVel.SetFieldValue("simulated", false);
+            playerVel.SetFieldValue("isKinematic", true);
+            Vector3 distance = targetPos - playerVel.transform.position;
+            Vector3 targetStartPos = playerVel.transform.position;
+            PlayerCollision col = playerVel.GetComponent<PlayerCollision>();
+            float t = playerMoveCurve.keys[playerMoveCurve.keys.Length - 1].time;
+            float c = 0f;
+            col.checkForGoThroughWall = false;
+            while (c < t)
+            {
+                c += Mathf.Clamp(Time.unscaledDeltaTime, 0f, 0.02f);
+                playerVel.transform.position = targetStartPos + distance * playerMoveCurve.Evaluate(c);
+                yield return null;
+            }
+            col.SetFieldValue("lastPos", (Vector2)targetPos);
+            col.checkForGoThroughWall = true;
+            yield return null;
+            yield return null;
+            int frames = 0;
+            while (frames < 10)
+            {
+                playerVel.transform.position = targetPos;
+                frames++;
+                yield return null;
+            }
+            playerVel.SetFieldValue("simulated", true);
+            playerVel.SetFieldValue("isKinematic", false);
 
+            yield break;
+        }
+
+        private IEnumerator HoldPlayer(Player person, Vector3 position)
+        {
             for (int i = 0; i < 2; i++)
             {
                 person.gameObject.transform.position = position;

@@ -209,7 +209,6 @@ namespace WWC.Patches
                 hitInfo.transform = hitInfo.collider.transform;
             }
             HealthHandler healthHandler = null;
-            CharacterData data = null;
             if (hitInfo.transform)
             {
                 healthHandler = hitInfo.transform.GetComponent<HealthHandler>();
@@ -222,15 +221,17 @@ namespace WWC.Patches
                     return;
                 }
                 Block block = healthHandler.GetComponent<Block>();
-                if (warded.shields > 0 && !block.IsBlocking())
+                CharacterData data = healthHandler.GetComponent<CharacterData>();
+                if (warded.shields > 0 && !block.IsBlocking() && !data.isSilenced && !data.isStunned)
                 {
                     wasBlocked = true;
                     warded.shields--;
-                    if (healthHandler.GetComponent<CharacterData>().view.IsMine)
+                    if (data.view.IsMine)
                     {
                         block.CallDoBlock(true, true, BlockTrigger.BlockTriggerType.Default, default, false);
                     }
                 }
             }
+        }
     }
 }
