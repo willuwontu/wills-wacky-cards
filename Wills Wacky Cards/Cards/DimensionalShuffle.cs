@@ -124,6 +124,8 @@ namespace WWC.MonoBehaviours
 
         private void OnBlock(BlockTrigger.BlockTriggerType blockTrigger)
         {
+            var _ = PlayerSpotlight.Cam;
+            _ = PlayerSpotlight.Group;
             if (canTrigger && (PhotonNetwork.OfflineMode || this.photonView.IsMine))
             {
                 var livingPlayers = PlayerManager.instance.players.Where((person) => !person.data.dead).ToArray();
@@ -199,7 +201,7 @@ namespace WWC.MonoBehaviours
             if (person.data.view.IsMine || PhotonNetwork.OfflineMode)
             {
                 PlayerSpotlight.AddSpotToPlayer(person);
-                PlayerSpotlight.FadeIn(0f);
+                PlayerSpotlight.FadeIn(0.1f);
                 PlayerSpotlight.FadeOut();
             }
 
@@ -240,6 +242,13 @@ namespace WWC.MonoBehaviours
 
             playerVel.SetFieldValue("simulated", true);
             playerVel.SetFieldValue("isKinematic", false);
+
+            yield return new WaitForSecondsRealtime(0.5f);
+
+            if (person.data.view.IsMine || PhotonNetwork.OfflineMode)
+            {
+
+            }
 
             yield break;
         }

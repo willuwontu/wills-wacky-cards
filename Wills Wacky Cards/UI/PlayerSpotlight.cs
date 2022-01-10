@@ -17,7 +17,7 @@ namespace WWC.UI
         public static bool FadeInProgress => PlayerSpotlight.fadeInProgress;
         private static Coroutine FadeCoroutine;
 
-        private const int layer = 31;
+        private const int layer = 30;
 
         private const float MaxShadowOpacity = 1f;
         public const float DefaultFadeInTime = 0.5f;
@@ -151,7 +151,12 @@ namespace WWC.UI
                 yield return null;
             }
             PlayerSpotlight.SetShadowOpacity(a);
-            if (disableWhenComplete) { PlayerSpotlight.BG.SetActive(false); }
+
+            if (disableWhenComplete) 
+            {
+                PlayerSpotlight.BG.SetActive(true);
+                WillsWackyCards.instance.ExecuteAfterFrames(2, () => { if (BG) { UnityEngine.GameObject.Destroy(BG); } });
+            }
 
             PlayerSpotlight.fadeInProgress = false;
             yield break;
