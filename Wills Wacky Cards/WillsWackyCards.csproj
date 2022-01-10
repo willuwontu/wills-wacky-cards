@@ -89,6 +89,9 @@
     <Reference Include="UnityEngine.Physics2DModule">
       <HintPath>..\..\..\Visual Studio 2019\Projects\Rounds\Dependencies\UnityEngine.Physics2DModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.SpriteMaskModule">
+      <HintPath>..\..\..\Visual Studio 2019\Projects\Rounds\Dependencies\UnityEngine.SpriteMaskModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.TextRenderingModule">
       <HintPath>..\..\..\Visual Studio 2019\Projects\Rounds\Dependencies\UnityEngine.TextRenderingModule.dll</HintPath>
     </Reference>
