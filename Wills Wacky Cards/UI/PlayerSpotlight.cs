@@ -154,8 +154,8 @@ namespace WWC.UI
 
             if (disableWhenComplete) 
             {
-                PlayerSpotlight.BG.SetActive(true);
-                WillsWackyCards.instance.ExecuteAfterFrames(2, () => { if (BG) { UnityEngine.GameObject.Destroy(BG); } });
+                PlayerSpotlight.BG.SetActive(false);
+                //WillsWackyCards.instance.ExecuteAfterFrames(2, () => { if (BG) { UnityEngine.GameObject.Destroy(BG); } });
             }
 
             PlayerSpotlight.fadeInProgress = false;
@@ -209,7 +209,7 @@ namespace WWC.UI
     }
     public class FollowPlayer : MonoBehaviour
     {
-        Player player = null;
+        public Player player { get; private set; }
 
         public void SetPlayer(Player player)
         {
