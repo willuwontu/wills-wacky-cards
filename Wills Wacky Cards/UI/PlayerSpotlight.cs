@@ -33,10 +33,6 @@ namespace WWC.UI
             {
                 if (PlayerSpotlight._Cam != null) { return PlayerSpotlight._Cam; }
 
-                _Cam = GameObject.Find("SpotlightCam");
-
-                if (PlayerSpotlight._Cam != null) { return PlayerSpotlight._Cam; }
-
                 PlayerSpotlight._Cam = new GameObject("SpotlightCam", typeof(Camera));
                 PlayerSpotlight._Cam.transform.SetParent(UnityEngine.GameObject.Find("/Game/Visual/Rendering ").transform);
                 PlayerSpotlight._Cam.GetComponent<Camera>().CopyFrom(MainCam.instance.cam);
