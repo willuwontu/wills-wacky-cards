@@ -229,6 +229,9 @@ namespace WWC.UI
             {
                 GameObject.Destroy(this);
             }
+
+            this.GetComponent<SpriteMask>().enabled = !player.data.dead;
+
             this.transform.position = this.player.gameObject.transform.position;
             // scale with player size
             this.transform.localScale = (this.player.transform.localScale.x / 1.25f) * PlayerSpotlight.SpotlightSizeMult * Vector3.one;

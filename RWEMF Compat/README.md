@@ -71,6 +71,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Boomerang (Common)
 
 ----
+## v 1.6.8
+- Dimensional Shuffle now utilizes a spotlight effect and no longer results in spontaneous ninja death.
+
+----
 ## v 1.6.7
 - Changes to card stats.
 - Patches to Code Logic.

@@ -194,16 +194,18 @@ namespace WWC.MonoBehaviours
 
                 StartCoroutine(Move(person, positions[index]));
             }
+
+            this.ExecuteAfterSeconds(4f,
+                () =>
+                {
+                    StartCoroutine((IEnumerator)typeof(ModdingUtils.AIMinion.AIMinionHandler).GetMethod("StartStalemateHandler", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { UnboundLib.GameModes.GameModeManager.CurrentHandler }));
+                });
         }
 
         private IEnumerator Move(Player person, Vector3 targetPos)
         {
             if (person.data.view.IsMine || PhotonNetwork.OfflineMode)
             {
-                if (!PlayerSpotlight.Group.GetComponentsInChildren<WWC.UI.FollowPlayer>().Select(spot => spot.player).ToArray().Contains(person))
-                {
-                    PlayerSpotlight.AddSpotToPlayer(person);
-                }
                 PlayerSpotlight.FadeIn(0.1f);
             }
 
