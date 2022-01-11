@@ -141,6 +141,7 @@ namespace WWC
             CustomCard.BuildCard<Resolute>();
             CustomCard.BuildCard<DimensionalShuffle>();
             CustomCard.BuildCard<Boomerang>();
+            CustomCard.BuildCard<FlySwatter>();
 
             if (debug)
             { 
