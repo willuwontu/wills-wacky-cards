@@ -46,7 +46,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Rare;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -55,14 +55,14 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Block per Curses",
+                    stat = "Block per 2 Curses",
                     amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Autoblock per Curse",
+                    stat = "Autoblock per 2 Curses",
                     amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },

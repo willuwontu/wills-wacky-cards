@@ -28,21 +28,10 @@ namespace WWC.MonoBehaviours
         {
             HookedMonoManager.instance.hookedMonos.Add(this);
             data = GetComponentInParent<CharacterData>();
-        }
-
-        private void Update()
-        {
-            if (!player)
-            {
-                if (!(data is null))
-                {
-                    player = data.player;
-                    block = data.block;
-                    stats = data.stats;
-                    stats.WasDealtDamageAction += OnWasDealtDamage;
-                }
-
-            }
+            player = data.player;
+            block = data.block;
+            stats = data.stats;
+            stats.WasDealtDamageAction += OnWasDealtDamage;
         }
 
         private void CheckIfValid()
@@ -114,7 +103,7 @@ namespace WWC.MonoBehaviours
 
         public override void OnBattleStart()
         {
-            shields = CurseManager.instance.GetAllCursesOnPlayer(player).Count();
+            shields = CurseManager.instance.GetAllCursesOnPlayer(player).Count() / 2;
         }
 
         public override void OnPointStart()
@@ -125,7 +114,7 @@ namespace WWC.MonoBehaviours
             if (!increased)
             {
                 increased = true;
-                additionalBlocks = curses.Count();
+                additionalBlocks = curses.Count() / 2;
                 block.additionalBlocks += additionalBlocks;
             }
         }
@@ -179,12 +168,72 @@ namespace WWC.MonoBehaviours
                 block.additionalBlocks -= additionalBlocks;
             }
             stats.WasDealtDamageAction -= OnWasDealtDamage;
+            HookedMonoManager.instance.hookedMonos.Remove(this);
+        }
+    }
+
+    [DisallowMultipleComponent]
+    class RunicWardsSpeedRecovery_Mono : Hooked_Mono
+    {
+        private CharacterData data;
+        private Player player;
+        private Block block;
+
+        private void Start()
+        {
+            HookedMonoManager.instance.hookedMonos.Add(this);
+            data = GetComponentInParent<CharacterData>();
+            player = data.player;
+            block = data.block;
+        }
+
+        private void Update()
+        {
+            if (block.counter >= block.Cooldown())
+            {
+                UnityEngine.GameObject.Destroy(this);
+            }
+        }
+
+        public override void OnPointEnd()
+        {
+            UnityEngine.GameObject.Destroy(this);
+        }
+
+        public override void OnGameStart()
+        {
+            UnityEngine.GameObject.Destroy(this);
+        }
+
+        private void OnDestroy()
+        {
+            HookedMonoManager.instance.hookedMonos.Remove(this);
+        }
+
+        public void Destroy()
+        {
+            UnityEngine.Object.Destroy(this);
         }
     }
 }
 
 namespace WWC.Patches
 {
+    [HarmonyPatch(typeof(Block))]
+    class RunicWardsBlock_Patch
+    {
+        [HarmonyPatch("Update")]
+        [HarmonyPrefix]
+        private static void RunicWardsRecoverSpeed(Block __instance)
+        {
+            if (__instance.GetComponent<RunicWardsSpeedRecovery_Mono>())
+            {
+                __instance.sinceBlock += TimeHandler.deltaTime;
+                __instance.counter += TimeHandler.deltaTime;
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(ProjectileHit))]
     class ProjectileHitPatchRPCA_DoHit
     {
@@ -224,13 +273,14 @@ namespace WWC.Patches
                 }
                 Block block = healthHandler.GetComponent<Block>();
                 CharacterData data = healthHandler.GetComponent<CharacterData>();
-                if (warded.shields > 0 && !block.IsBlocking() && !data.isSilenced && !data.isStunned)
+                if (warded.shields > 0 && block.counter >= block.Cooldown() && !block.IsBlocking() && !data.isSilenced && !data.isStunned)
                 {
                     wasBlocked = true;
                     warded.shields--;
+                    data.gameObject.AddComponent<RunicWardsSpeedRecovery_Mono>();
                     if (data.view.IsMine)
                     {
-                        block.CallDoBlock(true, true, BlockTrigger.BlockTriggerType.Default, default, false);
+                        block.CallDoBlock(true, false, BlockTrigger.BlockTriggerType.Default, default, false);
                     }
                 }
             }

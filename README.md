@@ -71,6 +71,19 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Boomerang (Common)
 
 ----
+## v 1.6.10
+- Runic Wards is nerfed
+- Logic Patches
+- Immovable Object and Unstoppable Force no longer eat glitch cards
+- Forbidden Magics now properly gives the holder curses
+- Curse Eater was nerfed
+
+----
+## v 1.6.9
+- Tweaks to dimensional shuffle
+- Dimensional shuffle now gives enemies a block at the end of it
+
+----
 ## v 1.6.8
 - Dimensional Shuffle now utilizes a spotlight effect and no longer results in spontaneous ninja death.
 

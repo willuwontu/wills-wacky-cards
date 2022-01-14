@@ -29,7 +29,7 @@ namespace WWC.Cards
             cardInfo.cardStats = MomentumTracker.GetOffensiveMomentumStats(stacks);
             tracker.updated = true;
 
-            cardInfo.categories = new CardCategory[] { WillsWackyManagers.Utils.RerollManager.instance.NoFlip };
+            cardInfo.categories = new CardCategory[] { WillsWackyManagers.Utils.RerollManager.instance.NoFlip, CustomCardCategories.instance.CardCategory("NoRandom") };
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
