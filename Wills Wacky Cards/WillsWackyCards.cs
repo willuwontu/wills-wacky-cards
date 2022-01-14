@@ -40,7 +40,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.6.8"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.6.10"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -141,7 +141,7 @@ namespace WWC
             CustomCard.BuildCard<Resolute>();
             CustomCard.BuildCard<DimensionalShuffle>();
             CustomCard.BuildCard<Boomerang>();
-            CustomCard.BuildCard<FlySwatter>();
+            //CustomCard.BuildCard<FlySwatter>();
 
             if (debug)
             { 

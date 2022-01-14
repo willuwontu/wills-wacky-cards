@@ -27,9 +27,9 @@ namespace WWC.Cards
             if (CurseManager.instance.GetRaw().Count() > 0)
             {
                 WillsWackyCards.instance.ExecuteAfterFrames(20, () => {
-                    CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f); });
                     foreach (var item in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
                     {
+                        CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f); });
                         CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse, 3f); });
                         CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse, 3f); });
                         CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse, 3f); });
