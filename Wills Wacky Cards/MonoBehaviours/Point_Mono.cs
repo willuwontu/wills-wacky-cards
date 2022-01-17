@@ -4,6 +4,7 @@ using UnboundLib.GameModes;
 using UnboundLib;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 namespace WWC.MonoBehaviours
 {
@@ -113,12 +114,8 @@ namespace WWC.MonoBehaviours
         private void UpdateMultiplier()
         {
             currentScore.Clear();
-            foreach (var player in PlayerManager.instance.players)
-            {
-                currentScore.Add(GameModeManager.CurrentHandler.GetTeamScore(player.teamID));
 
-                WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Debugging] Team {player.teamID} has {GameModeManager.CurrentHandler.GetTeamScore(player.teamID).points} points.");
-            }
+            currentScore = PlayerManager.instance.players.Select(p => p.teamID).Distinct().Select(ID => GameModeManager.CurrentHandler.GetTeamScore(ID)).ToList();
 
             totalPointsEarned = 0;
 

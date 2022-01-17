@@ -156,7 +156,7 @@ namespace WWC.MonoBehaviours
                         var person = livingPlayers[index];
 
                         var angle = UnityEngine.Random.Range(0f, 360f);
-                        var distance = player.transform.localScale.x * 2f;
+                        var distance = person.transform.localScale.x * 2f;
                         var direction = (new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad))).normalized;
                         Vector3 destination = playerPositions[index];
                         var hit = Physics2D.Raycast(destination, direction, distance, layerMask);
@@ -252,6 +252,7 @@ namespace WWC.MonoBehaviours
             }
 
             yield return null;
+            yield return null;
 
             col.SetFieldValue("lastPos", (Vector2)targetPos);
 
@@ -303,6 +304,11 @@ namespace WWC.MonoBehaviours
         public override void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
+        }
+
+        public override void OnPointEnd()
+        {
+            PlayerSpotlight.FadeOut();
         }
 
         private void OnDestroy()
