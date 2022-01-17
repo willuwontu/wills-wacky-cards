@@ -30,7 +30,7 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            player.gameObject.AddComponent<Vampirism_Mono>();
+            player.gameObject.GetOrAddComponent<Vampirism_Mono>();
             statModifiers.GetAdditionalData().Vampire = true;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }

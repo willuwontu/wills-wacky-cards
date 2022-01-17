@@ -71,6 +71,15 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Boomerang (Common)
 
 ----
+## v 1.6.12
+- Patched Adrenaline Rush and Endurance Training
+- Small Patch to Dimensional Shuffle
+
+----
+## v 1.6.11
+- Removed respawn patch as a dependency.
+
+----
 ## v 1.6.10
 - Runic Wards is nerfed
 - Logic Patches

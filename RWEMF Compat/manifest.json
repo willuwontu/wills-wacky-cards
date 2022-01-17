@@ -1,7 +1,7 @@
 {
 	"name":"WillsWackyCardsRWEMF",
 	"author_name":"willuwontu",
-    "version_number":"1.6.10",
+    "version_number":"1.6.12",
 	"website_url":"https://github.com/willuwontu/wills-wacky-cards",
 	"displayName":"Will's Wacky Cards - RWEMF Compatible",
 	"description":"Small addition of cards to the game.",
@@ -14,7 +14,6 @@
 		"Pykess-ModdingUtils-0.1.3",
 		"TeamDK-ZeroGBulletPatch-1.1.0",
 		"Pykess-GunUnblockablePatch-0.0.0",
-		"willuwontu-RespawnPatch-1.0.0",
 		"RoundsModding-RoundsWithEvenMoreFriends-2.0.0"
 	]
 }
