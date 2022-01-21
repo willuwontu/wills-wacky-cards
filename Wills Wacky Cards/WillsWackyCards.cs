@@ -80,8 +80,8 @@ namespace WWC
             CustomCard.BuildCard<Shotgun>();
             CustomCard.BuildCard<SlowDeath>();
             CustomCard.BuildCard<Vampirism>();
-            CustomCard.BuildCard<FastBall>();
-            CustomCard.BuildCard<SlowBall>();
+            CustomCard.BuildCard<BasicPhysics>();
+            CustomCard.BuildCard<BasicAlternatePhysics>();
             //CustomCard.BuildCard<Minigun>();
             CustomCard.BuildCard<WildAim>();
             CustomCard.BuildCard<RunningShoes>();
@@ -141,7 +141,7 @@ namespace WWC
             CustomCard.BuildCard<Resolute>();
             CustomCard.BuildCard<DimensionalShuffle>();
             CustomCard.BuildCard<Boomerang>();
-            //CustomCard.BuildCard<FlySwatter>();
+            CustomCard.BuildCard<FlySwatter>();
 
             if (debug)
             { 
