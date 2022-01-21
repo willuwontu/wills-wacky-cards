@@ -18,6 +18,7 @@ namespace WWC.Cards
         {
             gun.damage = 1.2f;
             statModifiers.gravity = 1.2f;
+            gun.reloadTimeAdd = 0.25f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -62,9 +63,16 @@ namespace WWC.Cards
                 },
                 new CardInfoStat()
                 {
-                    positive = true,
+                    positive = false,
                     stat = "Gravity",
                     amount = "+20%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Reload Time",
+                    amount = "+0.25s%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
@@ -113,10 +121,10 @@ namespace WWC.MonoBehaviours
                 return;
             }
 
-            foreach (var person in PlayerManager.instance.players.Where(p => p.teamID != player.teamID && PlayerManager.instance.CanSeePlayer(player.transform.position, p).canSee && Vector2.Distance(p.transform.position, player.transform.position) > 4f).ToArray())
+            foreach (var person in PlayerManager.instance.players.Where(p => p.teamID != player.teamID && PlayerManager.instance.CanSeePlayer(player.transform.position, p).canSee && Vector2.Distance(p.transform.position, player.transform.position) > 2f).ToArray())
             {
 
-                if (Vector2.Angle(Vector2.up, (person.transform.position - player.transform.position).normalized) <= 45f)
+                if (Vector2.Angle(Vector2.up, (person.transform.position - player.transform.position).normalized) <= 60f)
                 {
                     person.data.playerVel.AddForce(Vector2.down * 10 * (float)player.data.playerVel.GetFieldValue("mass"), ForceMode2D.Impulse);
                 }
