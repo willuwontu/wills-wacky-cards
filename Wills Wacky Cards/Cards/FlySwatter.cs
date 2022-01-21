@@ -94,7 +94,6 @@ namespace WWC.Cards
 
 namespace WWC.MonoBehaviours
 {
-    [DisallowMultipleComponent]
     public class FlySwatter_Mono : Hooked_Mono
     {
         private CharacterData data;
