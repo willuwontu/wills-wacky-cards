@@ -69,6 +69,11 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Resolute (Uncommon)
 - Dimensional Shuffle (Uncommon)
 - Boomerang (Common)
+- Fly Swatter (Uncommon)
+
+----
+## v 1.6.13
+- Added 1 New Card (Fly Swatter)
 
 ----
 ## v 1.6.12
