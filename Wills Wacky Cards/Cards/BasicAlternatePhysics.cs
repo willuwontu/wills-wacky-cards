@@ -10,7 +10,7 @@ using WWC.Extensions;
 
 namespace WWC.Cards
 {
-    class SlowBall : CustomCard
+    class BasicAlternatePhysics : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
