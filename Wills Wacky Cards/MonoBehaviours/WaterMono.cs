@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using UnityEngine;
 using UnboundLib;
 
@@ -29,9 +28,9 @@ namespace WaterMapObjects.MonoBehaviours
             player.data.healthHandler.TakeDamageOverTime(Vector2.up * 0.65f, Vector2.zero, 2.5f, 1, new Color(1, 0, 0, 0.7f));
         }
 
-        public override void HandleBox(Rigidbody2D rb)
+        public override void HandleBox(Rigidbody2D rb, Vector2 centroid)
         {
-            base.HandleBox(rb);
+            base.HandleBox(rb, centroid); ;
 
             if (rb.GetComponent<DamagableEvent>())
             {
@@ -79,9 +78,9 @@ namespace WaterMapObjects.MonoBehaviours
             player.data.healthHandler.TakeDamageOverTime(Vector2.up * 0.45f, Vector2.zero, 5, 1, new Color(0, 1, 0, 0.7f));
         }
 
-        public override void HandleBox(Rigidbody2D rb)
+        public override void HandleBox(Rigidbody2D rb, Vector2 centroid)
         {
-            base.HandleBox(rb);
+            base.HandleBox(rb, centroid);
 
             if (rb.GetComponent<DamagableEvent>())
             {
@@ -127,54 +126,97 @@ namespace WaterMapObjects.MonoBehaviours
 
         public void Start()
         {
-            if (this.gameObject.GetComponent<Collider2D>())
-            {
-                UnityEngine.GameObject.Destroy(this.gameObject.GetComponent<Collider2D>());
-            }
+            //if (this.gameObject.GetComponent<Collider2D>())
+            //{
+            //    UnityEngine.GameObject.Destroy(this.gameObject.GetComponent<Collider2D>());
+            //}
+
+            var coll = this.gameObject.GetComponent<Collider2D>();
+            var rigid = this.gameObject.GetOrAddComponent<Rigidbody2D>();
+            rigid.isKinematic = true;
+            //coll.isTrigger = true;
+
+            this.gameObject.layer = LayerMask.NameToLayer("BackgroundObject");
             this.gameObject.GetComponent<SpriteRenderer>().color = waterColor;
         }
 
-        private void FixedUpdate()
+        private void OnCollisionStay2D(Collision2D collision)
         {
-            if (!this.gameObject.GetComponent<Renderer>())
+            UnityEngine.Debug.Log($"{collision.collider.gameObject.name} collided with {collision.otherCollider.gameObject.name}");
+            var collider = collision.otherCollider;
+
+            // If Player
+            if (collider.GetComponent<Player>())
             {
+                HandlePlayer(collider.GetComponent<Player>());
+
                 return;
             }
 
-            var colliders = Physics2D.OverlapBoxAll(this.transform.position, this.gameObject.GetComponent<Renderer>().bounds.size, Vector3.SignedAngle(Vector3.up, this.transform.up.normalized, Vector3.up));
-
-            foreach (var collider in colliders)
+            // If Bullet
+            if (collider.GetComponentInParent<ProjectileHit>())
             {
-                if (collider == this.gameObject.GetComponent<Collider2D>())
-                {
-                    continue;
-                }
+                HandleBullet(collider.GetComponentInParent<ProjectileHit>());
 
-                // If Player
-                if (collider.GetComponent<Player>())
-                {
-                    HandlePlayer(collider.GetComponent<Player>());
+                return;
+            }
 
-                    continue;
-                }
+            // If Box
+            if (collider.GetComponent<Rigidbody2D>())
+            {
+                ContactPoint2D[] contacts = new ContactPoint2D[collision.contactCount];
 
-                // If Bullet
-                if (collider.GetComponentInParent<ProjectileHit>())
-                {
-                    HandleBullet(collider.GetComponentInParent<ProjectileHit>());
+                collision.GetContacts(contacts);
 
-                    continue;
-                }
+                var centroid = new Vector2(contacts.Select(contact => contact.point.x).Sum() / contacts.Length, contacts.Select(contact => contact.point.y).Sum() / contacts.Length);
 
-                // If Box
-                if (collider.GetComponent<Rigidbody2D>())
-                {
-                    HandleBox(collider.GetComponent<Rigidbody2D>());
+                HandleBox(collider.GetComponent<Rigidbody2D>(), centroid);
 
-                    continue;
-                }
+                return;
             }
         }
+
+        //private void FixedUpdate()
+        //{
+        //    if (!this.gameObject.GetComponent<Renderer>())
+        //    {
+        //        return;
+        //    }
+
+        //    var colliders = Physics2D.OverlapBoxAll(this.transform.position, this.gameObject.GetComponent<Renderer>().bounds.size, Vector3.SignedAngle(Vector3.up, this.transform.up.normalized, Vector3.up));
+
+        //    foreach (var collider in colliders)
+        //    {
+        //        if (collider == this.gameObject.GetComponent<Collider2D>())
+        //        {
+        //            continue;
+        //        }
+
+        //        // If Player
+        //        if (collider.GetComponent<Player>())
+        //        {
+        //            HandlePlayer(collider.GetComponent<Player>());
+
+        //            continue;
+        //        }
+
+        //        // If Bullet
+        //        if (collider.GetComponentInParent<ProjectileHit>())
+        //        {
+        //            HandleBullet(collider.GetComponentInParent<ProjectileHit>());
+
+        //            continue;
+        //        }
+
+        //        // If Box
+        //        if (collider.GetComponent<Rigidbody2D>())
+        //        {
+        //            HandleBox(collider.GetComponent<Rigidbody2D>());
+
+        //            continue;
+        //        }
+        //    }
+        //}
 
         public virtual void HandlePlayer(Player player)
         {
@@ -192,9 +234,11 @@ namespace WaterMapObjects.MonoBehaviours
             inWater.hadWater = new bool[] { true, true };
         }
 
-        public virtual void HandleBox(Rigidbody2D rb)
+        public virtual void HandleBox(Rigidbody2D rb, Vector2 centroid)
         {
-            rb.AddForce(Vector2.up * rb.mass * forceMult, ForceMode2D.Impulse);
+            rb.AddForceAtPosition(Vector2.up * rb.mass * forceMult, centroid, ForceMode2D.Impulse);
+
+            //rb.AddForce(Vector2.up * rb.mass * forceMult, ForceMode2D.Impulse);
         }
     }
 
