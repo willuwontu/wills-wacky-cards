@@ -4,16 +4,22 @@ using System.Text;
 using System.Linq;
 using UnityEngine;
 using UnboundLib;
+using HarmonyLib;
 
 namespace WaterMapObjects.MonoBehaviours
 {
     public class LavaMono : WaterMono
     {
+        private float _forceMult = 0.75f;
         public override float forceMult
         {
             get
             {
-                return 0.8f;
+                return _forceMult;
+            }
+            set
+            {
+                _forceMult = value;
             }
         }
         public override Color waterColor
@@ -58,11 +64,16 @@ namespace WaterMapObjects.MonoBehaviours
 
     public class AcidMono : WaterMono
     {
+        private float _forceMult = 0.705f;
         public override float forceMult
         {
             get
             {
-                return 0.725f;
+                return _forceMult;
+            }
+            set
+            {
+                _forceMult = value;
             }
         }
         public override Color waterColor
@@ -109,17 +120,67 @@ namespace WaterMapObjects.MonoBehaviours
         }
     }
 
+    public class SpaceMono : WaterMono
+    {
+        private float _forceMult = 0.7f;
+        public override float forceMult
+        {
+            get
+            {
+                return _forceMult;
+            }
+            set
+            {
+                _forceMult = value;
+            }
+        }
+        public override Color waterColor
+        {
+            get
+            {
+                return new Color(0.35f, 0.35f, 0.35f, 0.0275f);
+            }
+        }
+
+        public override void HandlePlayer(Player player)
+        {
+            var data = player.data;
+
+            var inSpace = data.gameObject.GetOrAddComponent<PlayerInSpace_Mono>();
+
+            inSpace.inSpace = new bool[] { true, true };
+        }
+
+        public override void HandleBox(Rigidbody2D rb)
+        {
+            base.HandleBox(rb);
+
+        }
+
+        public override void HandleBullet(ProjectileHit projectileHit)
+        {
+            var inSpace = projectileHit.gameObject.GetOrAddComponent<BulletInSpace_Mono>();
+            inSpace.inSpace = new bool[] { true, true };
+
+        }
+    }
+
     public class WaterMono : MonoBehaviour
     {
-        TrailRenderer trail;
+        //TrailRenderer trail;
 
         public RaycastHit2D[] hits;
 
+        private float _forceMult = 0.7125f;
         public virtual float forceMult 
         {
             get
             {
-                return 0.74f;
+                return _forceMult;
+            }
+            set
+            {
+                _forceMult = value;
             }
         }
         public virtual Color waterColor 
@@ -149,12 +210,12 @@ namespace WaterMapObjects.MonoBehaviours
 
             this.gameObject.GetOrAddComponent<RectTransform>();
 
-            trail = this.gameObject.AddComponent<TrailRenderer>();
-            trail.startColor = waterColor;
-            trail.endColor = waterColor;
-            trail.time = 0.02f;
-            trail.startWidth = 0.1f;
-            trail.endWidth = 0.1f;
+            //trail = this.gameObject.AddComponent<TrailRenderer>();
+            //trail.startColor = waterColor;
+            //trail.endColor = waterColor;
+            //trail.time = 0.02f;
+            //trail.startWidth = 0.025f;
+            //trail.endWidth = 0.025f;
         }
 
         //private void OnTriggerStay2D(Collider2D collider)
@@ -180,8 +241,8 @@ namespace WaterMapObjects.MonoBehaviours
             this.gameObject.GetOrAddComponent<RectTransform>().GetWorldCorners(tempCorners);
             Vector2[] waterCorners = tempCorners.Select(corner => (Vector2)corner).ToArray();
 
-            trail.SetPositions(tempCorners);
-            trail.AddPosition(tempCorners[0]);
+            //trail.AddPositions(tempCorners);
+            //trail.AddPosition(tempCorners[0]);
 
             // Get all collisions going clockwise
             for (int i = 0; i < waterCorners.Length; i++)
@@ -222,7 +283,7 @@ namespace WaterMapObjects.MonoBehaviours
         public virtual void HandleCollision(Collider2D collider)
         {
 
-            trail.AddPositions(new Vector3[] { this.transform.position, collider.transform.position });
+            //trail.AddPositions(new Vector3[] { this.transform.position, collider.transform.position });
 
             // If our patch of water
             if (collider.gameObject == this.gameObject)
@@ -308,7 +369,7 @@ namespace WaterMapObjects.MonoBehaviours
             // If all of the corners are in the object, centroid is the centroid of the object.
             if (!inWater.Contains(false))
             {
-                rb.AddForce(Vector2.up * rb.mass * forceMult, ForceMode2D.Impulse);
+                rb.AddForceAtPosition(Vector2.up * rb.mass * forceMult, rb.transform.position, ForceMode2D.Impulse);
                 return;
             }
 
@@ -324,8 +385,18 @@ namespace WaterMapObjects.MonoBehaviours
 
             // Get all contact points from our linecasts
             var contactPoints = hits.Where(hit => hit.collider.gameObject == rb.gameObject).Select(hit => hit.point).ToList();
+
             // Add any corners inside the water
             contactPoints.AddRange(rigidCorners.Where(corner => PointIsInsideShape(waterCorners, corner)));
+
+            // If contact points for the object don't exist
+            if (!(contactPoints.Count() > 0))
+            {
+                rb.AddForceAtPosition(Vector2.up * rb.mass * forceMult, rb.transform.position, ForceMode2D.Impulse);
+                return;
+            }
+
+            //trail.AddPositions(contactPoints.Select(point => (Vector3) point).ToArray());
 
             // Centroid is (sum x / count x, sum y / count y)
             var centroid = new Vector2(contactPoints.Select(point => point.x).Sum() / contactPoints.Count(), contactPoints.Select(point => point.y).Sum() / contactPoints.Count());
@@ -386,6 +457,7 @@ namespace WaterMapObjects.MonoBehaviours
         }
     }
 
+    [DisallowMultipleComponent]
     public class PlayerInWater_Mono : ModdingUtils.MonoBehaviours.ReversibleEffect
     {
         public bool[] hadWater = new bool[] { true, true };
@@ -394,6 +466,8 @@ namespace WaterMapObjects.MonoBehaviours
             this.characterStatModifiersModifier.jump_mult = 0.2f;
             this.characterStatModifiersModifier.movementSpeed_mult = 0.7f;
             this.gravityModifier.gravityForce_mult = 0f;
+
+            player.GetComponent<Gravity>().enabled = false;
 
             ApplyModifiers();
         }
@@ -424,10 +498,13 @@ namespace WaterMapObjects.MonoBehaviours
 
         public override void OnOnDestroy()
         {
+            player.GetComponent<Gravity>().enabled = true;
+
             data.currentJumps = data.jumps;
         }
     }
 
+    [DisallowMultipleComponent]
     public class BulletInWater_Mono : MonoBehaviour
     {
         public bool[] hadWater = new bool[] { true, true };
@@ -449,7 +526,7 @@ namespace WaterMapObjects.MonoBehaviours
 
         private void FixedUpdate()
         {
-            move.drag += 1;
+            move.drag += 2;
             move.dragMinSpeed = 0f;
             if (move.velocity.magnitude < prevVel)
             {
@@ -482,6 +559,89 @@ namespace WaterMapObjects.MonoBehaviours
                 else
                 {
                     hadWater[1] = false;
+                }
+            }
+        }
+    }
+
+    [DisallowMultipleComponent]
+    public class PlayerInSpace_Mono : ModdingUtils.MonoBehaviours.ReversibleEffect
+    {
+        public bool[] inSpace = new bool[] { true, true };
+        private float initialDrag;
+        private float initialAngularDrag;
+        public override void OnStart()
+        {
+            this.characterStatModifiersModifier.jump_mult = 0.25f;
+            this.characterStatModifiersModifier.movementSpeed_mult = 0.1f;
+            this.gravityModifier.gravityForce_mult = -0.001f;
+
+            initialAngularDrag = player.data.movement.extraAngularDrag;
+            initialDrag = player.data.movement.extraDrag;
+
+            player.data.movement.extraDrag = 1;
+            player.data.movement.extraAngularDrag = 1;
+
+            ApplyModifiers();
+        }
+
+        public override void OnFixedUpdate()
+        {
+            if (inSpace[0] == false && inSpace[0] == inSpace[1])
+            {
+                UnityEngine.GameObject.Destroy(this);
+            }
+            else
+            {
+                if (inSpace[0])
+                {
+                    inSpace[0] = false;
+                }
+                else
+                {
+                    inSpace[1] = false;
+                }
+            }
+        }
+
+        public override void OnOnDestroy()
+        {
+            player.data.movement.extraDrag = initialDrag;
+            player.data.movement.extraAngularDrag = initialAngularDrag;
+
+            data.currentJumps = data.jumps;
+        }
+    }
+    [DisallowMultipleComponent]
+    public class BulletInSpace_Mono : MonoBehaviour
+    {
+        public bool[] inSpace = new bool[] { true, true };
+
+        private MoveTransform move;
+        private float initialGravity;
+
+        private void Start()
+        {
+            move = this.gameObject.GetComponent<MoveTransform>();
+            move.simulateGravity = 1;
+        }
+
+        private void FixedUpdate()
+        {
+            if (inSpace[0] == false && inSpace[0] == inSpace[1])
+            {
+                move.simulateGravity = 0;
+                UnityEngine.GameObject.Destroy(this);
+            }
+            else
+            {
+                if (inSpace[0])
+                {
+                    inSpace[0] = false;
+                }
+                else
+                {
+                    inSpace[1] = false;
                 }
             }
         }
