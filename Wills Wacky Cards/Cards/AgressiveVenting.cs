@@ -16,13 +16,13 @@ namespace WWC.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            gun.attackSpeed = 20f;
+            gun.attackSpeed = 0.5f;
             gun.reloadTimeAdd = 0.25f;
+            cardInfo.allowMultiple = false;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            gun.attackSpeedMultiplier = 0.5f;
             player.gameObject.AddComponent<AgressiveVenting_Mono>();
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
@@ -62,7 +62,7 @@ namespace WWC.Cards
                 },
                 new CardInfoStat()
                 {
-                    positive = true,
+                    positive = false,
                     stat = "Reload Time",
                     amount = "+0.25s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
@@ -94,8 +94,9 @@ namespace WWC.MonoBehaviours
         private LineEffect effectRadius = null;
         private List<LineEffect> radiatingVisuals = new List<LineEffect>();
         private float speed = 10f;
-        private int layerMask = ~LayerMask.GetMask("BackgroundObject", "Projectile");
-        private float gunDamageDealtOver = 1/10f;
+        private int layerMask = ~LayerMask.GetMask("BackgroundObject");
+        private int checkMask = ~LayerMask.GetMask("BackgroundObject", "Player", "Projectile", "PlayerObjectCollider");
+        private float gunDamageDealtOver = 2f;
 
         private CharacterData data;
         private Player player;
@@ -123,7 +124,17 @@ namespace WWC.MonoBehaviours
             AddVentingVisual();
         }
 
-        private void Update()
+        private float CalculateDamage(float damage)
+        {
+            return (damage / 2f + 1f / 2f) * 55;
+        }
+
+        private float CalculateRadius(float attackSpeed)
+        {
+            return (attackSpeed / 10) + 4.9f;
+        }
+
+        private void FixedUpdate()
         {
             var activate = gun.IsReady(0f);
 
@@ -134,29 +145,30 @@ namespace WWC.MonoBehaviours
                 return;
             }
 
-            effectRadius.radius = (gun.attackSpeed / gun.attackSpeedMultiplier) * 3f * (1- gun.ReadyAmount());
+            effectRadius.radius = CalculateRadius(gun.attackSpeed / gun.attackSpeedMultiplier) * (1- gun.ReadyAmount());
 
-            if (!(radiatingVisuals.Count() > 0) || (radiatingVisuals.Count() > 0 && radiatingVisuals[radiatingVisuals.Count()-1].radius > 1f))
-            {
-                radiatingVisuals.Add(AddRadiatingVisual());
-            }
+            var radius = (float)effectRadius.InvokeMethod("GetRadius");
+            var hits = Physics2D.OverlapCircleAll(player.transform.position, radius);
 
-            var hits = Physics2D.OverlapCircleAll(player.transform.position, (float)effectRadius.InvokeMethod("GetRadius"));
 
             foreach (var hit in hits)
             {
-                if (PlayerManager.instance.CanSeePlayer(hit.gameObject.transform.position, player).canSee)
+                if (hit.gameObject.GetComponent<Damagable>())
                 {
-                    var damagable = hit.GetComponentInParent<Damagable>();
-                    if (damagable)
+                    var check = Physics2D.Linecast(player.transform.position, hit.gameObject.transform.position, checkMask);
+                    if (!check || check.collider.gameObject == hit.gameObject)
                     {
-                        if (damagable.GetComponent<Player>() && damagable.GetComponent<Player>().teamID == player.teamID)
+                        var damagable = hit.gameObject.GetComponent<Damagable>();
+                        if (damagable)
                         {
-                            continue;
-                        }
+                            if (damagable.GetComponent<Player>() && damagable.GetComponent<Player>().teamID == player.teamID)
+                            {
+                                continue;
+                            }
 
-                        damagable.CallTakeDamage(((hit.gameObject.transform.position - player.transform.position).normalized * gun.damage * (Time.deltaTime / gunDamageDealtOver) * (1 - gun.ReadyAmount()) * (Vector3.Distance(hit.gameObject.transform.position, player.transform.position) / (float)effectRadius.InvokeMethod("GetRadius"))), hit.gameObject.transform.position, null, player);
-                    }
+                            damagable.CallTakeDamage((((Vector2)hit.gameObject.transform.position - (Vector2)player.transform.position).normalized * CalculateDamage(gun.damage * gun.bulletDamageMultiplier) * (Time.deltaTime / gunDamageDealtOver) * (1 - gun.ReadyAmount()) * (1 - (Vector2.Distance((Vector2)hit.gameObject.transform.position, (Vector2)player.transform.position) / radius))), (check ? check.point : (Vector2)hit.gameObject.transform.position), null, player);
+                        }
+                    } 
                 }
             }
 
@@ -164,8 +176,14 @@ namespace WWC.MonoBehaviours
 
             foreach (var visual in visuals)
             {
+                if (!visual.gameObject.activeSelf)
+                {
+                    visual.gameObject.SetActive(true);
+                }
+
                 if (visual.radius > effectRadius.radius)
                 {
+                    visual.radius = 0f;
                     radiatingVisuals.Remove(visual);
                     UnityEngine.GameObject.Destroy(visual.gameObject);
                 }
@@ -173,6 +191,11 @@ namespace WWC.MonoBehaviours
                 {
                     visual.radius += TimeHandler.deltaTime * speed;
                 }
+            }
+
+            if (!(radiatingVisuals.Count() > 0) || (radiatingVisuals.Count() > 0 && radiatingVisuals[radiatingVisuals.Count() - 1].radius > 1f))
+            {
+                radiatingVisuals.Add(AddRadiatingVisual());
             }
 
             //gun.sinceAttack += TimeHandler.deltaTime * gun.attackSpeedMultiplier;
@@ -187,14 +210,16 @@ namespace WWC.MonoBehaviours
             ventingVisual.name = "A_AgressiveVenting";
 
             effectRadius = ventingVisual.gameObject.GetComponent<LineEffect>();
-            effectRadius.segments = 100;
-            effectRadius.effects[0].mainCurveMultiplier = 1f;
+            effectRadius.segments = 200;
+            effectRadius.effects[0].mainCurveMultiplier = .5f;
             effectRadius.effects[1].mainCurveMultiplier = 1f;
             effectRadius.effects[0].mainCurveScrollSpeed = 3f;
+            effectRadius.effects[1].mainCurveScrollSpeed = 5f;
 
             var renderer = effectRadius.gameObject.GetComponent<LineRenderer>();
             renderer.endColor = renderer.startColor = new Color(1f, 0.368f, 0f, 1f);
             renderer.startWidth = renderer.endWidth = 0.1f;
+            renderer.positionCount = 200;
         }
 
         private LineEffect AddRadiatingVisual()
@@ -204,10 +229,16 @@ namespace WWC.MonoBehaviours
             var radiateObj = Instantiate(statMods.AddObjectToPlayer.GetComponentInChildren<LineEffect>().gameObject, ventingVisual.transform);
             var lineEffect = radiateObj.GetComponent<LineEffect>();
             lineEffect.radius = 0f;
+            lineEffect.segments = 100;
+            lineEffect.effects[0].mainCurveMultiplier = .5f;
+            lineEffect.effects[1].mainCurveMultiplier = .5f;
+            lineEffect.effects[0].mainCurveScrollSpeed = 3f;
 
             var renderer = lineEffect.gameObject.GetComponent<LineRenderer>();
             renderer.endColor = renderer.startColor = new Color(1f, 0.4f, 0f, 1f);
             renderer.startWidth = renderer.endWidth = 0.1f;
+
+            radiateObj.SetActive(false);
             return lineEffect;
         }
 
