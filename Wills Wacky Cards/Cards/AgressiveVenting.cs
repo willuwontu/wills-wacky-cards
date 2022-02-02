@@ -94,7 +94,8 @@ namespace WWC.MonoBehaviours
         private LineEffect effectRadius = null;
         private List<LineEffect> radiatingVisuals = new List<LineEffect>();
         private float speed = 10f;
-        private int layerMask = ~LayerMask.GetMask("BackgroundObject", "Projectile");
+        private int layerMask = ~LayerMask.GetMask("BackgroundObject");
+        private int checkMask = ~LayerMask.GetMask("BackgroundObject", "Player", "Projectile", "PlayerObjectCollider");
         private float gunDamageDealtOver = 1/10f;
 
         private CharacterData data;
@@ -141,23 +142,50 @@ namespace WWC.MonoBehaviours
                 radiatingVisuals.Add(AddRadiatingVisual());
             }
 
-            var hits = Physics2D.OverlapCircleAll(player.transform.position, (float)effectRadius.InvokeMethod("GetRadius"));
+            var radius = (float)effectRadius.InvokeMethod("GetRadius");
+            var hits = Physics2D.CircleCastAll(player.transform.position, radius, data.hand.transform.forward, 0.0f, layerMask);
 
             foreach (var hit in hits)
             {
-                if (PlayerManager.instance.CanSeePlayer(hit.gameObject.transform.position, player).canSee)
+                if (hit.collider.gameObject.GetComponent<Damagable>())
                 {
-                    var damagable = hit.GetComponentInParent<Damagable>();
-                    if (damagable)
+                    var check = Physics2D.Linecast(player.transform.position, hit.point, checkMask);
+                    if (check)
                     {
-                        if (damagable.GetComponent<Player>() && damagable.GetComponent<Player>().teamID == player.teamID)
+                        UnityEngine.Debug.Log($"{check.collider.gameObject.name} != {hit.collider.gameObject.name}");
+                    }
+                    if (!check || check.collider.gameObject == hit.collider.gameObject)
+                    {
+                        var damagable = hit.collider.gameObject.GetComponent<Damagable>();
+                        if (damagable)
                         {
-                            continue;
-                        }
+                            if (damagable.GetComponent<Player>() && damagable.GetComponent<Player>().teamID == player.teamID)
+                            {
+                                continue;
+                            }
 
-                        damagable.CallTakeDamage(((hit.gameObject.transform.position - player.transform.position).normalized * gun.damage * (Time.deltaTime / gunDamageDealtOver) * (1 - gun.ReadyAmount()) * (Vector3.Distance(hit.gameObject.transform.position, player.transform.position) / (float)effectRadius.InvokeMethod("GetRadius"))), hit.gameObject.transform.position, null, player);
+                            damagable.CallTakeDamage(((hit.point - (Vector2) player.transform.position).normalized * gun.damage * (1 - gun.ReadyAmount()) * (hit.distance / radius)), hit.point, null, player);
+                        }
                     }
                 }
+
+
+                //if (PlayerManager.instance.CanSeePlayer(hit.gameObject.transform.position, player).canSee)
+                //{
+
+
+
+                //    var damagable = hit.GetComponentInParent<Damagable>();
+                //    if (damagable)
+                //    {
+                //        if (damagable.GetComponent<Player>() && damagable.GetComponent<Player>().teamID == player.teamID)
+                //        {
+                //            continue;
+                //        }
+
+                //        damagable.CallTakeDamage(((hit.gameObject.transform.position - player.transform.position).normalized * gun.damage * (Time.deltaTime / gunDamageDealtOver) * (1 - gun.ReadyAmount()) * (Vector3.Distance(hit.gameObject.transform.position, player.transform.position) / (float)effectRadius.InvokeMethod("GetRadius"))), hit.gameObject.transform.position, null, player);
+                //    }
+                //}
             }
 
             var visuals = radiatingVisuals.ToArray();
