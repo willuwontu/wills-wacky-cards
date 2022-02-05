@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using BepInEx;
 using HarmonyLib;
+using UnboundLib;
 
 
 namespace WWCC
@@ -27,8 +28,7 @@ namespace WWCC
 
         void Awake()
         {
-            var harmony = new Harmony(ModId);
-            harmony.PatchAll();
+
         }
 
         private void Start()
@@ -39,6 +39,9 @@ namespace WWCC
             {
                 CurseEaterClassName
             });
+
+            var harmony = new Harmony(ModId);
+            harmony.PatchAll();
         }
     }
 
