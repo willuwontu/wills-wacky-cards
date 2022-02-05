@@ -75,6 +75,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
 ----
 ## v 1.6.15
 - Buffed Aggressive Venting
+- Increased Compatibility with FFC Class Manager
 
 ----
 ## v 1.6.14
