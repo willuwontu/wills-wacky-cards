@@ -33,11 +33,22 @@ namespace WWC.Cards
         }
         protected override string GetDescription()
         {
-            return "F = MA";
+            return "";
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_BasicPhysics");
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {

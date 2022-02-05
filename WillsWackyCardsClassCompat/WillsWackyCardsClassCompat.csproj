@@ -2,33 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <RootNamespace>WWC</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Libs\**" />
-    <EmbeddedResource Remove="Libs\**" />
-    <None Remove="Libs\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="AssetsEmbedded\wwccards" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="AssetsEmbedded\wwccards" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\WillsWackyManagers\WillsWackyManagers\WillsWackyManagers.csproj" />
-  </ItemGroup>
-	
-  <PropertyGroup>
+	  <PropertyGroup>
     <RoundsFolder>D:\Program Files (x86)\Steam\steamapps\common\ROUNDS</RoundsFolder>
   </PropertyGroup>
 	
   <ItemGroup>
     <PackageReference Include="UnboundLib" Version="2.10.2" />
+  </ItemGroup>
+	
+  <ItemGroup>
+    <ProjectReference Include="..\Wills Wacky Cards\WillsWackyCards.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,8 +23,8 @@
     <Reference Include="BepInEx">
       <HintPath>$(RoundsFolder)\BepInEx\core\BepInEx.dll</HintPath>
     </Reference>
-    <Reference Include="MMHOOK_Assembly-CSharp">
-      <HintPath>$(RoundsFolder)\BepInEx\plugins\MMHOOK_Assembly-CSharp.dll</HintPath>
+    <Reference Include="ClassesManager">
+      <HintPath>$(RoundsFolder)\BepInEx\plugins\ClassesManager.dll</HintPath>
     </Reference>
     <Reference Include="ModdingUtils">
       <HintPath>$(RoundsFolder)\BepInEx\plugins\ModdingUtils.dll</HintPath>

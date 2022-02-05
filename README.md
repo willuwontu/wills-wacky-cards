@@ -70,11 +70,15 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Dimensional Shuffle (Uncommon)
 - Boomerang (Common)
 - Fly Swatter (Uncommon)
-- Agressive Venting (Uncommon)
+- Aggressive Venting (Uncommon)
+
+----
+## v 1.6.15
+- Buffed Aggressive Venting
 
 ----
 ## v 1.6.14
-- Added 1 New Card (Agressive Venting)
+- Added 1 New Card (Aggressive Venting)
 
 ----
 ## v 1.6.13
