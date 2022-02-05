@@ -20,7 +20,7 @@ namespace WWC.Cards
             gun.ammo = 3;
             gun.bulletDamageMultiplier = 1.5f;
             gun.gravity = 0f;
-            gun.reloadTimeAdd = 0.25f;
+            gun.attackSpeed = 0.5f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -44,7 +44,18 @@ namespace WWC.Cards
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_Boomerang");
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {
@@ -78,8 +89,8 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Reload Time",
-                    amount = "+0.25s",
+                    stat = "Attack Speed",
+                    amount = "-100%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
 

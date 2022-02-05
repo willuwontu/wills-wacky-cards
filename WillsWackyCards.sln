@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillsWackyCards", "Wills Wacky Cards\WillsWackyCards.csproj", "{F88BA7AB-1612-43C0-BA3D-2A260808641E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WillsWackyCards", "Wills Wacky Cards\WillsWackyCards.csproj", "{F88BA7AB-1612-43C0-BA3D-2A260808641E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WillsWackyManagers", "..\WillsWackyManagers\WillsWackyManagers\WillsWackyManagers.csproj", "{EB3BB52C-F0EE-4745-BA62-6A8DC0A6F8D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillsWackyCardsClassCompat", "WillsWackyCardsClassCompat\WillsWackyCardsClassCompat.csproj", "{272D9A3C-D22A-4818-93E3-31FC23111F2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{F88BA7AB-1612-43C0-BA3D-2A260808641E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F88BA7AB-1612-43C0-BA3D-2A260808641E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F88BA7AB-1612-43C0-BA3D-2A260808641E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB3BB52C-F0EE-4745-BA62-6A8DC0A6F8D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB3BB52C-F0EE-4745-BA62-6A8DC0A6F8D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB3BB52C-F0EE-4745-BA62-6A8DC0A6F8D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB3BB52C-F0EE-4745-BA62-6A8DC0A6F8D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{272D9A3C-D22A-4818-93E3-31FC23111F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{272D9A3C-D22A-4818-93E3-31FC23111F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{272D9A3C-D22A-4818-93E3-31FC23111F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{272D9A3C-D22A-4818-93E3-31FC23111F2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

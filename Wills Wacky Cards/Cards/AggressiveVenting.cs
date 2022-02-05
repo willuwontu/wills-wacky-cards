@@ -12,7 +12,7 @@ using UnityEngine;
 
 namespace WWC.Cards
 {
-    class AgressiveVenting : CustomCard
+    class AggressiveVenting : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
@@ -23,19 +23,19 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            player.gameObject.AddComponent<AgressiveVenting_Mono>();
+            player.gameObject.AddComponent<AggressiveVenting_Mono>();
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var mono = player.gameObject.GetComponent<AgressiveVenting_Mono>();
+            var mono = player.gameObject.GetComponent<AggressiveVenting_Mono>();
             UnityEngine.GameObject.Destroy(mono);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Agressive Venting";
+            return "Aggressive Venting";
         }
         protected override string GetDescription()
         {
@@ -88,7 +88,7 @@ namespace WWC.Cards
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    public class AgressiveVenting_Mono : Hooked_Mono
+    public class AggressiveVenting_Mono : Hooked_Mono
     {
         private GameObject ventingVisual = null;
         private LineEffect effectRadius = null;
@@ -96,7 +96,7 @@ namespace WWC.MonoBehaviours
         private float speed = 10f;
         private int layerMask = ~LayerMask.GetMask("BackgroundObject");
         private int checkMask = ~LayerMask.GetMask("BackgroundObject", "Player", "Projectile", "PlayerObjectCollider");
-        private float gunDamageDealtOver = 2f;
+        private float gunDamageDealtOver = 1.5f;
 
         private CharacterData data;
         private Player player;
@@ -131,7 +131,7 @@ namespace WWC.MonoBehaviours
 
         private float CalculateRadius(float attackSpeed)
         {
-            return (attackSpeed / 10) + 4.9f;
+            return (attackSpeed / 10) + 4.9f + (attackSpeed > 0.3f ? attackSpeed * 3f : 0f);
         }
 
         private void FixedUpdate()
