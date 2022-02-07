@@ -73,7 +73,7 @@ namespace WWC.Cards
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.MagicPink;
+            return CardThemeColor.CardThemeColorType.DestructiveRed;
         }
         public override string GetModName()
         {
