@@ -19,6 +19,7 @@ using UnboundLib.Networking;
 using WWC.Cards;
 using WWC.Cards.Curses;
 using WWC.Cards.Testing;
+using WWC.Interfaces;
 using WWC.Extensions;
 using WillsWackyManagers.Utils;
 using WWC.MonoBehaviours;
@@ -73,6 +74,7 @@ namespace WWC
 
             gameObject.AddComponent<HookedMonoManager>();
             remover = gameObject.AddComponent<CardRemover>();
+            gameObject.AddComponent<InterfaceGameModeHooksManager>();
 
             WWCCards = AssetUtils.LoadAssetBundleFromResources("wwccards", typeof(WillsWackyCards).Assembly);
 

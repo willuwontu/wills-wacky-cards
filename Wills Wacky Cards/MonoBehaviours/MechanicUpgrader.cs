@@ -4,6 +4,7 @@ using Sonigon.Internal;
 using UnityEngine;
 using UnityEngine.UI.ProceduralImage;
 using UnboundLib;
+using WWC.Interfaces;
 
 namespace WWC.MonoBehaviours
 {
@@ -61,17 +62,13 @@ namespace WWC.MonoBehaviours
 			this.currentUpgradeLevel = 0;
 			if (this.isUpgrading)
 			{
+                for (int i = 0; i < this.upgradeObjects.Length; i++)
+                {
+                    this.upgradeObjects[i].gameObject.SetActive(false);
+                }
+                this.rotator.gameObject.SetActive(false);
+                this.still.gameObject.SetActive(false);
 				this.isUpgrading = false;
-				//for (int i = 0; i < this.abyssalObjects.Length; i++)
-				//{
-				//	this.abyssalObjects[i].gameObject.SetActive(false);
-				//}
-				//this.data.maxHealth /= this.hpMultiplier;
-				//this.data.health /= this.hpMultiplier;
-				//this.data.stats.ConfigureMassAndSize();
-				//this.isAbyssalForm = false;
-				//this.rotator.gameObject.SetActive(false);
-				//this.still.gameObject.SetActive(false);
 			}
 			this.SoundStop();
 		}
