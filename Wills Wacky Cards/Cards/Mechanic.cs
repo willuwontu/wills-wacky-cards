@@ -52,7 +52,7 @@ namespace WWC.Cards
             upgrader.soundUpgradeChargeLoop = abyssal.soundAbyssalChargeLoop;
             upgrader.counter = 0;
             upgrader.timeToFill = 5f;
-            upgrader.timeToEmpty = 1f;
+            upgrader.timeToEmpty = 0.5f;
             upgrader.outerRing = abyssal.outerRing;
             upgrader.fill = abyssal.fill;
             upgrader.rotator = abyssal.rotator;
@@ -66,12 +66,11 @@ namespace WWC.Cards
 
                 foreach (var CO in COs)
                 {
-                    if (CO.transform.gameObject != mechObj.transform.Find("Canvas").gameObject)
+                    if (!(CO.transform.gameObject == mechObj.transform.Find("Canvas").gameObject) && !(upgrader.upgradeObjects.Contains(CO)))
                     {
                         UnityEngine.GameObject.Destroy(CO);
                     }
                 }
-
                 upgrader.outerRing.color = new Color32(255, 167, 0, 255);
                 upgrader.fill.color = new Color32(255, 196, 0, 10);
                 upgrader.rotator.gameObject.GetComponentInChildren<ProceduralImage>().color = upgrader.outerRing.color;
