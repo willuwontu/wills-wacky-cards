@@ -23,6 +23,7 @@ namespace WWCC
         public const string ModInitials = "WWCC";
 
         public const string CurseEaterClassName = "Curse Eater";
+        public const string MechanicClassName = "Mechanic";
 
         public static WillsWackyCardsClassCompat instance;
 
@@ -37,7 +38,8 @@ namespace WWCC
 
             ClassesManager.ClassesManager.Instance.AddClassProgressionCategories(new List<string>
             {
-                CurseEaterClassName
+                CurseEaterClassName,
+                MechanicClassName
             });
 
             var harmony = new Harmony(ModId);

@@ -143,6 +143,7 @@ namespace WWC
             CustomCard.BuildCard<Boomerang>();
             CustomCard.BuildCard<FlySwatter>();
             CustomCard.BuildCard<AggressiveVenting>();
+            CustomCard.BuildCard<Mechanic>();
 
             if (debug)
             { 

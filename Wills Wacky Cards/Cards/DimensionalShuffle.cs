@@ -208,14 +208,19 @@ namespace WWC.MonoBehaviours
                 //person.GetComponentInParent<PlayerCollision>().IgnoreWallForFrames(2);
                 //person.transform.position = positions[index];
 
-                StartCoroutine(Move(person, positions[index]));
+                if (person.data.dead)
+                {
+                    continue;
+                }
+
+                WillsWackyCards.instance.StartCoroutine(Move(person, positions[index]));
             }
 
-            this.ExecuteAfterSeconds(4f,
+            WillsWackyCards.instance.ExecuteAfterSeconds(4f,
                 () =>
                 {
                     PlayerSpotlight.FadeOut();
-                    StartCoroutine((IEnumerator)typeof(ModdingUtils.AIMinion.AIMinionHandler).GetMethod("StartStalemateHandler", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { UnboundLib.GameModes.GameModeManager.CurrentHandler }));
+                    WillsWackyCards.instance.StartCoroutine((IEnumerator)typeof(ModdingUtils.AIMinion.AIMinionHandler).GetMethod("StartStalemateHandler", BindingFlags.Static | BindingFlags.NonPublic).Invoke(null, new object[] { UnboundLib.GameModes.GameModeManager.CurrentHandler }));
 
                     foreach (var person in PlayerManager.instance.players.Where(p => p.data.view.IsMine && !p.data.dead))
                     {
