@@ -2,54 +2,70 @@
 using UnityEngine.UI;
 using UnboundLib;
 using WWC.Extensions;
+using WWC.Interfaces;
 using System;
+using ModdingUtils.Extensions;
 
 namespace WWC.MonoBehaviours
 {
-    public class Gatling_Mono : MonoBehaviour
+    public class Gatling_Mono : CounterReversibleEffect, IPointStartHookHandler, IGameStartHookHandler, IRoundStartHookHandler, IBattleStartHookHandler
     {
+        private int trackedStacks = 0;
+
         private int stacks = 0;
+
         private int maxStacks = 20;
+
         public float rampUp = 1f;
+
         private float timeSinceShot = 1f;
-        private bool coroutineStarted;
-        private Gun gun;
-        private GunAmmo gunAmmo;
-        private CharacterData data;
-        private WeaponHandler weaponHandler;
-        private CharacterStatModifiers stats;
-        private Player player;
 
-        private void Start()
+
+        public override void OnStart()
         {
-            data = GetComponentInParent<CharacterData>();
+            // modifiers of CounterReversibleEffects should start off as noop
+            base.gunStatModifier = new GunStatModifier();
+            base.gunAmmoStatModifier = new GunAmmoStatModifier();
+            base.characterStatModifiersModifier = new CharacterStatModifiersModifier();
+            base.gravityModifier = new GravityModifier();
+            base.blockModifier = new BlockModifier();
+            base.characterDataModifier = new CharacterDataModifier();
+
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+            gun.ShootPojectileAction += OnShootProjectileAction;
+            stats.OutOfAmmpAction -= OnReloadAction;
         }
 
-        private void Update()
+        public override CounterStatus UpdateCounter()
         {
-            if (!player)
+            if (trackedStacks != stacks)
             {
-                if (!(data is null))
-                {
-                    player = data.player;
-                    stats = data.stats;
-                    weaponHandler = data.weaponHandler;
-                    gun = weaponHandler.gun;
-                    gunAmmo = gun.GetComponentInChildren<GunAmmo>();
-                    gun.ShootPojectileAction += OnShootProjectileAction;
-                    stats.OutOfAmmpAction += OnReloadAction;
-                }
+                trackedStacks = stacks;
+                return CounterStatus.Apply;
             }
+            return CounterStatus.Wait;
+        }
 
-            if (!(player is null) && player.gameObject.activeInHierarchy && !coroutineStarted)
+        public override void UpdateEffects()
+        {
+            gunStatModifier.attackSpeed_mult = 1;
+            for (int i = 0; i < trackedStacks; i++)
             {
-                coroutineStarted = true;
-                InvokeRepeating(nameof(SpinDown), 0, TimeHandler.deltaTime);
-                InvokeRepeating(nameof(CheckIfValid), 0, 1f);
+                gunStatModifier.attackSpeed_mult *= rampUp;
             }
         }
 
-        private void SpinDown()
+        public override void Reset()
+        {
+
+        }
+
+        public override void OnApply()
+        {
+            
+        }
+
+        public override void OnUpdate()
         {
             if (timeSinceShot > 0f)
             {
@@ -59,42 +75,33 @@ namespace WWC.MonoBehaviours
             {
                 if (stacks > 0)
                 {
-                    gun.attackSpeed /= rampUp;
                     stacks -= 1;
                     timeSinceShot += 0.1f;
-                    //UnityEngine.Debug.Log(string.Format("Gatling stack Lost, {0} stacks remaining.", stacks));
-                    //UnityEngine.Debug.Log(string.Format("Attack Speed is now {0}", gun.attackSpeedMultiplier));
                 }
-                
+
             }
+
+            UpdateStats();
         }
 
         private void OnReloadAction(int maxAmmo)
         {
             var ratio = ((gunAmmo.reloadTime + gunAmmo.reloadTimeAdd) * gunAmmo.reloadTimeMultiplier)/1.5;
-            //UnityEngine.Debug.Log($"A reload time of {(gunAmmo.reloadTime + gunAmmo.reloadTimeAdd) * gunAmmo.reloadTimeMultiplier} and {ratio * 100}% reload to stack time ratio.");
             var loss = Mathf.Clamp((int)(ratio * stacks), 0, stacks);
-            //UnityEngine.Debug.Log(string.Format("{0} gatling stacks lost while reloading", loss));
-            while (loss > 0)
-            {
-                gun.attackSpeed /= rampUp;
-                stacks -= 1;
-                loss -= 1;
-                //UnityEngine.Debug.Log(string.Format("Attack Speed is now {0}", gun.attackSpeed));
-            }
+            stacks -= loss;
+            UpdateStats();
         }
 
         private void OnShootProjectileAction(GameObject obj)
         {
             if (stacks < maxStacks)
             {
-                gun.attackSpeed *= rampUp;
                 stacks += 1;
                 timeSinceShot = 1f;
-                //UnityEngine.Debug.Log(string.Format("Gatling stack added, {0} stacks total.", stacks));
-                //UnityEngine.Debug.Log(string.Format("Attack Speed is now {0}", gun.attackSpeed)); 
+                UpdateStats();
             }
         }
+
         private void CheckIfValid()
         {
             var haveGatling = false;
@@ -109,16 +116,36 @@ namespace WWC.MonoBehaviours
 
             if (!haveGatling)
             {
-                stats.OutOfAmmpAction -= OnReloadAction;
-                gun.ShootPojectileAction -= OnShootProjectileAction;
-                Destroy(this);
+                UnityEngine.GameObject.Destroy(this);
             }
         }
 
-        private void OnDestroy()
+        public void OnPointStart()
+        {
+            stacks = 0;
+            UpdateStats();
+            CheckIfValid();
+        }
+
+        public void OnRoundStart()
+        {
+            CheckIfValid();
+        }
+        public void OnBattleStart()
+        {
+            CheckIfValid();
+        }
+
+        public void OnGameStart()
+        {
+            UnityEngine.Object.Destroy(this);
+        }
+
+        public override void OnOnDestroy()
         {
             stats.OutOfAmmpAction -= OnReloadAction;
             gun.ShootPojectileAction -= OnShootProjectileAction;
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
 
         public void Destroy()

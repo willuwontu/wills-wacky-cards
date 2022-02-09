@@ -43,7 +43,18 @@ namespace WWC.Cards
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_EnduranceTraining");
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {

@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
@@ -9,37 +12,35 @@ using UnityEngine;
 
 namespace WWC.Cards
 {
-    class AdrenalineRush : CustomCard
+    class ImprovedShieldCapacitors : CustomCard
     {
-        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
+        public static CardCategory shieldDuration = CustomCardCategories.instance.CardCategory("Mechanic-Shield Duration");
+        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
-            var cardMono = gameObject.GetOrAddComponent<PointCard_Mono>();
-            cardMono.multiplierPerPoint = -0.2f;
-            cardMono.startValue = 1.30f;
+            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, shieldDuration };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var training = player.gameObject.AddComponent<AdrenalineRush_Mono>();
-            training.multiplierPerPoint = -0.2f;
-            training.startValue = 1.30f;
+            var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
+            upgrader.blockModifier.cdAdd_add += 0.5f;
+            upgrader.extraBlockTime += 0.3f;
+            upgrader.upgradeCooldown *= 0.85f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var training = player.gameObject.GetComponent<AdrenalineRush_Mono>();
-            Destroy(training);
+            //Drives me crazy
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Adrenaline Rush";
+            return "Improved Shield Capacitors";
         }
         protected override string GetDescription()
         {
-            return "Decreases by 20% with each match point.";
+            return "By upgrading our capacitors, we can improve our shield at the cost of charge time.";
         }
         protected override GameObject GetCardArt()
         {
@@ -47,7 +48,7 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_AdrenalineRush");
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_ImprovedShieldCapacitors");
             }
             catch
             {
@@ -58,7 +59,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Common;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -67,43 +68,29 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "HP",
-                    amount = "+0%",
+                    stat = "Block per upgrade",
+                    amount = "+0.3s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Movespeed",
-                    amount = "+0%",
+                    stat = "Upgrade Cooldown",
+                    amount = "-15%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Damage",
-                    amount = "+0%",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Reload Time",
-                    amount = "+0%",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Block Cooldown",
-                    amount = "+0%",
+                    stat = "Block CD per Upgrade",
+                    amount = "+0.5s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.DestructiveRed;
+            return CardThemeColor.CardThemeColorType.TechWhite;
         }
         public override string GetModName()
         {

@@ -20,7 +20,7 @@ namespace WWC.Cards
             gun.spread = 0.35f;
             gun.reloadTimeAdd = 0.5f;
             gun.attackSpeed = 1.25f;
-            gun.bulletDamageMultiplier = 0.8f;
+            gun.bulletDamageMultiplier = 0.75f;
 
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType"), CustomCardCategories.instance.CardCategory("WWC Gun Type") };
@@ -48,7 +48,18 @@ namespace WWC.Cards
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_Gatling");
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {
@@ -83,7 +94,7 @@ namespace WWC.Cards
                 {
                     positive = false,
                     stat = "Damage",
-                    amount = "-20%",
+                    amount = "-25%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

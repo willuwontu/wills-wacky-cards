@@ -34,10 +34,13 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.allowMultiple = false;
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Class") };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            MechanicAddClassStuff(characterStats);
+
             var abyssalCard = CardChoice.instance.cards.First(c => c.name.Equals("AbyssalCountdown"));
             var statMods = abyssalCard.gameObject.GetComponentInChildren<CharacterStatModifiers>();
             var abyssalObj = statMods.AddObjectToPlayer;
@@ -51,12 +54,16 @@ namespace WWC.Cards
             var upgrader = mechObj.AddComponent<MechanicUpgrader>();
             upgrader.soundUpgradeChargeLoop = abyssal.soundAbyssalChargeLoop;
             upgrader.counter = 0;
-            upgrader.timeToFill = 5f;
+            upgrader.timeToFill = 7f;
             upgrader.timeToEmpty = 0.5f;
+            upgrader.upgradeCooldown = 10f;
             upgrader.outerRing = abyssal.outerRing;
             upgrader.fill = abyssal.fill;
             upgrader.rotator = abyssal.rotator;
             upgrader.still = abyssal.still;
+            upgrader.gunStatModifier.damage_mult = 1.2f;
+            upgrader.characterDataModifier.maxHealth_mult = 1.2f;
+            upgrader.characterDataModifier.health_mult = 1.2f;
 
             WillsWackyCards.instance.ExecuteAfterFrames(5, () => 
             {
@@ -82,6 +89,7 @@ namespace WWC.Cards
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            MechanicRemoveClassStuff(characterStats);
             var mechObj = player.gameObject.transform.Find("A_MechanicUpgrader");
             UnityEngine.GameObject.Destroy(mechObj);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
@@ -93,11 +101,22 @@ namespace WWC.Cards
         }
         protected override string GetDescription()
         {
-            return "While standing still, upgrade yourself.";
+            return "Scavenging parts from the area around them, Mechanics upgrade their abilities during battle.";
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_Mechanic");
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {
@@ -110,8 +129,29 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Effect",
-                    amount = "No",
+                    stat = "DMG per Upgrade",
+                    amount = "+20%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "HP per Upgrade",
+                    amount = "+20%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Upgrade Time",
+                    amount = "7s",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Upgrade Cooldown",
+                    amount = "10s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
