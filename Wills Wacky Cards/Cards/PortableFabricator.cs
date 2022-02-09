@@ -46,7 +46,24 @@ namespace WWC.Cards
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_PortableFabricator");
+                var cards = art.transform.Find("Foreground/Cards");
+
+                foreach (Transform child in cards)
+                {
+                    child.Find("Card Holder").gameObject.AddComponent<GetRandomCardVisualsOnEnable>();
+                }
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {
