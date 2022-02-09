@@ -145,7 +145,13 @@ namespace WWC
             CustomCard.BuildCard<Boomerang>();
             CustomCard.BuildCard<FlySwatter>();
             CustomCard.BuildCard<AggressiveVenting>();
-            CustomCard.BuildCard<Mechanic>();
+
+            { //Mechanic Class
+                CustomCard.BuildCard<Mechanic>();
+                CustomCard.BuildCard<ImprovedShieldCapacitors>();
+                CustomCard.BuildCard<PortableFabricator>();
+                CustomCard.BuildCard<CloningTanks>();
+            }
 
             if (debug)
             { 
@@ -415,6 +421,10 @@ namespace WWC
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(CurseEater.CurseEaterClass))
                 {
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(CurseEater.CurseEaterClass);
+                }
+                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(Mechanic.MechanicClass))
+                {
+                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(Mechanic.MechanicClass);
                 }
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(TestCardCategory))
                 {

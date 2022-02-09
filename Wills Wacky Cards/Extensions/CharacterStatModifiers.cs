@@ -14,6 +14,9 @@ namespace WWC.Extensions
         public float DamageReduction;
         public bool isBanished;
         public float willpower;
+        public float extraBlockTime;
+        public bool useNewRespawnTime;
+        public float newRespawnTime;
 
         public CharacterStatModifiersAdditionalData()
         {
@@ -23,6 +26,9 @@ namespace WWC.Extensions
             DamageReduction = 0f;
             isBanished = false;
             willpower = 0f;
+            extraBlockTime = 0f;
+            useNewRespawnTime = false;
+            newRespawnTime = 0f;
         }
     }
     public static class CharacterStatModifiersExtension
@@ -55,6 +61,9 @@ namespace WWC.Extensions
             __instance.GetAdditionalData().DamageReduction = 0f;
             __instance.GetAdditionalData().isBanished = false;
             __instance.GetAdditionalData().willpower = 0f;
+            __instance.GetAdditionalData().extraBlockTime = 0f;
+            __instance.GetAdditionalData().useNewRespawnTime = false;
+            __instance.GetAdditionalData().newRespawnTime = 0f;
         }
     }
 }

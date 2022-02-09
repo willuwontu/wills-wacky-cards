@@ -5,26 +5,33 @@ using UnityEngine;
 using UnityEngine.UI.ProceduralImage;
 using UnboundLib;
 using WWC.Interfaces;
+using WWC.Extensions;
+using ModdingUtils.Extensions;
 
 namespace WWC.MonoBehaviours
 {
-	public class MechanicUpgrader : MonoBehaviour
+	public class MechanicUpgrader : MonoBehaviour, IPointEndHookHandler, IPointStartHookHandler
 	{
 		public void Start()
 		{
 			this.soundCounterLast = this.counter;
 			this.data = base.GetComponentInParent<CharacterData>();
 			HealthHandler healthHandler = this.data.healthHandler;
-			healthHandler.reviveAction = (Action)Delegate.Combine(healthHandler.reviveAction, new Action(this.ResetStuff));
-			base.GetComponentInParent<ChildRPC>().childRPCs.Add("MechanicUpgrade", new Action(this.RPCA_Activate));
+			base.GetComponentInParent<ChildRPC>().childRPCs.Add("MechanicUpgrade", new Action(this.RPCA_Upgrade));
+			InterfaceGameModeHooksManager.instance.RegisterHooks(this);
 		}
 
 		public void OnDestroy()
 		{
 			HealthHandler healthHandler = this.data.healthHandler;
-			healthHandler.reviveAction = (Action)Delegate.Combine(healthHandler.reviveAction, new Action(this.ResetStuff));
 			base.GetComponentInParent<ChildRPC>().childRPCs.Remove("MechanicUpgrade");
 			this.SoundStop();
+			InterfaceGameModeHooksManager.instance.RemoveHooks(this);
+
+			if (cloneActionAttached)
+            {
+				this.data.healthHandler.reviveAction -= OnCloneAction;
+            }
 		}
 
 		public void OnDisable()
@@ -53,6 +60,11 @@ namespace WWC.MonoBehaviours
 			}
 		}
 
+		public void OnPointEnd()
+        {
+			this.ResetStuff();
+        }
+
 		private void ResetStuff()
 		{
 			this.SoundStop();
@@ -73,10 +85,16 @@ namespace WWC.MonoBehaviours
 			this.SoundStop();
 		}
 
-		private void RPCA_Activate()
+		private void RPCA_Upgrade()
 		{
-			this.upgradeLevel += 1;
-			this.remainingDuration = this.duration;
+			var upgrade = this.data.player.gameObject.AddComponent<MechanicUpgrade>();
+			this.remainingDuration = this.upgradeCooldown;
+		}
+
+		public void OnPointStart()
+        {
+			this.remainingDuration = this.upgradeCooldown;
+			this.isUpgrading = true;
 		}
 
 		private void Update()
@@ -119,7 +137,7 @@ namespace WWC.MonoBehaviours
 					//this.isAbyssalForm = true;
 				}
 				this.remainingDuration -= TimeHandler.deltaTime;
-				this.counter = this.remainingDuration / this.duration;
+				this.counter = this.remainingDuration / this.upgradeCooldown;
 				return;
 			}
 			if (this.isUpgrading)
@@ -155,7 +173,7 @@ namespace WWC.MonoBehaviours
                 this.counter = Mathf.Clamp(this.counter, -0.1f / this.timeToFill, 1f);
                 if (this.counter >= 1f && this.data.view.IsMine)
                 {
-                    this.remainingDuration = this.duration;
+                    this.remainingDuration = this.upgradeCooldown;
                     base.GetComponentInParent<ChildRPC>().CallFunction("MechanicUpgrade");
                 }
             }
@@ -182,6 +200,19 @@ namespace WWC.MonoBehaviours
 			}
 		}
 
+		public void AttachCloneAction()
+        {
+			this.data.healthHandler.reviveAction += OnCloneAction;
+			cloneActionAttached = true;
+        }
+
+		private void OnCloneAction()
+        {
+			this.player.gameObject.AddComponent<ClonedWeakness>();
+			this.remainingDuration = upgradeCooldown;
+			this.isUpgrading = true;
+		}
+
 		public SoundEvent soundUpgradeChargeLoop;
 
 		private bool soundChargeIsPlaying;
@@ -197,7 +228,7 @@ namespace WWC.MonoBehaviours
 
 		public float timeToEmpty = 1f;
 
-		public float duration = 1;
+		public float upgradeCooldown = 1;
 
 		public float hpMultiplier = 2f;
 
@@ -215,12 +246,94 @@ namespace WWC.MonoBehaviours
 
 		private CharacterData data;
 
-		public GameObject[] upgradeObjects;
+		public Player player
+        {
+			get
+            {
+				return data.player;
+            }
+        }
+        public GameObject[] upgradeObjects = new GameObject[] { };
 
 		private float remainingDuration;
 
 		private bool isUpgrading;
 
 		private float startCounter;
+
+		private bool cloneActionAttached = false;
+
+		public float extraBlockTime = 0f;
+		public GunStatModifier gunStatModifier = new GunStatModifier();
+		public GunAmmoStatModifier gunAmmoStatModifier = new GunAmmoStatModifier();
+		public CharacterDataModifier characterDataModifier = new CharacterDataModifier();
+		public CharacterStatModifiersModifier characterStatModifiersModifier = new CharacterStatModifiersModifier();
+		public GravityModifier gravityModifier = new GravityModifier();
+		public BlockModifier blockModifier = new BlockModifier();
+	}
+
+	public class MechanicUpgrade : ReversibleEffect, IPointEndHookHandler
+    {
+		private float extraBlockTime = 0f;
+
+        public override void OnStart()
+        {
+			InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+			applyImmediately = true;
+			this.SetLivesToEffect(int.MaxValue);
+
+			var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
+			this.gunStatModifier = upgrader.gunStatModifier.Copy();
+			this.characterDataModifier = upgrader.characterDataModifier.Copy();
+			this.blockModifier = upgrader.blockModifier.Copy();
+			this.characterStatModifiersModifier = upgrader.characterStatModifiersModifier.Copy();
+			this.gunAmmoStatModifier = upgrader.gunAmmoStatModifier.Copy();
+			this.gravityModifier = upgrader.gravityModifier.Copy();
+			extraBlockTime = upgrader.extraBlockTime;
+			WWC.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).extraBlockTime += extraBlockTime;
+			block.UpdateParticleDuration();
+		}
+
+		public void OnPointEnd()
+        {
+			UnityEngine.GameObject.Destroy(this);
+        }
+
+        public override void OnOnDestroy()
+        {
+			InterfaceGameModeHooksManager.instance.RemoveHooks(this);
+			WWC.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).extraBlockTime -= extraBlockTime;
+		}
+    }
+
+	public class ClonedWeakness : ReversibleEffect, IPointStartHookHandler, IGameStartHookHandler, IBattleStartHookHandler
+    {
+		public override void OnStart()
+		{
+			InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+			applyImmediately = true;
+			this.SetLivesToEffect(int.MaxValue);
+
+			characterDataModifier.health_mult = 0.7f;
+			characterDataModifier.maxHealth_mult = 0.7f;
+		}
+
+		public void OnPointStart()
+        {
+			UnityEngine.GameObject.Destroy(this);
+        }
+		public void OnGameStart()
+		{
+			UnityEngine.GameObject.Destroy(this);
+		}
+		public void OnBattleStart()
+		{
+			UnityEngine.GameObject.Destroy(this);
+		}
+
+		public override void OnOnDestroy()
+		{
+			InterfaceGameModeHooksManager.instance.RemoveHooks(this);
+		}
 	}
 }
