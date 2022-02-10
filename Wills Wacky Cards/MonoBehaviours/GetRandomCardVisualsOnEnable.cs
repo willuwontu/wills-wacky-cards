@@ -35,10 +35,25 @@ namespace WWC.MonoBehaviours
 
             var card = GetRandomCardWithArt();
 
-            cardObj = Instantiate<GameObject>(card.gameObject, this.gameObject.transform);
-            cardObj.GetComponentInChildren<CardVisuals>().firstValueToSet = true;
+            RectTransform rect;
 
-            var rect = cardObj.GetOrAddComponent<RectTransform>();
+            try
+            {
+                cardObj = Instantiate<GameObject>(card.gameObject.transform.GetChild(0).GetChild(0).gameObject, this.gameObject.transform);
+            }
+            catch (Exception)
+            {
+                cardObj = Instantiate<GameObject>(card.gameObject, this.gameObject.transform);
+                var temp = cardObj;
+                cardObj = cardObj.GetComponentInChildren<Canvas>().gameObject;
+                cardObj.transform.SetParent(this.gameObject.transform);
+
+                UnityEngine.GameObject.Destroy(temp);
+            }
+            //cardObj.GetComponentInChildren<CardVisuals>().firstValueToSet = true;
+            cardObj.SetActive(true);
+
+            rect = cardObj.GetOrAddComponent<RectTransform>();
             rect.localScale = Vector3.one;
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
@@ -46,17 +61,18 @@ namespace WWC.MonoBehaviours
             rect.offsetMax = Vector2.zero;
             rect.pivot = new Vector2(0.5f, 0.5f);
 
-            var temp = cardObj.GetComponentInChildren<Canvas>().gameObject;
-            rect = temp.GetOrAddComponent<RectTransform>();
-            rect.localScale = Vector3.one;
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-            rect.pivot = new Vector2(0.5f, 0.5f);
+            var canvasGroups = cardObj.GetComponentsInChildren<CanvasGroup>();
+            foreach (var canvasGroup in canvasGroups)
+            {
+                canvasGroup.alpha = 1;
+            }
 
-            temp = temp.transform.parent.gameObject;
-            rect = temp.GetOrAddComponent<RectTransform>();
+            UnityEngine.GameObject.Destroy(cardObj.transform.Find("Back").gameObject);
+
+            var artHolder = cardObj.transform.Find("Front/Background/Art").gameObject;
+
+            var art = Instantiate<GameObject>(card.cardArt, artHolder.transform);
+            rect = art.GetOrAddComponent<RectTransform>();
             rect.localScale = Vector3.one;
             rect.anchorMin = Vector2.zero;
             rect.anchorMax = Vector2.one;
