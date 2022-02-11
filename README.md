@@ -71,6 +71,29 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Boomerang (Common)
 - Fly Swatter (Uncommon)
 - Aggressive Venting (Uncommon)
+- Mechanic (Common)
+  - Chemical Ammunition (Uncommon)
+  - Cloning Tanks (Rare)
+  - Cutting Laser (Common)
+  - Grey Goo (Common)
+  - Gyroscopic Stabilizers (Rare)
+  - Impact Dissipators (Uncommon)
+  - Improved Cycling (Uncommon)
+  - Improved Shield Capacitors (Common)
+  - Integrated Targeting Sensors (Uncommon)
+  - Jump Boots (Common)
+  - Omnitool (Uncommon)
+  - Particle Wave Sequencer (Uncommon)
+  - Personal Hammerspace (Common)
+  - Portable Fabricators (Common)
+
+----
+## v 1.7.0
+- Added 15 new Cards in the form of the Mechanic Class
+  - The mechanic class is oriented around finding the time to upgrade itself during battle. Don't let it sit in one place for too long or you'll be sorry (or happy if you're the mechanic).
+- Nerfed Ammo Cache Slightly
+- Some card art has been added, more card art to come
+- Patches to code logic and bugs
 
 ----
 ## v 1.6.15

@@ -55,7 +55,7 @@ namespace WWC.Cards
         }
         protected override string GetDescription()
         {
-            return $"A little ClF3 never hurt anyone, right?";
+            return $"A little ClF3 never hurt anyone, right? You may want to aim away from yourself.";
         }
         protected override GameObject GetCardArt()
         {
@@ -150,7 +150,7 @@ namespace WWC.MonoBehaviours
                 componentsInChildren3[i].color = new Color(0.2f, 1f, 0.2f, 1f);
             }
 
-            var cols = Physics2D.OverlapCircleAll(position, 3f).Where(col => (col.GetComponent<ProjectileCollision>() || col.GetComponent<Rigidbody2D>() || col.GetComponent<Player>())).ToArray();
+            var cols = Physics2D.OverlapCircleAll(position, 2.5f).Where(col => (col.GetComponent<ProjectileCollision>() || col.GetComponent<Rigidbody2D>() || col.GetComponent<Player>())).ToArray();
 
             foreach (var col in cols)
             {
@@ -158,8 +158,7 @@ namespace WWC.MonoBehaviours
 
                 RaycastHit2D hit = Physics2D.LinecastAll(position, (Vector2) col.transform.position).Where(hitCol => hitCol.collider == col).First();
 
-                acid.damage = 55f * gun.damage * gun.bulletDamageMultiplier * (1f - (hit.distance / 3f));
-                UnityEngine.Debug.Log($"{col.gameObject.name} takes {acid.damage}.");
+                acid.damage = 55f * gun.damage * gun.bulletDamageMultiplier * (1f - (hit.distance / 2.5f));
             }
         }
 
@@ -280,7 +279,7 @@ namespace WWC.MonoBehaviours
             {
                 rb.gameObject.transform.localScale = new Vector3(rb.gameObject.transform.localScale.x * 0.9985f, rb.gameObject.transform.localScale.y * 0.9985f, rb.gameObject.transform.localScale.z);
 
-                if (((Vector2)rb.gameObject.transform.localScale).x < 0.15f || ((Vector2)rb.gameObject.transform.localScale).y < 0.15f)
+                if (((Vector2)rb.gameObject.transform.localScale).x < 0.05f || ((Vector2)rb.gameObject.transform.localScale).y < 0.05f)
                 {
                     Destroy(rb.gameObject);
                 }

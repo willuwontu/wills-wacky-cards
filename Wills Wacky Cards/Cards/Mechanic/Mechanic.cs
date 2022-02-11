@@ -35,7 +35,7 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Class") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Class"), CustomCardCategories.instance.CardCategory("NoRemove") };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
