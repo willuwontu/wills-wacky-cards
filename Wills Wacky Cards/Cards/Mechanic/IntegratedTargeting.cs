@@ -7,67 +7,62 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
+using WWC.Interfaces;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WWC.Cards
 {
-    class PortableFabricator : CustomCard
+    class IntegratedTargeting : CustomCard
     {
-        public static CardCategory upgradeSpeed = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Speed");
+        public static CardCategory upgradeTargeting = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Targeting");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeSpeed };
+            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeTargeting };
+
+            gun.gravity = 0f;
+            gun.spread = 0f;
+            cardInfo.allowMultiple = false;
+
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
-            upgrader.timeToFill *= 0.75f;
-            upgrader.characterDataModifier.health_mult += 0.5f;
-            upgrader.characterDataModifier.health_mult += 0.5f;
-            upgrader.characterStatModifiersModifier.sizeMultiplier_mult += 0.1f;
-            upgrader.upgradeCooldown *= 1.1f;
+
+            upgrader.gunStatModifier.percentageDamage_add += 0.05f;
+            upgrader.upgradeAction += new Action<int>(level => 
+            {
+                if (level == 5)
+                {
+                    player.gameObject.AddComponent<TargetingSensors_Mono>();
+                }
+            });
+            upgrader.upgradeTime += 2f;
+
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
+
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            //Drives me crazy
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Portable Fabricator";
+            return "Integrated Targeting Sensors";
         }
         protected override string GetDescription()
         {
-            return "When you're surrounded by junk, it makes it easy to build things.";
+            return $"<color=#FF0000>ANALYZING WEAKPOINTS ...</color>";
         }
         protected override GameObject GetCardArt()
         {
-            GameObject art;
-
-            try
-            {
-                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_PortableFabricator");
-                var cards = art.transform.Find("Foreground/Cards");
-
-                foreach (Transform child in cards)
-                {
-                    child.Find("Card Holder").gameObject.AddComponent<GetRandomCardVisualsOnEnable>();
-                }
-            }
-            catch
-            {
-                art = null;
-            }
-
-            return art;
+            return null;
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return CardInfo.Rarity.Uncommon;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -76,29 +71,36 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "HP per Upgrade",
-                    amount = "+50%",
+                    stat = "%Max HP damage per upgrade",
+                    amount = "+5%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
+                    stat = "At 5 Upgrades",
+                    amount = "Unblockable Bullets",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Shots",
+                    amount = "Focused",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Bullet Gravity",
+                    amount = "No",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
                     stat = "Upgrade Time",
-                    amount = "-25%",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Upgrade Cooldown",
-                    amount = "+10%",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Size per Upgrade",
-                    amount = "+10%",
+                    amount = "+2s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
@@ -114,6 +116,32 @@ namespace WWC.Cards
         public override bool GetEnabled()
         {
             return true;
+        }
+    }
+}
+
+namespace WWC.MonoBehaviours
+{
+    public class TargetingSensors_Mono : MonoBehaviour, IPointStartHookHandler
+    {
+        private void Start()
+        {
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+            this.gameObject.GetComponent<CharacterData>().weaponHandler.gun.unblockable = true;
+        }
+        private void OnDestroy()
+        {
+            var cards = this.gameObject.GetComponent<CharacterData>().currentCards.ToArray();
+
+            if (!(cards.Where(card => card.gameObject.GetComponent<Gun>().unblockable).Count() > 0))
+            {
+                this.gameObject.GetComponent<CharacterData>().weaponHandler.gun.unblockable = false;
+            }
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
+        }
+        public void OnPointStart()
+        {
+            UnityEngine.GameObject.Destroy(this);
         }
     }
 }

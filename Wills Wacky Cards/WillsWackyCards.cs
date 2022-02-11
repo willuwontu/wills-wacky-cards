@@ -151,6 +151,17 @@ namespace WWC
                 CustomCard.BuildCard<ImprovedShieldCapacitors>();
                 CustomCard.BuildCard<PortableFabricator>();
                 CustomCard.BuildCard<CloningTanks>();
+                CustomCard.BuildCard<ChemicalAmmunition>();
+                CustomCard.BuildCard<CuttingLaser>();
+                CustomCard.BuildCard<GreyGoo>();
+                CustomCard.BuildCard<GyroscopicStabilizers>();
+                CustomCard.BuildCard<ImpactDissipators>();
+                CustomCard.BuildCard<ImprovedCycling>();
+                CustomCard.BuildCard<IntegratedTargeting>();
+                CustomCard.BuildCard<JumpBoots>();
+                CustomCard.BuildCard<Omnitool>();
+                CustomCard.BuildCard<ParticleWaveSequencer>();
+                CustomCard.BuildCard<PersonalHammerspace>();
             }
 
             if (debug)

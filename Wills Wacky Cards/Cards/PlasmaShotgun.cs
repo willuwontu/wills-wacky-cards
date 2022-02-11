@@ -45,7 +45,6 @@ namespace WWC.Cards
                 var chargeBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
                 chargeBar.name = "ChargeBar";
                 chargeBar.Translate(new Vector3(.95f, -1.1f, 0));
-                chargeBar.localScale.Set(0.5f, 1f, 1f);
                 chargeBar.localScale = new Vector3(0.6f, 1.4f, 1f);
                 chargeBar.Rotate(0f, 0f, 90f);
                 var plasmaShotgun = player.gameObject.GetOrAddComponent<PlasmaWeapon_Mono>();

@@ -251,12 +251,12 @@ namespace WWC.Patches
             if (viewID != -1)
             {
                 PhotonView photonView = PhotonNetwork.GetPhotonView(viewID);
-                hitInfo.collider = photonView.GetComponentInChildren<Collider2D>();
+                hitInfo.collider = photonView.GetComponentInChildren<UnityEngine.Collider2D>();
                 hitInfo.transform = photonView.transform;
             }
             else if (colliderID != -1)
             {
-                hitInfo.collider = MapManager.instance.currentMap.Map.GetComponentsInChildren<Collider2D>()[colliderID];
+                hitInfo.collider = MapManager.instance.currentMap.Map.GetComponentsInChildren<UnityEngine.Collider2D>()[colliderID];
                 hitInfo.transform = hitInfo.collider.transform;
             }
             HealthHandler healthHandler = null;
