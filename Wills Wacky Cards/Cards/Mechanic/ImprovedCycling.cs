@@ -13,31 +13,39 @@ using UnityEngine;
 
 namespace WWC.Cards
 {
-    class Template : CustomCard
+    class ImprovedCycling : CustomCard
     {
+        public static CardCategory upgradeFireRate = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Fire Rate");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
+            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeFireRate };
+            cardInfo.allowMultiple = false;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
+            var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
+
+            upgrader.gunStatModifier.bursts_add += 1;
+            upgrader.gunStatModifier.attackSpeed_mult *= 0.7f;
+            upgrader.upgradeTime += 1f;
+            upgrader.upgradeCooldown += 1f;
+
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
+
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            //Drives me crazy
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Card Name";
+            return "Improved Cycling";
         }
         protected override string GetDescription()
         {
-            return "Card Description";
+            return $"More Attacking = better.";
         }
         protected override GameObject GetCardArt()
         {
@@ -54,15 +62,36 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Effect",
-                    amount = "No",
+                    stat = "Burst per Upgrade",
+                    amount = "+1",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "ATK Speed per Upgrade",
+                    amount = "+30%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Upgrade Time",
+                    amount = "+1s",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Upgrade Cooldown",
+                    amount = "+1s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.EvilPurple;
+            return CardThemeColor.CardThemeColorType.TechWhite;
         }
         public override string GetModName()
         {

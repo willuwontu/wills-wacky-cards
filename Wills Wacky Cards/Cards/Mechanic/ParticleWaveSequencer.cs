@@ -7,22 +7,26 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
-using WWC.Interfaces;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WWC.Cards
 {
-    class Template : CustomCard
+    class ParticleWaveSequencer : CustomCard
     {
+        public static CardCategory upgradeBlock = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Block");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
+            cardInfo.allowMultiple = false;
+            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeBlock };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
+            var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
+            upgrader.blockModifier.additionalBlocks_add += 1;
+            upgrader.blockModifier.cdMultiplier_mult /= 1.1f;
+            upgrader.upgradeTime += 2.5f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -33,15 +37,32 @@ namespace WWC.Cards
 
         protected override string GetTitle()
         {
-            return "Card Name";
+            return "Particle Wave Sequencer";
         }
         protected override string GetDescription()
         {
-            return "Card Description";
+            return "By adding a feedback loop to the quantum wave circuits, we can get another flux wave emitted before diverting the remaining power back into the capacitors.";
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art = null;
+
+            //try
+            //{
+            //    art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_PortableFabricator");
+            //    var cards = art.transform.Find("Foreground/Cards");
+
+            //    foreach (Transform child in cards)
+            //    {
+            //        child.Find("Card Holder").gameObject.AddComponent<GetRandomCardVisualsOnEnable>();
+            //    }
+            //}
+            //catch
+            //{
+            //    art = null;
+            //}
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {
@@ -54,15 +75,29 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Effect",
-                    amount = "No",
+                    stat = "Block per Upgrade",
+                    amount = "+1",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Block CD per Upgrade",
+                    amount = "-10%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Upgrade Time",
+                    amount = "+2.5s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.EvilPurple;
+            return CardThemeColor.CardThemeColorType.TechWhite;
         }
         public override string GetModName()
         {

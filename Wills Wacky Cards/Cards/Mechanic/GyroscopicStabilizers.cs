@@ -7,45 +7,43 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
+using WWC.Interfaces;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WWC.Cards
 {
-    class CloningTanks : CustomCard
+    class GyroscopicStabilizers : CustomCard
     {
-        public static CardCategory upgradeLives = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Lives");
+        public static CardCategory upgradeEmptyTime = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Empty Time");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
+            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeEmptyTime };
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeLives };
-
+            statModifiers.gravity = 1f/ 2.5f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            characterStats.GetAdditionalData().useNewRespawnTime = true;
-            characterStats.GetAdditionalData().newRespawnTime = 0.5f;
-
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
-            upgrader.characterStatModifiersModifier.respawns_add += 1;
-            upgrader.AttachCloneAction();
+
+            upgrader.timeToEmpty += 5f;
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
+
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Cloning Tanks";
+            return "Gyroscopic Stabilizers";
         }
         protected override string GetDescription()
         {
-            return "Back-ups are always nice, even if they're a bit more fragile.";
+            return $"By adding stabilizers, projects fall apart less when moving around.";
         }
         protected override GameObject GetCardArt()
         {
@@ -62,8 +60,15 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Effect",
-                    amount = "No",
+                    stat = "Progress is lost over",
+                    amount = "+5s",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Gravity",
+                    amount = "-150%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

@@ -5,35 +5,44 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using WWC.Extensions;
+using WWC.MonoBehaviours;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
 namespace WWC.Cards
 {
-    class AmmoCache : CustomCard
+    class PortableFabricator : CustomCard
     {
-        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
+        public static CardCategory upgradeSpeed = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Speed");
+        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            gun.ammo = 10;
-            gun.reloadTime = 0.9f;
-            statModifiers.movementSpeed = 1f/1.25f;
+            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeSpeed };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
+            upgrader.upgradeTime /= 1.25f;
+            upgrader.characterDataModifier.health_mult += 0.5f;
+            upgrader.characterDataModifier.health_mult += 0.5f;
+            upgrader.characterStatModifiersModifier.sizeMultiplier_mult += 0.1f;
+            upgrader.upgradeCooldown *= 1.1f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            //Drives me crazy
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Ammo Cache";
+            return "Portable Fabricator";
         }
         protected override string GetDescription()
         {
-            return "Who cares about reloading?";
+            return "When you're surrounded by junk, it makes it easy to build things.";
         }
         protected override GameObject GetCardArt()
         {
@@ -41,7 +50,13 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_AmmoCache");
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_PortableFabricator");
+                var cards = art.transform.Find("Foreground/Cards");
+
+                foreach (Transform child in cards)
+                {
+                    child.Find("Card Holder").gameObject.AddComponent<GetRandomCardVisualsOnEnable>();
+                }
             }
             catch
             {
@@ -61,34 +76,44 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Ammo",
-                    amount = "+10",
+                    stat = "HP per Upgrade",
+                    amount = "+50%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Reload Speed",
-                    amount = "+10%",
+                    stat = "Upgrade Time",
+                    amount = "-25%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                }
-                ,
+                },
                 new CardInfoStat()
                 {
-                    positive = false,
-                    stat = "Move Speed",
-                    amount = "-25%",
+                    positive = true,
+                    stat = "Upgrade Cooldown",
+                    amount = "+10%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Size per Upgrade",
+                    amount = "+10%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.DestructiveRed;
+            return CardThemeColor.CardThemeColorType.TechWhite;
         }
         public override string GetModName()
         {
             return WillsWackyCards.ModInitials;
+        }
+        public override bool GetEnabled()
+        {
+            return true;
         }
     }
 }

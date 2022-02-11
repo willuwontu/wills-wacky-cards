@@ -7,6 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
+using TMPro;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using UnityEngine.UI.ProceduralImage;
@@ -54,7 +55,7 @@ namespace WWC.Cards
             var upgrader = mechObj.AddComponent<MechanicUpgrader>();
             upgrader.soundUpgradeChargeLoop = abyssal.soundAbyssalChargeLoop;
             upgrader.counter = 0;
-            upgrader.timeToFill = 7f;
+            upgrader.upgradeTime = 7f;
             upgrader.timeToEmpty = 0.5f;
             upgrader.upgradeCooldown = 10f;
             upgrader.outerRing = abyssal.outerRing;
@@ -65,25 +66,57 @@ namespace WWC.Cards
             upgrader.characterDataModifier.maxHealth_mult = 1.2f;
             upgrader.characterDataModifier.health_mult = 1.2f;
 
+
             WillsWackyCards.instance.ExecuteAfterFrames(5, () => 
             {
                 UnityEngine.GameObject.Destroy(abyssal);
 
-                var COs = mechObj.GetComponentsInChildren<Transform>().Where(child => child.parent == mechObj.transform).Select(child => child.gameObject).ToArray();
-
-                foreach (var CO in COs)
+                WillsWackyCards.instance.ExecuteAfterFrames(5, () =>
                 {
-                    if (!(CO.transform.gameObject == mechObj.transform.Find("Canvas").gameObject) && !(upgrader.upgradeObjects.Contains(CO)))
+                    var COs = mechObj.GetComponentsInChildren<Transform>().Where(child => child.parent == mechObj.transform).Select(child => child.gameObject).ToArray();
+
+                    foreach (var CO in COs)
                     {
-                        UnityEngine.GameObject.Destroy(CO);
+                        if (CO.transform != mechObj.transform.Find("Canvas"))
+                        {
+                            UnityEngine.GameObject.Destroy(CO);
+                        }
                     }
-                }
+                });
                 upgrader.outerRing.color = new Color32(255, 167, 0, 255);
                 upgrader.fill.color = new Color32(255, 196, 0, 10);
                 upgrader.rotator.gameObject.GetComponentInChildren<ProceduralImage>().color = upgrader.outerRing.color;
                 upgrader.still.gameObject.GetComponentInChildren<ProceduralImage>().color = upgrader.outerRing.color;
                 mechObj.transform.Find("Canvas/Size/BackRing").GetComponent<ProceduralImage>().color = new Color32(200, 124, 33, 29);
             });
+
+            var wobble = player.transform.Find("WobbleObjects");
+
+            var upgradeFrame = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects")).gameObject;
+            upgradeFrame.name = "Mechanic Level";
+            upgradeFrame.transform.localScale = Vector3.one;
+            upgradeFrame.transform.localPosition = new Vector3(0, 0.851f, 0);
+
+            UnityEngine.GameObject.Destroy(upgradeFrame.GetComponent<HealthBar>());
+
+            var upgradeCanvas = upgradeFrame.transform.Find("Canvas").gameObject;
+
+            var COs = upgradeCanvas.GetComponentsInChildren<Transform>().Where(child => child.parent == upgradeCanvas.transform).Select(child => child.gameObject).ToArray();
+            foreach (var CO in COs)
+            {
+                UnityEngine.GameObject.Destroy(CO);
+            }
+
+            RectTransform rect = null;
+
+            var levelFrame = Instantiate<GameObject>(WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("LevelFrame"), upgradeCanvas.transform);
+            rect = levelFrame.GetComponent<RectTransform>();
+            rect.localScale = Vector3.one;
+            rect.localPosition = new Vector3(-375, 0, 0);
+
+            upgrader.levelFrame = upgradeFrame;
+            upgrader.levelText = levelFrame.transform.Find("Ring/Level").gameObject.GetComponent<TextMeshProUGUI>();
+            upgrader.levelText.text = $"{upgrader.upgradeLevel}";
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }

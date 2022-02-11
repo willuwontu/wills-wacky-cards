@@ -2,6 +2,7 @@
 using Sonigon;
 using Sonigon.Internal;
 using UnityEngine;
+using TMPro;
 using UnityEngine.UI.ProceduralImage;
 using UnboundLib;
 using WWC.Interfaces;
@@ -17,6 +18,7 @@ namespace WWC.MonoBehaviours
 			this.soundCounterLast = this.counter;
 			this.data = base.GetComponentInParent<CharacterData>();
 			HealthHandler healthHandler = this.data.healthHandler;
+			healthHandler.reviveAction += OnRevive;
 			base.GetComponentInParent<ChildRPC>().childRPCs.Add("MechanicUpgrade", new Action(this.RPCA_Upgrade));
 			InterfaceGameModeHooksManager.instance.RegisterHooks(this);
 		}
@@ -24,6 +26,7 @@ namespace WWC.MonoBehaviours
 		public void OnDestroy()
 		{
 			HealthHandler healthHandler = this.data.healthHandler;
+			healthHandler.reviveAction -= OnRevive;
 			base.GetComponentInParent<ChildRPC>().childRPCs.Remove("MechanicUpgrade");
 			this.SoundStop();
 			InterfaceGameModeHooksManager.instance.RemoveHooks(this);
@@ -32,6 +35,17 @@ namespace WWC.MonoBehaviours
             {
 				this.data.healthHandler.reviveAction -= OnCloneAction;
             }
+
+			if (levelFrame)
+            {
+				UnityEngine.GameObject.Destroy(levelFrame);
+            }
+		}
+
+		private void OnRevive()
+        {
+			this.remainingDuration = upgradeCooldown;
+			this.isUpgrading = true;
 		}
 
 		public void OnDisable()
@@ -72,6 +86,7 @@ namespace WWC.MonoBehaviours
 			this.counter = 0f;
 			this.upgradeLevel = 0;
 			this.currentUpgradeLevel = 0;
+			this.levelText.text = $"{upgradeLevel}";
 			if (this.isUpgrading)
 			{
                 for (int i = 0; i < this.upgradeObjects.Length; i++)
@@ -89,6 +104,13 @@ namespace WWC.MonoBehaviours
 		{
 			var upgrade = this.data.player.gameObject.AddComponent<MechanicUpgrade>();
 			this.remainingDuration = this.upgradeCooldown;
+			this.upgradeLevel++;
+			this.levelText.text = $"{upgradeLevel}";
+
+			if (upgradeAction != null)
+            {
+				upgradeAction(upgradeLevel);
+            }
 		}
 
 		public void OnPointStart()
@@ -126,6 +148,7 @@ namespace WWC.MonoBehaviours
 			{
 				if (!this.isUpgrading)
 				{
+					currentUpgradeLevel = upgradeLevel;
 					this.isUpgrading = true;
 					//for (int i = 0; i < this.abyssalObjects.Length; i++)
 					//{
@@ -156,7 +179,7 @@ namespace WWC.MonoBehaviours
             {
                 if (this.data.input.direction == Vector3.zero || this.data.input.direction == Vector3.down)
                 {
-                    this.counter += TimeHandler.deltaTime / this.timeToFill;
+                    this.counter += TimeHandler.deltaTime / this.upgradeTime;
                 }
                 else
                 {
@@ -170,7 +193,7 @@ namespace WWC.MonoBehaviours
 			}
             try
             {
-                this.counter = Mathf.Clamp(this.counter, -0.1f / this.timeToFill, 1f);
+                this.counter = Mathf.Clamp(this.counter, -0.1f / this.upgradeTime, 1f);
                 if (this.counter >= 1f && this.data.view.IsMine)
                 {
                     this.remainingDuration = this.upgradeCooldown;
@@ -209,8 +232,6 @@ namespace WWC.MonoBehaviours
 		private void OnCloneAction()
         {
 			this.player.gameObject.AddComponent<ClonedWeakness>();
-			this.remainingDuration = upgradeCooldown;
-			this.isUpgrading = true;
 		}
 
 		public SoundEvent soundUpgradeChargeLoop;
@@ -224,7 +245,7 @@ namespace WWC.MonoBehaviours
 		[Range(0f, 1f)]
 		public float counter;
 
-		public float timeToFill = 5f;
+		public float upgradeTime = 5f;
 
 		public float timeToEmpty = 1f;
 
@@ -263,18 +284,28 @@ namespace WWC.MonoBehaviours
 
 		private bool cloneActionAttached = false;
 
+		public GameObject levelFrame = null;
+
+		public TextMeshProUGUI levelText = null;
+
 		public float extraBlockTime = 0f;
+		public float regenAdd = 0f;
+		public int extraJumps = 0;
 		public GunStatModifier gunStatModifier = new GunStatModifier();
 		public GunAmmoStatModifier gunAmmoStatModifier = new GunAmmoStatModifier();
 		public CharacterDataModifier characterDataModifier = new CharacterDataModifier();
 		public CharacterStatModifiersModifier characterStatModifiersModifier = new CharacterStatModifiersModifier();
 		public GravityModifier gravityModifier = new GravityModifier();
 		public BlockModifier blockModifier = new BlockModifier();
+
+		public Action<int> upgradeAction;
 	}
 
 	public class MechanicUpgrade : ReversibleEffect, IPointEndHookHandler
     {
 		private float extraBlockTime = 0f;
+		private float extraRegen = 0f;
+		private int extraJumps = 0;
 
         public override void OnStart()
         {
@@ -292,6 +323,9 @@ namespace WWC.MonoBehaviours
 			extraBlockTime = upgrader.extraBlockTime;
 			WWC.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).extraBlockTime += extraBlockTime;
 			block.UpdateParticleDuration();
+			health.regeneration += extraRegen = upgrader.regenAdd;
+			data.jumps += extraJumps = upgrader.extraJumps;
+			data.currentJumps += extraJumps;
 		}
 
 		public void OnPointEnd()
@@ -303,6 +337,9 @@ namespace WWC.MonoBehaviours
         {
 			InterfaceGameModeHooksManager.instance.RemoveHooks(this);
 			WWC.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).extraBlockTime -= extraBlockTime;
+			health.regeneration -= extraRegen;
+			data.jumps -= extraJumps;
+			data.currentJumps -= extraJumps;
 		}
     }
 
