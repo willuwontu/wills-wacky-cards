@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,8 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
+using WWC.Cards;
+using WWC.Interfaces;
 using WWC.MonoBehaviours;
 using TMPro;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
@@ -16,6 +19,8 @@ namespace WWC.Cards
 {
     public class Mechanic : CustomCard
     {
+        public static CardInfo card = null;
+
         public const string MechanicClassName = "Mechanic";
 
         public static CardCategory MechanicClass = CustomCardCategories.instance.CardCategory("Mechanic");
@@ -24,6 +29,7 @@ namespace WWC.Cards
         {
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.Add(CustomCardCategories.instance.CardCategory("Class"));
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == MechanicClass);
+            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Default"));
         }
 
         public static void MechanicRemoveClassStuff(CharacterStatModifiers characterStats)
@@ -40,6 +46,8 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            player.gameObject.AddComponent<Mechanic_Mono>();
+
             MechanicAddClassStuff(characterStats);
 
             var abyssalCard = CardChoice.instance.cards.First(c => c.name.Equals("AbyssalCountdown"));
@@ -55,16 +63,16 @@ namespace WWC.Cards
             var upgrader = mechObj.AddComponent<MechanicUpgrader>();
             upgrader.soundUpgradeChargeLoop = abyssal.soundAbyssalChargeLoop;
             upgrader.counter = 0;
-            upgrader.upgradeTime = 7f;
+            upgrader.upgradeTime = 6f;
             upgrader.timeToEmpty = 0.5f;
-            upgrader.upgradeCooldown = 10f;
+            upgrader.upgradeCooldown = 12f;
             upgrader.outerRing = abyssal.outerRing;
             upgrader.fill = abyssal.fill;
             upgrader.rotator = abyssal.rotator;
             upgrader.still = abyssal.still;
-            upgrader.gunStatModifier.damage_mult = 1.2f;
-            upgrader.characterDataModifier.maxHealth_mult = 1.2f;
-            upgrader.characterDataModifier.health_mult = 1.2f;
+            upgrader.gunStatModifier.damage_mult = 1.4f;
+            upgrader.characterDataModifier.maxHealth_mult = 1.4f;
+            upgrader.characterDataModifier.health_mult = 1.4f;
 
 
             WillsWackyCards.instance.ExecuteAfterFrames(5, () => 
@@ -118,13 +126,13 @@ namespace WWC.Cards
             upgrader.levelText = levelFrame.transform.Find("Ring/Level").gameObject.GetComponent<TextMeshProUGUI>();
             upgrader.levelText.text = $"{upgrader.upgradeLevel}";
 
+            characterStats.objectsAddedToPlayer.Add(mechObj);
+
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             MechanicRemoveClassStuff(characterStats);
-            var mechObj = player.gameObject.transform.Find("A_MechanicUpgrader");
-            UnityEngine.GameObject.Destroy(mechObj);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
@@ -153,7 +161,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Common;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -163,28 +171,28 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "DMG per Upgrade",
-                    amount = "+20%",
+                    amount = "+40%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "HP per Upgrade",
-                    amount = "+20%",
+                    amount = "+40%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Upgrade Time",
-                    amount = "7s",
+                    amount = "6s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = false,
                     stat = "Upgrade Cooldown",
-                    amount = "10s",
+                    amount = "12s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
@@ -200,6 +208,101 @@ namespace WWC.Cards
         public override bool GetEnabled()
         {
             return true;
+        }
+    }
+}
+
+namespace WWC.MonoBehaviours
+{
+    [DisallowMultipleComponent]
+    class Mechanic_Mono : ReversibleEffect, IPointStartHookHandler, IPlayerPickStartHookHandler, IGameStartHookHandler
+    {
+        public override void OnStart()
+        {
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+        }
+
+        private void CheckIfValid()
+        {
+            var haveCard = false;
+            for (int i = 0; i < player.data.currentCards.Count; i++)
+            {
+                if (player.data.currentCards[i].cardName.ToLower() == "Mechanic".ToLower())
+                {
+                    haveCard = true;
+                    break;
+                }
+            }
+
+            if (!haveCard)
+            {
+                var classCards = data.currentCards.Where(card => card.categories.Contains(Mechanic.MechanicClass)).ToList();
+                var cardIndeces = Enumerable.Range(0, player.data.currentCards.Count()).Where((index) => player.data.currentCards[index].categories.Contains(Mechanic.MechanicClass)).ToArray();
+                if (classCards.Count() > 0)
+                {
+                    CardInfo[] replacePool = null;
+                    if (classCards.Where(card => card.rarity == CardInfo.Rarity.Common).ToArray().Length > 0)
+                    {
+                        replacePool = classCards.Where(card => card.rarity == CardInfo.Rarity.Common).ToArray();
+                    }
+                    else if (classCards.Where(card => card.rarity == CardInfo.Rarity.Uncommon).ToArray().Length > 0)
+                    {
+                        replacePool = classCards.Where(card => card.rarity == CardInfo.Rarity.Uncommon).ToArray();
+                    }
+                    else if (classCards.Where(card => card.rarity == CardInfo.Rarity.Rare).ToArray().Length > 0)
+                    {
+                        replacePool = classCards.Where(card => card.rarity == CardInfo.Rarity.Rare).ToArray();
+                    }
+                    var replaced = replacePool[UnityEngine.Random.Range(0, replacePool.Length)];
+                    classCards.Remove(replaced);
+                    if (classCards.Count() > 1)
+                    {
+                        classCards.Shuffle();
+                    }
+                    classCards.Insert(0, Mechanic.card);
+
+                    StartCoroutine(ReplaceCards(player, cardIndeces, classCards.ToArray()));
+                }
+                else
+                {
+                    UnityEngine.GameObject.Destroy(this);
+                }
+            }
+        }
+
+        private IEnumerator ReplaceCards(Player player, int[] indeces, CardInfo[] cards)
+        {
+            yield return ModdingUtils.Utils.Cards.instance.ReplaceCards(player, indeces, cards, null, true);
+
+            yield break;
+        }
+
+        public void OnPlayerPickStart()
+        {
+            if (ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.Contains(WWC.Cards.Mechanic.MechanicClass))
+            {
+                ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.RemoveAll((category) => category == WWC.Cards.Mechanic.MechanicClass);
+            }
+
+
+            CheckIfValid();
+        }
+
+        public void OnPointStart()
+        {
+            CheckIfValid();
+        }
+
+        public void OnGameStart()
+        {
+            UnityEngine.GameObject.Destroy(this);
+        }
+
+        public override void OnOnDestroy()
+        {
+            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Class"));
+            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.Add(WWC.Cards.Mechanic.MechanicClass);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
         }
     }
 }

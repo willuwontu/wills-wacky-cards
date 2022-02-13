@@ -88,6 +88,19 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Portable Fabricators (Common)
 
 ----
+## v 1.7.3
+- Changed from debug to release build
+
+----
+## v 1.7.2
+- Made it so that when losing the Mechanic or Curse Eater class while having cards from that class still, one of your lowest rarity cards for that class is converted into the class card.
+
+----
+## v 1.7.1
+- Fixed an issue with Mechanic not having its cards show up.
+- Minor reversion to compatibility with FFC Class Manager
+
+----
 ## v 1.7.0
 - Added 15 new Cards in the form of the Mechanic Class
   - The mechanic class is oriented around finding the time to upgrade itself during battle. Don't let it sit in one place for too long or you'll be sorry (or happy if you're the mechanic).

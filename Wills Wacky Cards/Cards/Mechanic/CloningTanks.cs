@@ -28,10 +28,14 @@ namespace WWC.Cards
             characterStats.GetAdditionalData().newRespawnTime = 0.5f;
 
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
-            upgrader.characterStatModifiersModifier.respawns_add += 1;
-            upgrader.AttachCloneAction();
-            upgrader.upgradeCooldown += 5f;
-            upgrader.upgradeTime += 5f;
+            
+            if (upgrader)
+            {
+                upgrader.characterStatModifiersModifier.respawns_add += 1;
+                upgrader.AttachCloneAction();
+                upgrader.upgradeCooldown += 5f;
+                upgrader.upgradeTime += 5f;
+            }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }

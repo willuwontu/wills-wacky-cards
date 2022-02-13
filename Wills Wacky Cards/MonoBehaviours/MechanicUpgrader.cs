@@ -115,7 +115,7 @@ namespace WWC.MonoBehaviours
 
 		public void OnPointStart()
         {
-			this.remainingDuration = this.upgradeCooldown;
+			this.remainingDuration = 0;
 			this.isUpgrading = true;
 		}
 

@@ -26,8 +26,11 @@ namespace WWC.Cards
         {
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
 
-            upgrader.upgradeCooldown /= 1.25f;
-            upgrader.gunStatModifier.damage_mult += 0.5f;
+            if (upgrader)
+            {
+                upgrader.upgradeCooldown /= 1.25f;
+                upgrader.gunStatModifier.damage_mult += 0.5f;
+            }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
