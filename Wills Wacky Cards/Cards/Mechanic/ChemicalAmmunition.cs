@@ -31,10 +31,13 @@ namespace WWC.Cards
 
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
 
-            upgrader.gunStatModifier.damage_mult += 0.30f;
-            upgrader.gunStatModifier.reflects_add += 1;
-            upgrader.upgradeCooldown += 3f;
-            upgrader.upgradeTime += 3f;
+            if (upgrader)
+            {
+                upgrader.gunStatModifier.damage_mult += 0.30f;
+                upgrader.gunStatModifier.reflects_add += 1;
+                upgrader.upgradeCooldown += 3f;
+                upgrader.upgradeTime += 3f;
+            }
 
             ObjectsToSpawn item = ((GameObject)Resources.Load("0 cards/Mayhem")).GetComponent<Gun>().objectsToSpawn[0];
             List<ObjectsToSpawn> list = gun.objectsToSpawn.ToList<ObjectsToSpawn>();

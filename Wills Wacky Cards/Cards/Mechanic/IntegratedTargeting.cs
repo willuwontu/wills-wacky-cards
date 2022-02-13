@@ -30,15 +30,18 @@ namespace WWC.Cards
         {
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
 
-            upgrader.gunStatModifier.percentageDamage_add += 0.05f;
-            upgrader.upgradeAction += new Action<int>(level => 
+            if (upgrader)
             {
-                if (level == 5)
+                upgrader.gunStatModifier.percentageDamage_add += 0.05f;
+                upgrader.upgradeAction += new Action<int>(level =>
                 {
-                    player.gameObject.AddComponent<TargetingSensors_Mono>();
-                }
-            });
-            upgrader.upgradeTime += 2f;
+                    if (level == 5)
+                    {
+                        player.gameObject.AddComponent<TargetingSensors_Mono>();
+                    }
+                });
+                upgrader.upgradeTime += 2f;
+            }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }

@@ -26,9 +26,12 @@ namespace WWC.Cards
         {
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
 
-            upgrader.gunAmmoStatModifier.currentAmmo_add += 3;
-            upgrader.gunAmmoStatModifier.maxAmmo_add += 3;
-            upgrader.gunAmmoStatModifier.reloadTimeMultiplier_mult *= 0.75f;
+            if (upgrader)
+            {
+                upgrader.gunAmmoStatModifier.currentAmmo_add += 3;
+                upgrader.gunAmmoStatModifier.maxAmmo_add += 3;
+                upgrader.gunAmmoStatModifier.reloadTimeMultiplier_mult *= 0.75f;
+            }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }

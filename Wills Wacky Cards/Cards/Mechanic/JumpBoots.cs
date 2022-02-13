@@ -24,8 +24,11 @@ namespace WWC.Cards
         {
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
 
-            upgrader.characterStatModifiersModifier.movementSpeed_mult *= 1.3f;
-            upgrader.extraJumps += 1;
+            if (upgrader)
+            {
+                upgrader.characterStatModifiersModifier.movementSpeed_mult *= 1.3f;
+                upgrader.extraJumps += 1;
+            }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }

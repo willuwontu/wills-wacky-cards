@@ -23,11 +23,16 @@ namespace WWC.Cards
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
-            upgrader.upgradeTime /= 1.25f;
-            upgrader.characterDataModifier.health_mult += 0.5f;
-            upgrader.characterDataModifier.health_mult += 0.5f;
-            upgrader.characterStatModifiersModifier.sizeMultiplier_mult += 0.1f;
-            upgrader.upgradeCooldown *= 1.1f;
+            
+            if (upgrader)
+            {
+                upgrader.upgradeTime /= 1.25f;
+                upgrader.characterDataModifier.health_mult += 0.5f;
+                upgrader.characterDataModifier.health_mult += 0.5f;
+                upgrader.characterStatModifiersModifier.sizeMultiplier_mult += 0.1f;
+                upgrader.upgradeCooldown *= 1.1f;
+            }
+
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -46,7 +51,7 @@ namespace WWC.Cards
         }
         protected override GameObject GetCardArt()
         {
-            GameObject art;
+            GameObject art = null;
 
             try
             {
@@ -55,7 +60,7 @@ namespace WWC.Cards
 
                 foreach (Transform child in cards)
                 {
-                    child.Find("Card Holder").gameObject.AddComponent<GetRandomCardVisualsOnEnable>();
+                    //child.Find("Card Holder").gameObject.AddComponent<GetRandomCardVisualsOnEnable>();
                 }
             }
             catch

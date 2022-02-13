@@ -27,7 +27,10 @@ namespace WWC.Cards
         {
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
 
-            upgrader.timeToEmpty += 5f;
+            if (upgrader)
+            {
+                upgrader.timeToEmpty += 5f;
+            }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }

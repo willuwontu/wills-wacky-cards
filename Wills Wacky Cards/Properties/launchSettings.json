@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "WillsWackyCards": {
+      "commandName": "Executable",
+      "executablePath": "D:\\Program Files (x86)\\Steam\\steamapps\\common\\ROUNDS\\Rounds.exe",
+      "commandLineArgs": "--doorstop-enable true --doorstop-target \"D:\\Program Files (x86)\\Steam\\steamapps\\common\\ROUNDS\\BepInEx\\core\\BepInEx.Preloader.dll\"",
+      "workingDirectory": "D:\\Program Files (x86)\\Steam\\steamapps\\common\\ROUNDS"
+    }
+  }
+}

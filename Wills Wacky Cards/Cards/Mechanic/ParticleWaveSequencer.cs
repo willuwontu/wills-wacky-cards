@@ -24,9 +24,13 @@ namespace WWC.Cards
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var upgrader = player.GetComponentInChildren<MechanicUpgrader>();
-            upgrader.blockModifier.additionalBlocks_add += 1;
-            upgrader.blockModifier.cdMultiplier_mult /= 1.1f;
-            upgrader.upgradeTime += 2.5f;
+            
+            if (upgrader)
+            {
+                upgrader.blockModifier.additionalBlocks_add += 1;
+                upgrader.blockModifier.cdMultiplier_mult /= 1.1f;
+                upgrader.upgradeTime += 2.5f;
+            }
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

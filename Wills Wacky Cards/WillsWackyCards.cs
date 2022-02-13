@@ -41,7 +41,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.7.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.7.3"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -62,8 +62,7 @@ namespace WWC
 
         void Awake()
         {
-            var harmony = new Harmony(ModId);
-            harmony.PatchAll();
+
         }
         void Start()
         {
@@ -71,6 +70,9 @@ namespace WWC
 
             instance = this;
             instance.gameObject.name = "WillsWackyCards";
+
+            var harmony = new Harmony(ModId);
+            harmony.PatchAll();
 
             gameObject.AddComponent<HookedMonoManager>();
             remover = gameObject.AddComponent<CardRemover>();
@@ -134,7 +136,7 @@ namespace WWC
             CustomCard.BuildCard<HolyWater>();
             CustomCard.BuildCard<CleansingRitual>();
             CustomCard.BuildCard<BulletPoweredJetpack>();
-            CustomCard.BuildCard<CurseEater>();
+            CustomCard.BuildCard<CurseEater>(cardInfo => { CurseEater.card = cardInfo; });
             CustomCard.BuildCard<GhostlyBody>();
             CustomCard.BuildCard<ShadowBullets>();
             CustomCard.BuildCard<SiphonCurses>();
@@ -147,7 +149,7 @@ namespace WWC
             CustomCard.BuildCard<AggressiveVenting>();
 
             { //Mechanic Class
-                CustomCard.BuildCard<Mechanic>();
+                CustomCard.BuildCard<Mechanic>(cardInfo => { Mechanic.card = cardInfo; });
                 CustomCard.BuildCard<ImprovedShieldCapacitors>();
                 CustomCard.BuildCard<PortableFabricator>();
                 CustomCard.BuildCard<CloningTanks>();
