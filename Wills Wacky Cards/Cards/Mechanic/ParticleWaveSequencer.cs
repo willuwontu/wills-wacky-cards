@@ -49,22 +49,16 @@ namespace WWC.Cards
         }
         protected override GameObject GetCardArt()
         {
-            GameObject art = null;
+            GameObject art;
 
-            //try
-            //{
-            //    art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_PortableFabricator");
-            //    var cards = art.transform.Find("Foreground/Cards");
-
-            //    foreach (Transform child in cards)
-            //    {
-            //        child.Find("Card Holder").gameObject.AddComponent<GetRandomCardVisualsOnEnable>();
-            //    }
-            //}
-            //catch
-            //{
-            //    art = null;
-            //}
+            try
+            {
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_MechanicCardPlaceHolder");
+            }
+            catch
+            {
+                art = null;
+            }
 
             return art;
         }

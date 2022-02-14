@@ -11,7 +11,7 @@ using ModdingUtils.Extensions;
 
 namespace WWC.MonoBehaviours
 {
-	public class MechanicUpgrader : MonoBehaviour, IPointEndHookHandler, IPointStartHookHandler
+	public class MechanicUpgrader : MonoBehaviour, IRoundEndHookHandler, IPointStartHookHandler
 	{
 		public void Start()
 		{
@@ -74,7 +74,7 @@ namespace WWC.MonoBehaviours
 			}
 		}
 
-		public void OnPointEnd()
+		public void OnRoundEnd()
         {
 			this.ResetStuff();
         }
@@ -301,7 +301,7 @@ namespace WWC.MonoBehaviours
 		public Action<int> upgradeAction;
 	}
 
-	public class MechanicUpgrade : ReversibleEffect, IPointEndHookHandler
+	public class MechanicUpgrade : ReversibleEffect, IRoundEndHookHandler
     {
 		private float extraBlockTime = 0f;
 		private float extraRegen = 0f;
@@ -328,7 +328,7 @@ namespace WWC.MonoBehaviours
 			data.currentJumps += extraJumps;
 		}
 
-		public void OnPointEnd()
+		public void OnRoundEnd()
         {
 			UnityEngine.GameObject.Destroy(this);
         }
