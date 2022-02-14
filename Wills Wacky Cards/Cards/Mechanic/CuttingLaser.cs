@@ -28,7 +28,7 @@ namespace WWC.Cards
 
             if (upgrader)
             {
-                upgrader.upgradeCooldown /= 1.25f;
+                upgrader.upgradeTime *= 0.75f;
                 upgrader.gunStatModifier.damage_mult += 0.5f;
             }
 
@@ -50,7 +50,18 @@ namespace WWC.Cards
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_MechanicCardPlaceHolder");
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {
@@ -70,7 +81,7 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Upgrade Cooldown",
+                    stat = "Upgrade Time",
                     amount = "-25%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }

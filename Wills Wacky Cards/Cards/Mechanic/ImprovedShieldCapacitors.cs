@@ -28,7 +28,7 @@ namespace WWC.Cards
             {
                 upgrader.blockModifier.cdAdd_add += 0.5f;
                 upgrader.extraBlockTime += 0.3f;
-                upgrader.upgradeCooldown *= 0.85f;
+                upgrader.upgradeTime *= 0.85f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -80,7 +80,7 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Upgrade Cooldown",
+                    stat = "Upgrade Time",
                     amount = "-15%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },

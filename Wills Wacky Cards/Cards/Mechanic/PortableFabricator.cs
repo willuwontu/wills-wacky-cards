@@ -26,7 +26,7 @@ namespace WWC.Cards
             
             if (upgrader)
             {
-                upgrader.upgradeTime /= 1.25f;
+                upgrader.upgradeTime*= 0.7f;
                 upgrader.characterDataModifier.health_mult += 0.5f;
                 upgrader.characterDataModifier.health_mult += 0.5f;
                 upgrader.characterStatModifiersModifier.sizeMultiplier_mult += 0.1f;
@@ -89,7 +89,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Upgrade Time",
-                    amount = "-25%",
+                    amount = "-30%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
