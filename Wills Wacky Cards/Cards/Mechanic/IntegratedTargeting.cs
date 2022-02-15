@@ -65,7 +65,7 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_MechanicCardPlaceHolder");
+                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_IntegratedTargeting");
             }
             catch
             {

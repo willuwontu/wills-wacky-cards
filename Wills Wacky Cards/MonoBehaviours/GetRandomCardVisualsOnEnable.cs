@@ -61,6 +61,16 @@ namespace WWC.MonoBehaviours
             rect.offsetMax = Vector2.zero;
             rect.pivot = new Vector2(0.5f, 0.5f);
 
+            //var visualThings = cardObj.GetComponentsInChildren<CardVisuals>()
+
+            var rarityThings = cardObj.GetComponentsInChildren<CardRarityColor>().ToList();
+
+            foreach (var thing in rarityThings)
+            {
+                thing.GetComponentInParent<CardVisuals>().toggleSelectionAction = (Action<bool>)Delegate.Remove(thing.GetComponentInParent<CardVisuals>().toggleSelectionAction, new Action<bool>(thing.Toggle));
+                UnityEngine.GameObject.Destroy(thing);
+            }
+
             var canvasGroups = cardObj.GetComponentsInChildren<CanvasGroup>();
             foreach (var canvasGroup in canvasGroups)
             {
@@ -88,3 +98,4 @@ namespace WWC.MonoBehaviours
         }
     }
 }
+
