@@ -14,6 +14,7 @@ using TMPro;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using UnityEngine.UI.ProceduralImage;
+using UnboundLib.Utils;
 
 namespace WWC.Cards
 {
@@ -50,7 +51,7 @@ namespace WWC.Cards
 
             MechanicAddClassStuff(characterStats);
 
-            var abyssalCard = CardChoice.instance.cards.First(c => c.name.Equals("AbyssalCountdown"));
+            var abyssalCard = CardManager.cards.Values.Select(card => card.cardInfo).First(c => c.name.Equals("AbyssalCountdown"));
             var statMods = abyssalCard.gameObject.GetComponentInChildren<CharacterStatModifiers>();
             var abyssalObj = statMods.AddObjectToPlayer;
 

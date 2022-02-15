@@ -60,7 +60,7 @@ namespace WWC.Cards
 
                 foreach (Transform child in cards)
                 {
-                    //child.Find("Card Holder").gameObject.AddComponent<GetRandomCardVisualsOnEnable>();
+                    child.Find("Card Holder").gameObject.AddComponent<GetRandomCardVisualsOnEnable>();
                 }
             }
             catch
