@@ -75,12 +75,12 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Damage taken over per upgrade",
-                    amount = "+2s",
+                    amount = "+4s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
-                    positive = true,
+                    positive = false,
                     stat = "Upgrade Cooldown",
                     amount = "+50%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
