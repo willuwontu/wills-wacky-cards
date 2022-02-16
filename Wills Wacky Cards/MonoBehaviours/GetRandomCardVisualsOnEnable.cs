@@ -50,7 +50,6 @@ namespace WWC.MonoBehaviours
 
                 UnityEngine.GameObject.Destroy(temp);
             }
-            //cardObj.GetComponentInChildren<CardVisuals>().firstValueToSet = true;
             cardObj.SetActive(true);
 
             rect = cardObj.GetOrAddComponent<RectTransform>();
@@ -61,14 +60,19 @@ namespace WWC.MonoBehaviours
             rect.offsetMax = Vector2.zero;
             rect.pivot = new Vector2(0.5f, 0.5f);
 
-            //var visualThings = cardObj.GetComponentsInChildren<CardVisuals>()
-
-            var rarityThings = cardObj.GetComponentsInChildren<CardRarityColor>().ToList();
+            var rarityThings = cardObj.GetComponentsInChildren<CardRarityColor>();
 
             foreach (var thing in rarityThings)
             {
-                thing.GetComponentInParent<CardVisuals>().toggleSelectionAction = (Action<bool>)Delegate.Remove(thing.GetComponentInParent<CardVisuals>().toggleSelectionAction, new Action<bool>(thing.Toggle));
-                UnityEngine.GameObject.Destroy(thing);
+                try
+                {
+                    thing.GetComponentInParent<CardVisuals>().toggleSelectionAction = (Action<bool>)Delegate.Remove(thing.GetComponentInParent<CardVisuals>().toggleSelectionAction, new Action<bool>(thing.Toggle));
+                    UnityEngine.GameObject.Destroy(thing);
+                }
+                catch (Exception)
+                {
+                    UnityEngine.GameObject.Destroy(thing);
+                }
             }
 
             var canvasGroups = cardObj.GetComponentsInChildren<CanvasGroup>();

@@ -94,14 +94,14 @@ namespace WWC.Cards
                 },
                 new CardInfoStat()
                 {
-                    positive = true,
+                    positive = false,
                     stat = "Upgrade Cooldown",
                     amount = "+10%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
-                    positive = true,
+                    positive = false,
                     stat = "Size per Upgrade",
                     amount = "+10%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned

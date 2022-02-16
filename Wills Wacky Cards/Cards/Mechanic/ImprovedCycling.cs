@@ -20,6 +20,7 @@ namespace WWC.Cards
         {
             cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeFireRate };
             cardInfo.allowMultiple = false;
+            gun.timeBetweenBullets = 0.1f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

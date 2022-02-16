@@ -88,6 +88,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Portable Fabricators (Common)
 
 ----
+## v 1.7.5
+- Added some art
+
+----
 ## v 1.7.4
 - Mechanic Upgrades now last until the end of the round (full circle) instead of being removed at point end (half-circle).
 - Some minor changes
