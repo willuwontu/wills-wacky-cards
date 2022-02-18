@@ -58,7 +58,7 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_ForbiddenMagics");
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_ForbiddenMagics");
             }
             catch
             {

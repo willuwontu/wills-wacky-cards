@@ -147,10 +147,5 @@ namespace WWC.MonoBehaviours
             gun.ShootPojectileAction -= OnShootProjectileAction;
             InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
-
-        public void Destroy()
-        {
-            UnityEngine.Object.Destroy(this);
-        }
     }
 }

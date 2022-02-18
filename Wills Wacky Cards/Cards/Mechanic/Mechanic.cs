@@ -118,7 +118,7 @@ namespace WWC.Cards
 
             RectTransform rect = null;
 
-            var levelFrame = Instantiate<GameObject>(WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("LevelFrame"), upgradeCanvas.transform);
+            var levelFrame = Instantiate<GameObject>(WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("LevelFrame"), upgradeCanvas.transform);
             rect = levelFrame.GetComponent<RectTransform>();
             rect.localScale = Vector3.one;
             rect.localPosition = new Vector3(-375, 0, 0);
@@ -151,7 +151,7 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_Mechanic");
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_Mechanic");
             }
             catch
             {

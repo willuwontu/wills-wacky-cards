@@ -41,7 +41,7 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_BasicAltPhysics");
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_BasicAltPhysics");
             }
             catch
             {
