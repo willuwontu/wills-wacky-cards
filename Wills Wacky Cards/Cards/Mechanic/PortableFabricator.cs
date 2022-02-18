@@ -55,7 +55,7 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyCards.instance.WWCCards.LoadAsset<GameObject>("C_PortableFabricator");
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_PortableFabricator");
                 var cards = art.transform.Find("Foreground/Cards");
 
                 foreach (Transform child in cards)

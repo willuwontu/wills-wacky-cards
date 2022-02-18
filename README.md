@@ -88,6 +88,11 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Portable Fabricators (Common)
 
 ----
+## v 1.7.6
+- Moved some curses over to WWM
+- Code Refactoring
+
+----
 ## v 1.7.5
 - Added some art
 
