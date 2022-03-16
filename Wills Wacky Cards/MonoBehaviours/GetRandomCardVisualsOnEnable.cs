@@ -93,6 +93,12 @@ namespace WWC.MonoBehaviours
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
             rect.pivot = new Vector2(0.5f, 0.5f);
+
+            var particles = cardObj.GetComponentsInChildren<GeneralParticleSystem>().Select(system => system.gameObject);
+            foreach (var particle in particles)
+            {
+                UnityEngine.GameObject.Destroy(particle);
+            }
         }
 
         private void OnDisable()

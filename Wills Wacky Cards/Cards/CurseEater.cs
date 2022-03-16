@@ -125,6 +125,7 @@ namespace WWC.MonoBehaviours
         public override void OnStart()
         {
             InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+            SetLivesToEffect(int.MaxValue);
         }
 
         private void CheckIfValid()
@@ -188,16 +189,14 @@ namespace WWC.MonoBehaviours
             {
                 ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.RemoveAll((category) => category == WWC.Cards.CurseEater.CurseEaterClass);
             }
-
-
-            CheckIfValid();
         }
 
         public void OnPointStart()
         {
             var curses = CurseManager.instance.GetAllCursesOnPlayer(player).Count();
             var multiplier = 0.1f * curses + 0.8f;
-            characterStatModifiersModifier.lifeSteal_add += multiplier;
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse Eater] Adding a +{string.Format("{F:0}", multiplier * 100f)}% lifesteal.");
+            characterStatModifiersModifier.lifeSteal_add = multiplier;
             ApplyModifiers();
 
             CheckIfValid();
@@ -205,6 +204,7 @@ namespace WWC.MonoBehaviours
 
         public void OnPointEnd()
         {
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse Eater] Removing lifesteal modifier.");
             ClearModifiers();
         }
 
@@ -218,7 +218,7 @@ namespace WWC.MonoBehaviours
             OnPointEnd();
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Class"));
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.Add(WWC.Cards.CurseEater.CurseEaterClass);
-            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

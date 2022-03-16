@@ -50,10 +50,7 @@ namespace WWC.MonoBehaviours
 
         public void Awake()
         {
-            if (player is null)
-            {
-                player = gameObject.GetComponent<Player>();
-            }
+            player = gameObject.GetComponentInParent<Player>();
             gun = player.GetComponent<Holding>().holdable.GetComponent<Gun>();
             data = player.GetComponent<CharacterData>();
             health = player.GetComponent<HealthHandler>();
