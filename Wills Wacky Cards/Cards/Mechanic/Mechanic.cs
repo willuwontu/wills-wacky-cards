@@ -221,6 +221,7 @@ namespace WWC.MonoBehaviours
         public override void OnStart()
         {
             InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+            this.SetLivesToEffect(int.MaxValue);
         }
 
         private void CheckIfValid()
@@ -303,7 +304,7 @@ namespace WWC.MonoBehaviours
         {
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Class"));
             ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.Add(WWC.Cards.Mechanic.MechanicClass);
-            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }
