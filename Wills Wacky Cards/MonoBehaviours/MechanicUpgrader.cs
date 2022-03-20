@@ -81,7 +81,6 @@ namespace WWC.MonoBehaviours
 
 		private void ResetStuff()
 		{
-			this.SoundStop();
 			this.remainingDuration = 0f;
 			this.counter = 0f;
 			this.upgradeLevel = 0;

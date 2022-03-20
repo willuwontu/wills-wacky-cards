@@ -144,7 +144,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in gameStartHooks)
             {
-                hook.OnGameStart();
+                try
+                {
+                    hook.OnGameStart();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
@@ -153,7 +160,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in gameEndHooks)
             {
-                hook.OnGameEnd();
+                try
+                {
+                    hook.OnGameEnd();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
@@ -162,7 +176,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in roundStartHooks)
             {
-                hook.OnRoundStart();
+                try
+                {
+                    hook.OnRoundStart();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
@@ -171,7 +192,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in roundEndHooks)
             {
-                hook.OnRoundEnd();
+                try
+                {
+                    hook.OnRoundEnd();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
@@ -180,7 +208,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in pointStartHooks)
             {
-                hook.OnPointStart();
+                try
+                {
+                    hook.OnPointStart();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
@@ -189,7 +224,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in pointEndHooks)
             {
-                hook.OnPointEnd();
+                try
+                {
+                    hook.OnPointEnd();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
@@ -198,7 +240,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in battleStartHooks)
             {
-                hook.OnBattleStart();
+                try
+                {
+                    hook.OnBattleStart();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
@@ -207,7 +256,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in pickStartHooks)
             {
-                hook.OnPickStart();
+                try
+                {
+                    hook.OnPickStart();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
@@ -216,7 +272,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in pickEndHooks)
             {
-                hook.OnPickEnd();
+                try
+                {
+                    hook.OnPickEnd();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
@@ -225,7 +288,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in playerPickStartHooks)
             {
-                hook.OnPlayerPickStart();
+                try
+                {
+                    hook.OnPlayerPickStart();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
@@ -234,7 +304,14 @@ namespace WWC.Interfaces
         {
             foreach (var hook in playerPickEndHooks)
             {
-                hook.OnPlayerPickEnd();
+                try
+                {
+                    hook.OnPlayerPickEnd();
+                }
+                catch (Exception e)
+                {
+                    UnityEngine.Debug.LogException(e);
+                }
             }
 
             yield break;
