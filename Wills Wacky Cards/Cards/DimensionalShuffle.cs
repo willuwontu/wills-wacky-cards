@@ -9,6 +9,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
+using WWC.Interfaces;
 using WWC.UI;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
@@ -99,7 +100,7 @@ namespace WWC.Cards
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    public class DimensionalShuffle_Mono : Hooked_Mono
+    public class DimensionalShuffle_Mono : MonoBehaviourPun, IBattleStartHookHandler, IPointEndHookHandler, IGameStartHookHandler
     {
         private float lastUsed;
         private bool canTrigger = true;
@@ -112,7 +113,7 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
             player = data.player;
             block = data.block;
@@ -301,17 +302,17 @@ namespace WWC.MonoBehaviours
             yield break;
         }
 
-        public override void OnBattleStart()
+        public void OnBattleStart()
         {
             canTrigger = true;
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             PlayerSpotlight.FadeOut();
         }
@@ -319,7 +320,7 @@ namespace WWC.MonoBehaviours
         private void OnDestroy()
         {
             block.BlockAction -= OnBlock;
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
 
         public void Destroy()

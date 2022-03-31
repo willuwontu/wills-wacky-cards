@@ -7,6 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
+using WWC.Interfaces;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
@@ -75,7 +76,7 @@ namespace WWC.Cards.Curses
         }
     }
 
-    class ErodingDarkness_Mono : Hooked_Mono
+    class ErodingDarkness_Mono : MonoBehaviour, IRoundStartHookHandler
     {
         private int rounds = 0;
 
@@ -92,7 +93,7 @@ namespace WWC.Cards.Curses
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
         }
 
@@ -115,7 +116,7 @@ namespace WWC.Cards.Curses
             }
         }
 
-        public override void OnRoundStart()
+        public void OnRoundStart()
         {
             rounds += 1;
 
@@ -124,6 +125,11 @@ namespace WWC.Cards.Curses
                 CurseManager.instance.CursePlayer(player);
                 rounds = 0;
             }
+        }
+
+        private void OnDestroy()
+        {
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

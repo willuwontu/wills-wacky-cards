@@ -8,6 +8,7 @@ using UnboundLib.Cards;
 using WillsWackyManagers.Utils;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
+using WWC.Interfaces;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
@@ -89,7 +90,7 @@ namespace WWC.Cards
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    class GhostBody_Mono : Hooked_Mono
+    class GhostBody_Mono : ReversibleEffect, IPointEndHookHandler, IPointStartHookHandler, IGameStartHookHandler
     {
         private bool changedGravity = false;
         private float prevGravity;
@@ -98,20 +99,15 @@ namespace WWC.MonoBehaviours
         private int curseCount = 0;
         private ModdingUtils.MonoBehaviours.InAirJumpEffect flight;
 
-        private CharacterData data;
-        private Player player;
-        private CharacterStatModifiers stats;
-        private Gravity gravity;
         private PlayerCollision col;
 
-        private void Start()
+        public override void OnStart()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
-            data = GetComponentInParent<CharacterData>();
-            player = data.player;
-            stats = data.stats;
-            gravity = player.GetComponent<Gravity>();
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             col = player.GetComponent<PlayerCollision>();
+
+            applyImmediately = false;
+            this.SetLivesToEffect(int.MaxValue);
         }
 
         private void CheckIfValid()
@@ -132,7 +128,7 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnPointStart()
+        public void OnPointStart()
         {
             CheckIfValid();
             if (!increased)
@@ -143,23 +139,14 @@ namespace WWC.MonoBehaviours
                 multiplier = 0.05f * curses;
                 stats.GetAdditionalData().DamageReduction += multiplier;
 
-                if (curseCount < 16 && gravity.gravityForce != 0f)
-                {
-                    gravity.gravityForce *= (1f - (1f / 16f * (float)Mathf.Clamp(curseCount, 0, 16)));
-                }
-                else if (curseCount >= 16 && gravity.gravityForce != 0f)
-                {
-                    prevGravity = gravity.gravityForce;
-                    gravity.gravityForce = 0f;
-                    changedGravity = true;
-                }
+                gravityModifier.gravityForce_mult = (1f - (1f / 16f * (float)Mathf.Clamp(curseCount, 0, 16)));
 
-                if (curseCount > 20)
+                if (curseCount >= 20)
                 {
                     col.enabled = false;
                 }
 
-                if (multiplier >= 0.8f)
+                if (curseCount >= 16)
                 {
 
                     flight = player.gameObject.AddComponent<ModdingUtils.MonoBehaviours.InAirJumpEffect>();
@@ -171,30 +158,25 @@ namespace WWC.MonoBehaviours
                     flight.SetInterval(0.1f);
                 }
             }
+
+            ApplyModifiers();
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
+            this.ClearModifiers();
+
+            col.enabled = true;
             if (increased)
             {
                 stats.GetAdditionalData().DamageReduction -= multiplier;
 
-                if (curseCount < 16 && gravity.gravityForce != 0f)
-                {
-                    gravity.gravityForce /= (1f - (1f / 16f * (float)Mathf.Clamp(curseCount, 0, 16)));
-                }
-                else if (changedGravity)
-                {
-                    gravity.gravityForce = prevGravity;
-                    changedGravity = false;
-                }
-
-                if (curseCount > 20)
+                if (curseCount >= 20)
                 {
                     col.enabled = true;
                 }
 
-                if (multiplier >= 0.8f)
+                if (curseCount >= 16)
                 {
                     UnityEngine.GameObject.Destroy(flight);
                 }
@@ -203,20 +185,15 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
-        private void OnDestroy()
+        public override void OnOnDestroy()
         {
             OnPointEnd();
-            HookedMonoManager.instance.hookedMonos.Remove(this);
-        }
-
-        public void Destroy()
-        {
-            UnityEngine.Object.Destroy(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

@@ -7,6 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WillsWackyManagers.Utils;
 using WWC.Extensions;
+using WWC.Interfaces;
 using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
@@ -140,7 +141,7 @@ namespace WWC.Cards
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    class ShadowBullets_Mono : Hooked_Mono
+    class ShadowBullets_Mono : MonoBehaviour, IPointStartHookHandler, IGameStartHookHandler
     {
         private CharacterData data;
         private Player player;
@@ -148,7 +149,7 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
         }
 
@@ -249,12 +250,12 @@ namespace WWC.MonoBehaviours
         //    gun.spread = Mathf.Clamp(gun.spread, 0.01f, float.PositiveInfinity);
         //}
 
-        public override void OnPointStart()
+        public void OnPointStart()
         {
             CheckIfValid();
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
@@ -262,7 +263,7 @@ namespace WWC.MonoBehaviours
         private void OnDestroy()
         {
             gun.ShootPojectileAction -= OnShootProjectileAction;
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
 
         public void Destroy()

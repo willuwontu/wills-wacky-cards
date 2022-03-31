@@ -14,7 +14,6 @@ namespace WWC.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            statModifiers.movementSpeed = .85f;
             statModifiers.jump = 1.45f;
             gun.spread = 0.05f;
 
@@ -57,13 +56,6 @@ namespace WWC.Cards
                     positive = true,
                     stat = "Jump Height",
                     amount = "+45%",
-                    simepleAmount = CardInfoStat.SimpleAmount.Some
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Move Speed",
-                    amount = "-15%",
                     simepleAmount = CardInfoStat.SimpleAmount.Some
                 },
                 new CardInfoStat()

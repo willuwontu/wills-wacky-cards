@@ -21,6 +21,10 @@ namespace WWC.MonoBehaviours
 			healthHandler.reviveAction += OnRevive;
 			base.GetComponentInParent<ChildRPC>().childRPCs.Add("MechanicUpgrade", new Action(this.RPCA_Upgrade));
 			InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+
+			rotateImage = rotator.gameObject.GetComponentInChildren<ProceduralImage>();
+			topImage = still.gameObject.GetComponentInChildren<ProceduralImage>();
+			backRing = this.gameObject.transform.Find("Canvas/Size/BackRing").GetComponent<ProceduralImage>();
 		}
 
 		public void OnDestroy()
@@ -116,10 +120,13 @@ namespace WWC.MonoBehaviours
         {
 			this.remainingDuration = 0;
 			this.isUpgrading = true;
+			this.counter = 0f;
 		}
 
 		private void Update()
 		{
+			AdjustColors(isUpgrading);
+
 			if (this.soundCounterLast < this.counter)
 			{
 				this.SoundPlay();
@@ -232,6 +239,41 @@ namespace WWC.MonoBehaviours
         {
 			this.player.gameObject.AddComponent<ClonedWeakness>();
 		}
+
+		private void AdjustColors(bool onCooldown)
+		{
+			int index = onCooldown ? 1 : 0;
+
+			backRing.color = backRingColors[index];
+			rotateImage.color = ringColors[index];
+			topImage.color = ringColors[index];
+			fill.color = backgroundColors[index];
+			outerRing.color = ringColors[index];
+		}
+
+		private Color[] backRingColors = new Color[]
+{
+			new Color32(255, 167, 0, 255),
+			new Color32(161, 56, 52, 29)
+};
+
+		private Color[] ringColors = new Color[]
+		{
+			new Color32(0, 191, 255, 255),
+			new Color32(255, 69, 0, 255)
+		};
+
+		private Color[] backgroundColors = new Color[]
+		{
+			new Color32(255, 196, 0, 10),
+			new Color32(255, 41, 0, 5)
+		};
+
+		private ProceduralImage backRing;
+
+		private ProceduralImage rotateImage;
+
+		private ProceduralImage topImage;
 
 		public SoundEvent soundUpgradeChargeLoop;
 

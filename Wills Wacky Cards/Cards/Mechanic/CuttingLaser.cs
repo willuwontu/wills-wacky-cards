@@ -29,7 +29,7 @@ namespace WWC.Cards
             if (upgrader)
             {
                 upgrader.upgradeTime *= 0.75f;
-                upgrader.gunStatModifier.damage_mult += 0.5f;
+                upgrader.gunStatModifier.damage_mult += 0.3f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -75,7 +75,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Damage per upgrade",
-                    amount = "+50%",
+                    amount = "+30%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

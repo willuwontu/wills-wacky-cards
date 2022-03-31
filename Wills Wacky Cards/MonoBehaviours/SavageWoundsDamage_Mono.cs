@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnboundLib;
 using WWC.Extensions;
+using WWC.Interfaces;
 using InControl;
 using System;
 using System.Collections;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 
 namespace WWC.MonoBehaviours
 {
-    public class SavageWoundsDamage_Mono : Hooked_Mono
+    public class SavageWoundsDamage_Mono : MonoBehaviour, IPointEndHookHandler
     {
         public bool start = false;
         public float duration = 0f;
@@ -23,7 +24,7 @@ namespace WWC.MonoBehaviours
         private void Start()
         {
             data = GetComponentInParent<CharacterData>();
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
         }
 
         private void FixedUpdate()
@@ -57,14 +58,14 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
         private void OnDestroy()
         {
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
             colorEffect.Destroy();
         }
 

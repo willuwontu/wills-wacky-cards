@@ -14,13 +14,12 @@ namespace WWC.Cards
 {
     class UnstoppableForce : CustomCard
     {
+        public static CardInfo card = null;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             var tracker = this.gameObject.GetOrAddComponent<MomentumCard_Mono>();
             tracker.card = cardInfo;
             tracker.title = "Unstoppable Force";
-
-            MomentumTracker.stacks += 1;
 
             var stacks = MomentumTracker.stacks = Math.Max(MomentumTracker.stacks, 1);
 

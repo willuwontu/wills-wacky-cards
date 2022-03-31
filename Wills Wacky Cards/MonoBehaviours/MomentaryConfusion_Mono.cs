@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnboundLib;
 using WWC.Extensions;
+using WWC.Interfaces;
 using InControl;
 using System;
 using System.Collections;
@@ -9,7 +10,7 @@ using System.Collections.Generic;
 
 namespace WWC.MonoBehaviours
 {
-    public class MomentaryConfusion_Mono : Hooked_Mono
+    public class MomentaryConfusion_Mono : MonoBehaviour, IPointEndHookHandler, IPointStartHookHandler, IRoundEndHookHandler, IGameStartHookHandler, IBattleStartHookHandler
     {
         public int chance = 0;
         public float duration = 0f;
@@ -38,7 +39,7 @@ namespace WWC.MonoBehaviours
         private void Start()
         {
             data = GetComponentInParent<CharacterData>();
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
         }
 
         private void FixedUpdate()
@@ -122,22 +123,26 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             battleStarted = false;
+            if (swapped)
+            {
+                UndoSwap();
+            }
         }
 
-        public override void OnPointStart()
+        public void OnPointStart()
         {
             CheckIfValid();
         }
 
-        public override void OnBattleStart()
+        public void OnBattleStart()
         {
             battleStarted = true;
         }
 
-        public override void OnRoundEnd()
+        public void OnRoundEnd()
         {
             if (swapped)
             {
@@ -145,7 +150,7 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
@@ -233,7 +238,7 @@ namespace WWC.MonoBehaviours
                     UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] Player {player.playerID} has issues with undoing the swap.");
                 }
             }
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
 
         public void Destroy()

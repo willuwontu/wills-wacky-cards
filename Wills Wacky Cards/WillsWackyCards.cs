@@ -41,7 +41,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.7.8"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.8.0"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -69,7 +69,6 @@ namespace WWC
             var harmony = new Harmony(ModId);
             harmony.PatchAll();
 
-            gameObject.AddComponent<HookedMonoManager>();
             remover = gameObject.AddComponent<CardRemover>();
             gameObject.AddComponent<InterfaceGameModeHooksManager>();
 
@@ -87,8 +86,8 @@ namespace WWC
             CustomCard.BuildCard<Gatling>();
             CustomCard.BuildCard<PlasmaRifle>();
             CustomCard.BuildCard<PlasmaShotgun>();
-            CustomCard.BuildCard<UnstoppableForce>();
-            CustomCard.BuildCard<ImmovableObject>();
+            CustomCard.BuildCard<UnstoppableForce>(cardInfo => { UnstoppableForce.card = cardInfo; });
+            CustomCard.BuildCard<ImmovableObject>(cardInfo => { ImmovableObject.card = cardInfo; });
             CustomCard.BuildCard<HotPotato>();
             CustomCard.BuildCard<SavageWounds>();
             CustomCard.BuildCard<RitualisticSacrifice>();
@@ -121,6 +120,7 @@ namespace WWC
                 CustomCard.BuildCard<ShakyBullets>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
                 CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
                 CustomCard.BuildCard<EasyTarget>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+                CustomCard.BuildCard<WeakMind>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
                 //CustomCard.BuildCard<ErodingDarkness>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             }
 
@@ -273,49 +273,27 @@ namespace WWC
 
         IEnumerator RoundStart(IGameModeHandler gm)
         {
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                hookedMono.OnRoundStart();
-            }
             yield break;
         }
 
         IEnumerator RoundEnd(IGameModeHandler gm)
         {
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                hookedMono.OnRoundEnd();
-            }
             yield break;
         }
 
         IEnumerator PointStart(IGameModeHandler gm)
         {
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                //UnityEngine.Debug.Log($"[{ModInitials}][Debugging] Running OnPointStart");
-                hookedMono.OnPointStart();
-            }
             yield break;
         }
 
         IEnumerator PointEnd(IGameModeHandler gm)
         {
             battleStarted = false;
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                //UnityEngine.Debug.Log($"[{ModInitials}][Debugging] Running OnPointEnd");
-                hookedMono.OnPointEnd();
-            }
             yield break;
         }
 
         IEnumerator PlayerPickStart(IGameModeHandler gm)
         {
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                hookedMono.OnPlayerPickStart();
-            }
             foreach (var player in PlayerManager.instance.players)
             {
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(SiphonCurses.siphonCard))
@@ -347,30 +325,16 @@ namespace WWC
 
         IEnumerator PlayerPickEnd(IGameModeHandler gm)
         {
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                hookedMono.OnPlayerPickEnd();
-            }
-
             yield break;
         }
 
         IEnumerator PickStart(IGameModeHandler gm)
         {
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                hookedMono.OnPickStart();
-            }
-
             yield break;
         }
 
         IEnumerator PickEnd(IGameModeHandler gm)
         {
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                hookedMono.OnPickEnd();
-            }
             yield break;
         }
 
@@ -388,10 +352,6 @@ namespace WWC
                     var gunAmmo = player.data.weaponHandler.gun.GetComponentInChildren<GunAmmo>();
                     gunAmmo.ReloadAmmo();
                 }
-            }
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                hookedMono.OnBattleStart();
             }
             yield break;
         }
@@ -418,10 +378,6 @@ namespace WWC
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(TestCardCategory);
                 }
             }
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                hookedMono.OnGameStart();
-            }
             yield break;
         }
 
@@ -430,10 +386,6 @@ namespace WWC
             DestroyAll<Minigun_Mono>();
             DestroyAll<Vampirism_Mono>();
             DestroyAll<Gatling_Mono>();
-            foreach (var hookedMono in HookedMonoManager.instance.hookedMonos)
-            {
-                hookedMono.OnGameEnd();
-            }
             yield break;
         }
         void DestroyAll<T>() where T : UnityEngine.Object

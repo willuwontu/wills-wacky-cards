@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 using WWC.Extensions;
+using WWC.Interfaces;
 
 namespace WWC.MonoBehaviours
 {
@@ -17,7 +18,7 @@ namespace WWC.MonoBehaviours
         }
     }
 
-    class WaveMover_Mono : Hooked_Mono
+    class WaveMover_Mono : MonoBehaviour, IGameStartHookHandler
     {
         private CharacterData data;
         private Player player;
@@ -26,23 +27,12 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
-        }
-
-        private void Update()
-        {
-            if (!player)
-            {
-                if (!(data is null))
-                {
-                    player = data.player;
-                    weaponHandler = data.weaponHandler;
-                    gun = weaponHandler.gun;
-                    gun.ShootPojectileAction += OnShootProjectileAction;
-                }
-
-            }
+            player = data.player;
+            weaponHandler = data.weaponHandler;
+            gun = weaponHandler.gun;
+            gun.ShootPojectileAction += OnShootProjectileAction;
         }
 
         private void OnShootProjectileAction(GameObject obj)
@@ -61,14 +51,14 @@ namespace WWC.MonoBehaviours
             wave.amplitude = amp;
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
         private void OnDestroy()
         {
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
             gun.ShootPojectileAction -= OnShootProjectileAction;
         }
     }

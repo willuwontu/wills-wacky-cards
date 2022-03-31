@@ -7,6 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
+using WWC.Interfaces;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
@@ -19,6 +20,7 @@ namespace WWC.Cards
             gun.damage = 1.2f;
             statModifiers.gravity = 1.2f;
             gun.reloadTimeAdd = 0.25f;
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("TRT_Enabled") };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -94,14 +96,14 @@ namespace WWC.Cards
 
 namespace WWC.MonoBehaviours
 {
-    public class FlySwatter_Mono : Hooked_Mono
+    public class FlySwatter_Mono : MonoBehaviour, IBattleStartHookHandler, IGameStartHookHandler
     {
         private CharacterData data;
         private Player player;
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
             player = data.player;
         }
@@ -149,19 +151,19 @@ namespace WWC.MonoBehaviours
             return false;
         }
 
-        public override void OnBattleStart()
+        public void OnBattleStart()
         {
 
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
         private void OnDestroy()
         {
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
 
         public void Destroy()

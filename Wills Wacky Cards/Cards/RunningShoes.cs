@@ -15,8 +15,7 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             statModifiers.movementSpeed = 1.45f;
-            statModifiers.jump = .85f;
-            gun.spread = 0.05f;
+            gun.spread = 0.1f;
 
             cardInfo.allowMultiple = true;
             cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Running Shoes") };
@@ -62,15 +61,8 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Jump Height",
-                    amount = "-15%",
-                    simepleAmount = CardInfoStat.SimpleAmount.Some
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
                     stat = "Spread",
-                    amount = "+5%",
+                    amount = "+10%",
                     simepleAmount = CardInfoStat.SimpleAmount.Some
                 }
             };

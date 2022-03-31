@@ -94,7 +94,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Bounce per Upgrade",
-                    amount = "+30%",
+                    amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

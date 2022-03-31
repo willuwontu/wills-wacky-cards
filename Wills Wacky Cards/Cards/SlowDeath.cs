@@ -20,7 +20,6 @@ namespace WWC.Cards
             statModifiers.jump = 0.7f;
             statModifiers.gravity = 0.85f;
             gun.slow = 0.3f;
-            statModifiers.health = 1.1f;
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -79,13 +78,6 @@ namespace WWC.Cards
                     positive = false,
                     stat = "Jump Height",
                     amount = "-30%",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Health",
-                    amount = "+10%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

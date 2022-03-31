@@ -88,6 +88,20 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Portable Fabricators (Common)
 
 ----
+## v 1.8.0
+- Aggressive balancing pass
+- Bug fixes
+- Lots of code refactoring
+
+----
+## v 1.7.10
+- Curse Eater Lifesteal should now work
+
+----
+## v 1.7.9
+- Bug Fixes
+
+----
 ## v 1.7.8
 - Bug Fixes
 

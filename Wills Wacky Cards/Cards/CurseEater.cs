@@ -83,7 +83,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Lifesteal",
-                    amount = "+80%",
+                    amount = "+70%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -194,8 +194,8 @@ namespace WWC.MonoBehaviours
         public void OnPointStart()
         {
             var curses = CurseManager.instance.GetAllCursesOnPlayer(player).Count();
-            var multiplier = 0.1f * curses + 0.8f;
-            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse Eater] Adding a +{string.Format("{F:0}", multiplier * 100f)}% lifesteal.");
+            var multiplier = 0.1f * curses + 0.7f;
+            UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Curse Eater] Adding a +{string.Format("{0:F0}", multiplier * 100f)}% lifesteal.");
             characterStatModifiersModifier.lifeSteal_add = multiplier;
             ApplyModifiers();
 

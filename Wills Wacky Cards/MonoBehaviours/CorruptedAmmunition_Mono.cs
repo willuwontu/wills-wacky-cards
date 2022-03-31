@@ -3,6 +3,7 @@ using System.Linq;
 using WWC.Extensions;
 using UnityEngine;
 using WillsWackyManagers.Utils;
+using WWC.Interfaces;
 using Photon.Pun;
 
 namespace WWC.MonoBehaviours
@@ -48,7 +49,7 @@ namespace WWC.MonoBehaviours
     }
 
     [DisallowMultipleComponent]
-    class CorruptedAmmunition_Mono : Hooked_Mono
+    class CorruptedAmmunition_Mono : MonoBehaviourPun, IPointStartHookHandler, IPointEndHookHandler, IPickStartHookHandler, IGameStartHookHandler
     {
         private int corruptedBullets = 0;
         private GameObject bulletMono = new GameObject("CorruptedBullet", typeof(CorruptionHitEffect));
@@ -65,7 +66,7 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
         }
 
@@ -121,12 +122,12 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
-            Destroy(this);
+            UnityEngine.GameObject.Destroy(this);
         }
 
-        public override void OnPointStart()
+        public void OnPointStart()
         {
             CheckIfValid();
             try
@@ -151,7 +152,7 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             if (increased)
             {
@@ -162,7 +163,7 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnPickStart()
+        public void OnPickStart()
         {
             CheckCorruption();
         }
@@ -199,6 +200,7 @@ namespace WWC.MonoBehaviours
                 UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Corrupted Ammunition][Debugging] Player {player.playerID} has a damage multiplier of {gun.damage} after an decrease of {corruptedBullets * 0.2f * 100f} from curses.");
             }
             gun.ShootPojectileAction -= OnShootProjectileAction;
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WillsWackyCards", "Wills Wa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WillsWackyManagers", "..\WillsWackyManagers\WillsWackyManagers\WillsWackyManagers.csproj", "{EB3BB52C-F0EE-4745-BA62-6A8DC0A6F8D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WillsWackyCardsClassCompat", "WillsWackyCardsClassCompat\WillsWackyCardsClassCompat.csproj", "{272D9A3C-D22A-4818-93E3-31FC23111F2F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WillsWackyCardsClassCompat", "WillsWackyCardsClassCompat\WillsWackyCardsClassCompat.csproj", "{272D9A3C-D22A-4818-93E3-31FC23111F2F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

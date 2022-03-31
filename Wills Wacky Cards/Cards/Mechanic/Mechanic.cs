@@ -71,9 +71,9 @@ namespace WWC.Cards
             upgrader.fill = abyssal.fill;
             upgrader.rotator = abyssal.rotator;
             upgrader.still = abyssal.still;
-            upgrader.gunStatModifier.damage_mult = 1.4f;
-            upgrader.characterDataModifier.maxHealth_mult = 1.4f;
-            upgrader.characterDataModifier.health_mult = 1.4f;
+            upgrader.gunStatModifier.damage_mult = 1.3f;
+            upgrader.characterDataModifier.maxHealth_mult = 1.3f;
+            upgrader.characterDataModifier.health_mult = 1.3f;
 
 
             WillsWackyCards.instance.ExecuteAfterFrames(5, () => 
@@ -172,14 +172,14 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "DMG per Upgrade",
-                    amount = "+40%",
+                    amount = "+30%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "HP per Upgrade",
-                    amount = "+40%",
+                    amount = "+30%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

@@ -18,9 +18,10 @@ namespace WWC.Cards
         {
             gun.objectsToSpawn = new ObjectsToSpawn[] { new ObjectsToSpawn { AddToProjectile = new GameObject("A_Boomerang", new Type[] { typeof(BoomerangBullet_Mono) }) } };
             gun.ammo = 3;
-            gun.bulletDamageMultiplier = 1.5f;
+            gun.bulletDamageMultiplier = 1.45f;
             gun.gravity = 0f;
             gun.attackSpeed = 2f;
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("TRT_Enabled") };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -69,7 +70,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Damage",
-                    amount = "+50%",
+                    amount = "+45%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

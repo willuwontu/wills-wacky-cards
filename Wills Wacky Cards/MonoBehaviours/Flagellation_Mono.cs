@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using WWC.Extensions;
+using WWC.Interfaces;
 using UnboundLib.GameModes;
 using UnboundLib;
 using System.Collections.Generic;
@@ -8,78 +8,45 @@ using System.Linq;
 
 namespace WWC.MonoBehaviours
 {
-    public class Flagellation_Mono : Hooked_Mono
+    public class Flagellation_Mono : ReversibleEffect, IPointEndHookHandler, IPointStartHookHandler, IGameStartHookHandler
     {
         public CardInfo hiltlessBlade;
 
         private float multiplier = 1f;
 
-        private CharacterData data;
-        private Player player;
-        private Block block;
-        private HealthHandler health;
-        private CharacterStatModifiers stats;
-        private Gun gun;
-        private GunAmmo gunAmmo;
-        private Gravity gravity;
-        private WeaponHandler weaponHandler;
-
-        private void Start()
+        public override void OnStart()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
+            this.applyImmediately = false;
+            this.SetLivesToEffect(int.MaxValue);
         }
 
-        private void Update()
-        {
-            if (!player)
-            {
-                if (!(data is null))
-                {
-                    player = data.player;
-                    weaponHandler = data.weaponHandler;
-                    gun = weaponHandler.gun;
-                    gunAmmo = gun.GetComponentInChildren<GunAmmo>();
-                    block = data.block;
-                    stats = data.stats;
-                    health = data.healthHandler;
-                    gravity = player.GetComponent<Gravity>();
-                }
-
-            }
-        }
-
-        public override void OnPointStart()
+        public void OnPointStart()
         {
             multiplier = 1f;
             foreach (var card in player.data.currentCards.Where((cardInfo) => cardInfo.cardName.ToLower() == "Flagellation".ToLower()))
             {
                 multiplier *= 2f;
             }
-            data.maxHealth *= multiplier;
-            data.health = data.maxHealth;
-            stats.InvokeMethod("ConfigureMassAndSize");
+            this.characterDataModifier.health_mult = multiplier;
+            this.characterDataModifier.maxHealth_mult = multiplier;
+            this.ApplyModifiers();
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
-            data.maxHealth /= multiplier;
+            this.ClearModifiers();
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
-
-        private void OnDestroy()
+        public override void OnOnDestroy()
         {
-            HookedMonoManager.instance.hookedMonos.Remove(this);
-        }
-
-        public void Destroy()
-        {
-            UnityEngine.Object.Destroy(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

@@ -6,6 +6,11 @@ using UnboundLib.GameModes;
 
 namespace WWC.Interfaces
 {
+    /// <summary>
+    /// <para>A class used to run the game mode hook interfaces.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/>.</para>
+    /// </summary>
     public class InterfaceGameModeHooksManager : MonoBehaviour
     {
         public static InterfaceGameModeHooksManager instance { get; private set; }
@@ -43,7 +48,19 @@ namespace WWC.Interfaces
             GameModeManager.AddHook(GameModeHooks.HookRoundStart, RoundStart);
             GameModeManager.AddHook(GameModeHooks.HookRoundEnd, RoundEnd);
         }
-
+        /// <summary>
+        /// <para>Registers any interface hooks on an object so that they're triggered when the hook is called.</para>
+        /// </summary>
+        /// <param name="obj">The object to register</param>
+        /// <example>
+        /// An example showing how to register a hook when a monobehaviour is created.
+        /// <code>
+        /// public void Start()
+        ///     {
+        ///         InterfaceGameModeHooksManager.RegisterHooks(this);
+        ///     }
+        /// </code>
+        /// </example>
         public void RegisterHooks(object obj)
         {
             if (obj is IGameEndHookHandler gameEnd)
@@ -92,6 +109,19 @@ namespace WWC.Interfaces
             }
         }
 
+        /// <summary>
+        /// <para>Deregisters any gamemode hooks on an object, so that they're not triggered anymore.</para>
+        /// </summary>
+        /// <param name="obj">The object to deregister.</param>
+        /// <example>
+        /// An example showing how to remove a hook when a monobehaviour is destroyed.
+        /// <code>
+        /// public void OnDestroy()
+        ///     {
+        ///         InterfaceGameModeHooksManager.RemoveHooks(this);
+        ///     }
+        /// </code>
+        /// </example>
         public void RemoveHooks(object obj)
         {
             if (obj is IGameEndHookHandler gameEnd)
@@ -318,48 +348,103 @@ namespace WWC.Interfaces
         }
     }
 
-    interface IGameStartHookHandler
+    /// <summary>
+    /// <para>An interface for a Game Start gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>  
+    /// </summary>
+    public interface IGameStartHookHandler
     {
-        public abstract void OnGameStart();
+        public void OnGameStart();
     }
-    interface IGameEndHookHandler
+    /// <summary>
+    /// <para>An interface for a Game End gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>  
+    /// </summary>
+    public interface IGameEndHookHandler
     {
-        public abstract void OnGameEnd();
+        public void OnGameEnd();
     }
-    interface IPlayerPickStartHookHandler
+    /// <summary>
+    /// <para>An interface for a Player Pick Start gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>   
+    /// </summary>
+    public interface IPlayerPickStartHookHandler
     {
-        public abstract void OnPlayerPickStart();
+        public void OnPlayerPickStart();
     }
-    interface IPlayerPickEndHookHandler
+    /// <summary>
+    /// <para>An interface for a Player Pick End gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>   
+    /// </summary>
+    public interface IPlayerPickEndHookHandler
     {
-        public abstract void OnPlayerPickEnd();
+        public void OnPlayerPickEnd();
     }
-    interface IPointEndHookHandler
+    /// <summary>
+    /// <para>An interface for a Point End gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>   
+    /// </summary>
+    public interface IPointEndHookHandler
     {
-        public abstract void OnPointEnd();
+        public void OnPointEnd();
     }
-    interface IPointStartHookHandler
+    /// <summary>
+    /// <para>An interface for a Point Start gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>   
+    /// </summary>
+    public interface IPointStartHookHandler
     {
-        public abstract void OnPointStart();
+        public void OnPointStart();
     }
-    interface IRoundEndHookHandler
+    /// <summary>
+    /// <para>An interface for a Round End gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>   
+    /// </summary>
+    public interface IRoundEndHookHandler
     {
-        public abstract void OnRoundEnd();
+        public void OnRoundEnd();
     }
-    interface IRoundStartHookHandler
+    /// <summary>
+    /// <para>An interface for a Round Start gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>   
+    /// </summary>
+    public interface IRoundStartHookHandler
     {
-        public abstract void OnRoundStart();
+        public void OnRoundStart();
     }
-    interface IPickStartHookHandler
+    /// <summary>
+    /// <para>An interface for a Pick Start gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>   
+    /// </summary>
+    public interface IPickStartHookHandler
     {
-        public abstract void OnPickStart();
+        public void OnPickStart();
     }
-    interface IPickEndHookHandler
+    /// <summary>
+    /// <para>An interface for a Pick End gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>   
+    /// </summary>
+    public interface IPickEndHookHandler
     {
-        public abstract void OnPickEnd();
+        public void OnPickEnd();
     }
-    interface IBattleStartHookHandler
+    /// <summary>
+    /// <para>An interface for a Battle Start gamemode hook.</para>
+    /// 
+    /// <para>Make sure to register your hooks with <see cref="InterfaceGameModeHooksManager.RegisterHooks(object)"/> in <see cref="MonoBehaviour.Start()"/> and remove them with <see cref="InterfaceGameModeHooksManager.RemoveHooks(object)"/> in <see cref="MonoBehaviour.OnDestroy()"/>.</para>   
+    /// </summary>
+    public interface IBattleStartHookHandler
     {
-        public abstract void OnBattleStart();
+        public void OnBattleStart();
     }
 }

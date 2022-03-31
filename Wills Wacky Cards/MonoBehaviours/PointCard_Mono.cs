@@ -5,10 +5,11 @@ using UnboundLib.GameModes;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using WWC.Interfaces;
 
 namespace WWC.MonoBehaviours
 {
-    public class PointCard_Mono : Hooked_Mono
+    public class PointCard_Mono : MonoBehaviour, IPointStartHookHandler, IGameStartHookHandler, IPickStartHookHandler
     {
         private TextMeshProUGUI description;
         private TextMeshProUGUI cardName;
@@ -40,7 +41,7 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
 
 
             TextMeshProUGUI[] allChildrenRecursive = gameObject.GetComponentsInChildren<TextMeshProUGUI>();
@@ -65,7 +66,7 @@ namespace WWC.MonoBehaviours
             cardName = titleText.GetComponent<TextMeshProUGUI>();
         }
 
-        public override void OnPointStart()
+        public void OnPointStart()
         {
             UpdateMultiplier();
             foreach (var statInfo in CurrentStats())
@@ -84,12 +85,12 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             OnPointStart();
         }
 
-        public override void OnPickStart()
+        public void OnPickStart()
         {
             OnPointStart();
         }
@@ -152,6 +153,11 @@ namespace WWC.MonoBehaviours
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Debugging] Current number of points is {totalPointsEarned}");
+        }
+
+        private void OnDestroy()
+        {
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

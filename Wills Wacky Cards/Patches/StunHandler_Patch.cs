@@ -15,7 +15,7 @@ namespace WWC.Patches
         static void WillpowerSpeedUp(StunHandler __instance, CharacterData ___data)
         {
             var data = ___data;
-            if (data.stats.GetAdditionalData().willpower != 0f && data.silenceTime > 0f)
+            if (data.stats.GetAdditionalData().willpower != 0f && data.stunTime > 0f)
             {
                 data.stunTime -= TimeHandler.deltaTime * data.stats.GetAdditionalData().willpower;
             }

@@ -80,14 +80,6 @@ namespace WWC.Patches
             {
                 healthHandler.regeneration = 0f;
             }
-            if (characterStatModifiers.GetAdditionalData().MassModifier != 1f)
-            {
-                float massCurr = (float)characterData.playerVel.GetFieldValue("mass");
-                float massMod = characterStatModifiers.GetAdditionalData().MassModifier;
-                float massTarg = massCurr * massMod;
-                characterData.playerVel.SetFieldValue("mass", massTarg);
-                UnityEngine.Debug.Log(string.Format("[WWC] Setting Mass to {0:F2} (was {1:F2}, modified by {2:F2})", massTarg, massCurr, massMod));
-            }
         }
     }
 }
