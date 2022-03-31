@@ -14,13 +14,13 @@ namespace WWC.Cards
 {
     class ImmovableObject : CustomCard
     {
+        public static CardInfo card = null;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             var tracker = this.gameObject.GetOrAddComponent<MomentumCard_Mono>();
             tracker.card = cardInfo;
             tracker.title = "Immovable Object";
 
-            MomentumTracker.stacks += 1;
 
             var stacks = MomentumTracker.stacks = Math.Max(MomentumTracker.stacks, 1);
 

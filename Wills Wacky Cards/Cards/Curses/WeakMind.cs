@@ -5,53 +5,38 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using WWC.MonoBehaviours;
+using WillsWackyManagers.Utils;
 using WWC.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WWC.Cards
+namespace WWC.Cards.Curses
 {
-    class SavageWounds : CustomCard
+    class WeakMind : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.damage = 0.8f;
-            List<ObjectsToSpawn> list = gun.objectsToSpawn.ToList<ObjectsToSpawn>();
-            list.Add(new ObjectsToSpawn
-            {
-                AddToProjectile = new GameObject("Savage_Hit", new Type[]
-                {
-                    typeof(SavageWounds_Mono)
-                })
-            });
-            gun.objectsToSpawn = list.ToArray();
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            // Edits values on player when card is selected
-            var wounds = player.gameObject.GetOrAddComponent<SavageWounds_Mono>();
-            wounds.duration += 4f;
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            characterStats.GetAdditionalData().willpower *= 0.5f;
+            characterStats.GetAdditionalData().MassModifier *= 0.1f;
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var wounds = player.gameObject.GetComponent<SavageWounds_Mono>();
-            if (wounds)
-            {
-                wounds.duration -= 2f;
-            }
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Savage Wounds";
+            return "Weak Mind";
         }
         protected override string GetDescription()
         {
-            return "Some wounds take more time to recover from.";
+            return "I've got some oceanfornt property in Arizona to sell you.";
         }
         protected override GameObject GetCardArt()
         {
@@ -68,26 +53,19 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Damage",
-                    amount = "-20%",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Stop Healing",
-                    amount = "+4s",
+                    stat = "Willpower",
+                    amount = "-50%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.DestructiveRed;
+            return CardThemeColor.CardThemeColorType.EvilPurple;
         }
         public override string GetModName()
         {
-            return WillsWackyCards.ModInitials;
+            return WillsWackyCards.CurseInitials;
         }
         public override bool GetEnabled()
         {

@@ -7,6 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
+using WWC.Interfaces;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
@@ -85,7 +86,7 @@ namespace WWC.Cards.Curses
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    public class FumbledMags_Mono : Hooked_Mono
+    public class FumbledMags_Mono : MonoBehaviourPun, IBattleStartHookHandler, IPointEndHookHandler, IGameStartHookHandler
     {
         public int chance = 0;
 
@@ -99,7 +100,7 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
             player = data.player;
             stats = data.stats;
@@ -125,25 +126,25 @@ namespace WWC.MonoBehaviours
             gunAmmo.SetFieldValue("currentAmmo", (int) gunAmmo.GetFieldValue("currentAmmo") - ammo);
         }
 
-        public override void OnBattleStart()
+        public void OnBattleStart()
         {
             canTrigger = true;
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             canTrigger = false;
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
         private void OnDestroy()
         {
-            
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
 
         public void Destroy()

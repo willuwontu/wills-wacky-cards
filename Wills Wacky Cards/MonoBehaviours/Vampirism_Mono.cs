@@ -1,51 +1,46 @@
 ﻿using UnityEngine;
 using WWC.Extensions;
+using WWC.Interfaces;
 
 namespace WWC.MonoBehaviours
 {
-    public class Vampirism_Mono : Hooked_Mono
+    public class Vampirism_Mono : MonoBehaviour, IBattleStartHookHandler, IPointEndHookHandler, IGameStartHookHandler
     {
         public float percentLifeDrain = 1f/16.5f;
         private float damage;
-        private bool coroutineStarted;
         private CharacterData data;
         private Player target;
         private bool battleStarted = false;
+        private float lastTriggered = 0f;
 
         private void Start()
         {
-            data = GetComponent<CharacterData>();
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            data = GetComponentInParent<CharacterData>();
+            target = data.player;
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
         }
 
         private void Update()
         {
-            if (!target)
+            if (Time.time > (lastTriggered + 1f))
             {
-                if (!(data is null)) target = data.player;
+                Damage();
             }
-
-            if (!(target is null) && target.gameObject.activeInHierarchy && !coroutineStarted)
-            {
-                coroutineStarted = true;
-                InvokeRepeating(nameof(Damage), 0, 1f);
-            }
-
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             battleStarted = false;
         }
 
-        public override void OnBattleStart()
+        public void OnBattleStart()
         {
             battleStarted = true;
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
-            UnityEngine.GameObject.Destroy(this);
+            UnityEngine.GameObject.Destroy(this.gameObject);
         }
 
         public void Damage()
@@ -59,11 +54,11 @@ namespace WWC.MonoBehaviours
         }
         public void Destroy()
         {
-            UnityEngine.Object.Destroy(this);
+            UnityEngine.Object.Destroy(this.gameObject);
         }
         private void OnDestroy()
         {
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

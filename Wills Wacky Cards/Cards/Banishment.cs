@@ -7,6 +7,7 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
+using WWC.Interfaces;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using Photon.Pun;
@@ -21,6 +22,7 @@ namespace WWC.Cards
             block.InvokeMethod("ResetStats");
             block.cdMultiplier = 1.1f;
 
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("TRT_Enabled") };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -83,7 +85,7 @@ namespace WWC.Cards
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    public class Banishment_Mono : Hooked_Mono
+    public class Banishment_Mono : MonoBehaviour, IPointStartHookHandler, IPointEndHookHandler, IGameStartHookHandler
     {
         public float duration = 0f;
 
@@ -102,7 +104,7 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
             player = data.player;
             weaponHandler = data.weaponHandler;
@@ -200,12 +202,12 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnPointStart()
+        public void OnPointStart()
         {
 
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             var people = banished.Keys.ToArray();
             foreach (var person in people)
@@ -219,7 +221,7 @@ namespace WWC.MonoBehaviours
             banished = new Dictionary<Player, float>();
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
@@ -229,7 +231,7 @@ namespace WWC.MonoBehaviours
             block.BlockProjectileAction -= OnBlockProjectile;
 
             UnityEngine.GameObject.Destroy(camera);
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
 
         public void Destroy()
@@ -239,7 +241,7 @@ namespace WWC.MonoBehaviours
     }
 
     [DisallowMultipleComponent]
-    public class BanishedPlayer_Mono : Hooked_Mono
+    public class BanishedPlayer_Mono : ReversibleEffect, IPointEndHookHandler, IGameStartHookHandler
     {
         public float duration = 0f;
         public bool go = false;
@@ -247,17 +249,10 @@ namespace WWC.MonoBehaviours
         public float slow = 0.7f;
         private Dictionary<Player, float> banished = new Dictionary<Player, float>();
 
-        private CharacterData data;
-        private Player player;
-        private CharacterStatModifiers stats;
-
-        private void Start()
+        public override void OnStart()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
-            data = GetComponentInParent<CharacterData>();
-            player = data.player;
-            stats = data.stats;
-            stats.movementSpeed *= slow;
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+            characterStatModifiersModifier.movementSpeed_mult = slow;
         }
 
         private void Update()
@@ -273,25 +268,20 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
-        private void OnDestroy()
+        public override void OnOnDestroy()
         {
             stats.movementSpeed /= slow;
-            HookedMonoManager.instance.hookedMonos.Remove(this);
-        }
-
-        public void Destroy()
-        {
-            UnityEngine.Object.Destroy(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

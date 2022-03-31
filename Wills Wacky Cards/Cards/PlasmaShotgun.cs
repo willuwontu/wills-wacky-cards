@@ -129,7 +129,7 @@ namespace WWC.Cards
                 {
                     positive = false,
                     stat = "Attack Speed",
-                    amount = string.Format("+{0:F0}%", 0.8f/0.3f),
+                    amount = string.Format("-{0:F0}%", 0.8f/0.3f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

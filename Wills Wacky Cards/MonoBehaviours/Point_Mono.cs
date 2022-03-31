@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using WWC.Extensions;
+using WWC.Interfaces;
 using UnboundLib.GameModes;
 using UnboundLib;
 using System.Collections.Generic;
@@ -18,7 +19,7 @@ namespace WWC.MonoBehaviours
 
     }
 
-    public class Point_Mono : Hooked_Mono
+    public class Point_Mono : ReversibleEffect, IPointStartHookHandler, IPointEndHookHandler, IGameStartHookHandler
     {
         public Func<float, int, float, bool, float> MultiplierCalculation = 
             (start, points, multiplier, up) => 
@@ -38,53 +39,25 @@ namespace WWC.MonoBehaviours
         private List<TeamScore> currentScore = new List<TeamScore>();
         private int totalPointsEarned = 0;
 
-        private CharacterData data;
-        private Player player;
-        private Block block;
-        private HealthHandler health;
-        private CharacterStatModifiers stats;
-        private Gun gun;
-        private GunAmmo gunAmmo;
-        private Gravity gravity;
-        private WeaponHandler weaponHandler;
-
-        private void Start()
+        public override void OnStart()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
-            data = GetComponentInParent<CharacterData>();
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
+            applyImmediately = false;
+            this.SetLivesToEffect(int.MaxValue);
         }
 
-        private void Update()
+        public void OnPointStart()
         {
-            if (!player)
-            {
-                if (!(data is null))
-                {
-                    player = data.player;
-                    weaponHandler = data.weaponHandler;
-                    gun = weaponHandler.gun;
-                    gunAmmo = gun.GetComponentInChildren<GunAmmo>();
-                    block = data.block;
-                    stats = data.stats;
-                    health = data.healthHandler;
-                    gravity = player.GetComponent<Gravity>();
-                }
-
-            }
+            UpdateMultipliers();
+            this.ApplyModifiers();
         }
 
-        public override void OnPointStart()
+        public void OnPointEnd()
         {
-            UpdateMultiplier();
-            ChangeStats();
+            this.ClearModifiers();
         }
 
-        public override void OnPointEnd()
-        {
-            ChangeStats(false);
-        }
-
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
@@ -111,7 +84,7 @@ namespace WWC.MonoBehaviours
             block.cdMultiplier *= downMult;
         }
 
-        private void UpdateMultiplier()
+        private void UpdateMultipliers()
         {
             currentScore.Clear();
 
@@ -124,17 +97,24 @@ namespace WWC.MonoBehaviours
                 totalPointsEarned += score.points;
             }
 
+            var upMult = MultiplierCalculation(startValue, totalPointsEarned, multiplierPerPoint, true);
+            var downMult = MultiplierCalculation(startValue, totalPointsEarned, multiplierPerPoint, false);
+
+            this.characterDataModifier.maxHealth_mult = upMult;
+            this.characterDataModifier.health_mult = upMult;
+            this.characterStatModifiersModifier.movementSpeed_mult = upMult;
+            this.characterStatModifiersModifier.jump_mult = upMult;
+            this.gravityModifier.gravityForce_mult = downMult;
+            this.gunStatModifier.damage_mult = upMult;
+            this.gunAmmoStatModifier.reloadTimeMultiplier_mult = downMult;
+            this.blockModifier.cdMultiplier_mult = downMult;
+
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Debugging] Current number of points is {totalPointsEarned}");
         }
 
-        private void OnDestroy()
+        public override void OnOnDestroy()
         {
-            HookedMonoManager.instance.hookedMonos.Remove(this);
-        }
-
-        public void Destroy()
-        {
-            UnityEngine.Object.Destroy(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

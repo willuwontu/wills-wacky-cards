@@ -20,10 +20,10 @@ namespace WWC.Cards
             gun.spread = 0.35f;
             gun.reloadTimeAdd = 0.5f;
             gun.attackSpeed = 1.25f;
-            gun.bulletDamageMultiplier = 0.75f;
+            gun.bulletDamageMultiplier = 0.5f;
 
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType"), CustomCardCategories.instance.CardCategory("WWC Gun Type") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType"), CustomCardCategories.instance.CardCategory("WWC Gun Type"), CustomCardCategories.instance.CardCategory("TRT_Traitor") };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -94,7 +94,7 @@ namespace WWC.Cards
                 {
                     positive = false,
                     stat = "Damage",
-                    amount = "-25%",
+                    amount = "-50%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

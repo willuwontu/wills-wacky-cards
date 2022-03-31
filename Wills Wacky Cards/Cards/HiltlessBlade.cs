@@ -70,7 +70,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Damage",
-                    amount = "+150%",
+                    amount = "+100%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

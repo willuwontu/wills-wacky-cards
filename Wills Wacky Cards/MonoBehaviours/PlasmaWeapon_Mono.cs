@@ -2,6 +2,7 @@
 using UnityEngine.UI;
 using UnboundLib;
 using WWC.Extensions;
+using WWC.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,7 +12,7 @@ using Photon.Pun;
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    public class PlasmaWeapon_Mono : Hooked_Mono
+    public class PlasmaWeapon_Mono : MonoBehaviourPun, IPointStartHookHandler, IPointEndHookHandler, IBattleStartHookHandler
     {
         public float chargeToUse = 0f;
         public bool canShoot = true;
@@ -34,7 +35,7 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
             chargeBarObj = gameObject.transform.Find("WobbleObjects/ChargeBar").gameObject;
         }
@@ -211,21 +212,26 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnBattleStart()
+        public void OnBattleStart()
         {
             canShoot = true;
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             gun.currentCharge = 0f;
             gun.GetAdditionalData().beginCharge = false;
             canShoot = false;
         }
 
-        public override void OnPointStart()
+        public void OnPointStart()
         {
             CheckIfValid();
+        }
+
+        public void OnGameStart()
+        {
+            UnityEngine.GameObject.Destroy(this);
         }
 
         private void CheckIfValid()
@@ -250,7 +256,7 @@ namespace WWC.MonoBehaviours
 
         private void OnDestroy()
         {
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
             gun.useCharge = false;
             gun.ShootPojectileAction -= OnShootProjectileAction;
             Destroy(chargeBarObj);

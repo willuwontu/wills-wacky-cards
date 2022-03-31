@@ -5,37 +5,36 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using WWC.MonoBehaviours;
+using WillsWackyManagers.Utils;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 
-namespace WWC.Cards
+namespace WWC.Cards.Curses
 {
-    class WildAim : CustomCard
+    class Template : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.damage = 2.5f;
-            gun.spread = 0.7f;
-
-            cardInfo.allowMultiple = true;
-            cardInfo.categories = new CardCategory[] { CardChoiceSpawnUniqueCardPatch.CustomCategories.CustomCardCategories.instance.CardCategory("TRT_Enabled") };
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
+            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Wild Aim";
+            return "Template Curse";
         }
         protected override string GetDescription()
         {
-            return "Why aim when you can just shoot?";
+            return "Somebody forgot to change this stuff.";
         }
         protected override GameObject GetCardArt()
         {
@@ -51,27 +50,24 @@ namespace WWC.Cards
             {
                 new CardInfoStat()
                 {
-                    positive = true,
-                    stat = "Damage",
-                    amount = "+150%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aHugeAmountOf
-                },
-                new CardInfoStat()
-                {
                     positive = false,
-                    stat = "Spread",
-                    amount = "+70%",
-                    simepleAmount = CardInfoStat.SimpleAmount.aHugeAmountOf
+                    stat = "Effect",
+                    amount = "No",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.ColdBlue;
+            return CardThemeColor.CardThemeColorType.EvilPurple;
         }
         public override string GetModName()
         {
-            return WillsWackyCards.ModInitials;
+            return WillsWackyCards.CurseInitials;
+        }
+        public override bool GetEnabled()
+        {
+            return true;
         }
     }
 }

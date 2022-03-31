@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
+using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnboundLib.Cards;
 using UnityEngine;
 
@@ -16,6 +17,9 @@ namespace WWC.Cards
             gun.ammo = 10;
             gun.reloadTime = 0.9f;
             statModifiers.movementSpeed = 1f/1.25f;
+
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("TRT_Enabled") };
+
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

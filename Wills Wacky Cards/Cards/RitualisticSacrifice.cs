@@ -23,7 +23,7 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            WillsWackyCards.instance.ExecuteAfterFrames(10, () => 
+            WillsWackyCards.instance.ExecuteAfterFrames(40, () => 
                 {
                     var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
                     CurseManager.instance.RemoveAllCurses(player);

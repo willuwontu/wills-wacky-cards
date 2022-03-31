@@ -7,11 +7,12 @@ using WWC.Extensions;
 using WillsWackyManagers.Utils;
 using UnityEngine;
 using WWC.MonoBehaviours;
+using WWC.Interfaces;
 
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    class RunicWardsBlock_Mono : Hooked_Mono
+    class RunicWardsBlock_Mono : MonoBehaviourPun, IPointStartHookHandler, IPointEndHookHandler, IGameStartHookHandler, IBattleStartHookHandler
     {
         public int shields = 0;
         public int additionalBlocks = 0;
@@ -26,7 +27,7 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
             player = data.player;
             block = data.block;
@@ -96,17 +97,17 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             Destroy(this);
         }
 
-        public override void OnBattleStart()
+        public void OnBattleStart()
         {
             shields = CurseManager.instance.GetAllCursesOnPlayer(player).Count() / 2;
         }
 
-        public override void OnPointStart()
+        public void OnPointStart()
         {
             CheckIfValid();
             var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
@@ -119,7 +120,7 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             if (increased)
             {
@@ -168,12 +169,12 @@ namespace WWC.MonoBehaviours
                 block.additionalBlocks -= additionalBlocks;
             }
             stats.WasDealtDamageAction -= OnWasDealtDamage;
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 
     [DisallowMultipleComponent]
-    class RunicWardsSpeedRecovery_Mono : Hooked_Mono
+    class RunicWardsSpeedRecovery_Mono : MonoBehaviour, IPointEndHookHandler, IGameStartHookHandler
     {
         private CharacterData data;
         private Player player;
@@ -181,7 +182,7 @@ namespace WWC.MonoBehaviours
 
         private void Start()
         {
-            HookedMonoManager.instance.hookedMonos.Add(this);
+            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
             data = GetComponentInParent<CharacterData>();
             player = data.player;
             block = data.block;
@@ -195,19 +196,19 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public override void OnPointEnd()
+        public void OnPointEnd()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
-        public override void OnGameStart()
+        public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
         }
 
         private void OnDestroy()
         {
-            HookedMonoManager.instance.hookedMonos.Remove(this);
+            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
 
         public void Destroy()
