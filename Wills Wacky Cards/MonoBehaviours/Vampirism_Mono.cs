@@ -25,6 +25,7 @@ namespace WWC.MonoBehaviours
             if (Time.time > (lastTriggered + 1f))
             {
                 Damage();
+                lastTriggered = Time.time;
             }
         }
 

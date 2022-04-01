@@ -19,25 +19,33 @@ namespace WWC.Patches
             if ((card.sourceCard == WWC.Cards.ImmovableObject.card) || (card.sourceCard == WWC.Cards.UnstoppableForce.card))
             {
                 WWC.MonoBehaviours.MomentumTracker.stacks += 1;
-                if (card.sourceCard == WWC.Cards.ImmovableObject.card)
-                {
-                    UnityEngine.GameObject.Destroy(__result);
+                //if (card.sourceCard == WWC.Cards.ImmovableObject.card)
+                //{
+                //    var temp = __result;
+                //    WillsWackyCards.instance.ExecuteAfterFrames(5, () => 
+                //    {
+                //        UnityEngine.GameObject.Destroy(temp);
+                //    });
 
-                    var stacks = MomentumTracker.stacks;
-                    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { MomentumTracker.createdDefenseCards[stacks].gameObject, pos, rot });
-                    __result.GetComponent<CardInfo>().sourceCard = MomentumTracker.createdDefenseCards[stacks];
-                    __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
-                }
+                //    var stacks = MomentumTracker.stacks;
+                //    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { MomentumTracker.createdDefenseCards[stacks].gameObject, pos, rot });
+                //    __result.GetComponent<CardInfo>().sourceCard = MomentumTracker.createdDefenseCards[stacks];
+                //    __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
+                //}
 
-                if (card.sourceCard == WWC.Cards.UnstoppableForce.card)
-                {
-                    UnityEngine.GameObject.Destroy(__result);
+                //if (card.sourceCard == WWC.Cards.UnstoppableForce.card)
+                //{
+                //    var temp = __result;
+                //    WillsWackyCards.instance.ExecuteAfterSeconds(0.5f, () =>
+                //    {
+                //        UnityEngine.GameObject.Destroy(temp);
+                //    });
 
-                    var stacks = MomentumTracker.stacks;
-                    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { MomentumTracker.createdOffenseCards[stacks].gameObject, pos, rot });
-                    __result.GetComponent<CardInfo>().sourceCard = MomentumTracker.createdOffenseCards[stacks];
-                    __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
-                }
+                //    var stacks = MomentumTracker.stacks;
+                //    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { MomentumTracker.createdOffenseCards[stacks].gameObject, pos, rot });
+                //    __result.GetComponent<CardInfo>().sourceCard = MomentumTracker.createdOffenseCards[stacks];
+                //    __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
+                //}
             }
         }
 

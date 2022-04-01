@@ -88,6 +88,18 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Portable Fabricators (Common)
 
 ----
+## v 1.8.3
+- Bug Fixes
+
+----
+## v 1.8.2
+- Bug Fixes
+
+----
+## v 1.8.1
+- Bug Fixes
+
+----
 ## v 1.8.0
 - Aggressive balancing pass
 - Bug fixes
