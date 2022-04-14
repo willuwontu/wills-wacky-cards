@@ -124,9 +124,9 @@ namespace WWC.Cards
                 },
                 new CardInfoStat()
                 {
-                    positive = true,
-                    stat = "Reload",
-                    amount = "0.25%",
+                    positive = false,
+                    stat = "Reload Time",
+                    amount = "+0.25s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

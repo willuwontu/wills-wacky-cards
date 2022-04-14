@@ -86,7 +86,7 @@ namespace WWC.Cards
                 },
                 new CardInfoStat()
                 {
-                    positive = true,
+                    positive = false,
                     stat = "Block CD per Upgrade",
                     amount = "+0.5s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned

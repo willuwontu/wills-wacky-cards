@@ -14,9 +14,16 @@ namespace WWC.Cards
 {
     class Boomerang : CustomCard
     {
+        private static GameObject boomerangObject = null;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            gun.objectsToSpawn = new ObjectsToSpawn[] { new ObjectsToSpawn { AddToProjectile = new GameObject("A_Boomerang", new Type[] { typeof(BoomerangBullet_Mono) }) } };
+            if (!boomerangObject)
+            {
+                boomerangObject = new GameObject("A_Boomerang", new Type[] { typeof(BoomerangBullet_Mono) });
+                DontDestroyOnLoad(boomerangObject);
+            }
+
+            gun.objectsToSpawn = new ObjectsToSpawn[] { new ObjectsToSpawn { AddToProjectile = boomerangObject } };
             gun.ammo = 3;
             gun.bulletDamageMultiplier = 1.45f;
             gun.gravity = 0f;

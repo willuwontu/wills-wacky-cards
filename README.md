@@ -87,6 +87,21 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Personal Hammerspace (Common)
   - Portable Fabricators (Common)
 
+<details>
+<summary>Patches</summary>
+
+----
+## v 1.8.6
+- Bug Fixes
+
+----
+## v 1.8.4
+- Bug Fixes
+
+----
+## v 1.8.3
+- Bug Fixes, miscellaneous changes
+
 ----
 ## v 1.8.3
 - Bug Fixes
@@ -469,3 +484,5 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Minor patches on card logic
 - Shotgun is now incompatible with Pong (BSC) and Flamethrower (CR)
 - Slow Death doesn't slow as much.
+
+</details>

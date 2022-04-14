@@ -4,6 +4,7 @@ using WWC.Interfaces;
 
 namespace WWC.MonoBehaviours
 {
+    [DisallowMultipleComponent]
     public class Vampirism_Mono : MonoBehaviour, IBattleStartHookHandler, IPointEndHookHandler, IGameStartHookHandler
     {
         public float percentLifeDrain = 1f/16.5f;
