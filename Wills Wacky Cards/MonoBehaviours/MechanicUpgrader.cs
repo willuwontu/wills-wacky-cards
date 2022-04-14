@@ -21,10 +21,6 @@ namespace WWC.MonoBehaviours
 			healthHandler.reviveAction += OnRevive;
 			base.GetComponentInParent<ChildRPC>().childRPCs.Add("MechanicUpgrade", new Action(this.RPCA_Upgrade));
 			InterfaceGameModeHooksManager.instance.RegisterHooks(this);
-
-			rotateImage = rotator.gameObject.GetComponentInChildren<ProceduralImage>();
-			topImage = still.gameObject.GetComponentInChildren<ProceduralImage>();
-			backRing = this.gameObject.transform.Find("Canvas/Size/BackRing").GetComponent<ProceduralImage>();
 		}
 
 		public void OnDestroy()
@@ -114,6 +110,12 @@ namespace WWC.MonoBehaviours
             {
 				upgradeAction(upgradeLevel);
             }
+		}
+
+		private void Upgrade()
+        {
+			base.GetComponentInParent<ChildRPC>().CallFunction("MechanicUpgrade");
+			this.counter = 1f;
 		}
 
 		public void OnPointStart()
@@ -244,11 +246,11 @@ namespace WWC.MonoBehaviours
 		{
 			int index = onCooldown ? 1 : 0;
 
-			backRing.color = backRingColors[index];
-			rotateImage.color = ringColors[index];
-			topImage.color = ringColors[index];
-			fill.color = backgroundColors[index];
-			outerRing.color = ringColors[index];
+			this.backRing.color = backRingColors[index];
+			this.rotateImage.color = ringColors[index];
+			this.topImage.color = ringColors[index];
+			this.fill.color = backgroundColors[index];
+			this.outerRing.color = ringColors[index];
 		}
 
 		private Color[] backRingColors = new Color[]
@@ -259,7 +261,7 @@ namespace WWC.MonoBehaviours
 
 		private Color[] ringColors = new Color[]
 		{
-			new Color32(0, 191, 255, 255),
+			new Color32(255, 167, 0, 255),
 			new Color32(255, 69, 0, 255)
 		};
 
@@ -269,13 +271,28 @@ namespace WWC.MonoBehaviours
 			new Color32(255, 41, 0, 5)
 		};
 
-		private ProceduralImage backRing;
-
-		private ProceduralImage rotateImage;
-
-		private ProceduralImage topImage;
-
-		public SoundEvent soundUpgradeChargeLoop;
+		private ProceduralImage backRing
+        {
+			get
+            {
+				return this.gameObject.transform.Find("Canvas/Size/BackRing").GetComponent<ProceduralImage>();
+			}
+        }
+        private ProceduralImage rotateImage
+        {
+			get
+            {
+				return rotator.gameObject.GetComponentInChildren<ProceduralImage>();
+			}
+        }
+        private ProceduralImage topImage
+        {
+			get
+            {
+				return still.gameObject.GetComponentInChildren<ProceduralImage>();
+			}
+        }
+        public SoundEvent soundUpgradeChargeLoop;
 
 		private bool soundChargeIsPlaying;
 

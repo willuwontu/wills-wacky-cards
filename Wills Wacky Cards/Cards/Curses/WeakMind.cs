@@ -36,7 +36,7 @@ namespace WWC.Cards.Curses
         }
         protected override string GetDescription()
         {
-            return "I've got some oceanfornt property in Arizona to sell you.";
+            return "I've got some oceanfront property in Arizona to sell you.";
         }
         protected override GameObject GetCardArt()
         {

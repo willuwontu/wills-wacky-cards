@@ -32,7 +32,7 @@ namespace WWC.Cards
         {
             // Edits values on player when card is selected
             var wounds = player.gameObject.GetOrAddComponent<SavageWounds_Mono>();
-            wounds.duration += 4f;
+            wounds.duration += 6f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -40,7 +40,7 @@ namespace WWC.Cards
             var wounds = player.gameObject.GetComponent<SavageWounds_Mono>();
             if (wounds)
             {
-                wounds.duration -= 2f;
+                wounds.duration -= 6f;
             }
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
@@ -76,7 +76,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Stop Healing",
-                    amount = "+4s",
+                    amount = "+6s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

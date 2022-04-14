@@ -2,23 +2,28 @@
 using UnityEngine;
 using Sonigon;
 using WWC.MonoBehaviours;
+using WWC.Extensions;
 using UnboundLib;
+using UnboundLib.Networking;
 
 namespace WWC.Patches
 {
     [HarmonyPatch(typeof(CardChoice))] 
     class CardChoice_Patch
     {
-        [HarmonyPostfix]
+        [HarmonyPrefix]
         [HarmonyPriority(Priority.Last)]
         [HarmonyPatch("SpawnUniqueCard")]
-        static void MomentumReplace(CardChoice __instance, ref GameObject __result, Vector3 pos, Quaternion rot)
+        static void MomentumReplace(CardChoice __instance, GameObject __result, Vector3 pos, Quaternion rot)
         {
             var card = __result.GetComponent<CardInfo>();
 
             if ((card.sourceCard == WWC.Cards.ImmovableObject.card) || (card.sourceCard == WWC.Cards.UnstoppableForce.card))
             {
-                WWC.MonoBehaviours.MomentumTracker.stacks += 1;
+                if (PlayerManager.instance.GetPlayerWithID(__instance.pickrID).data.view.IsMine)
+                {
+                    UnboundLib.NetworkingManager.RPC(typeof(CardChoice_Patch), nameof(CardChoice_Patch.URPCA_IncrementMomentum));
+                }
                 //if (card.sourceCard == WWC.Cards.ImmovableObject.card)
                 //{
                 //    var temp = __result;
@@ -47,6 +52,12 @@ namespace WWC.Patches
                 //    __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
                 //}
             }
+        }
+
+        [UnboundRPC]
+        private static void URPCA_IncrementMomentum()
+        {
+            WWC.MonoBehaviours.MomentumTracker.stacks += 1;
         }
 
         //[HarmonyPrefix]
