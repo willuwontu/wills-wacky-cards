@@ -9,38 +9,6 @@ namespace WWC.Patches
     [HarmonyPatch(typeof(Gun))] 
     class Gun_Patch
     {
-        // Prefix patch is run before the original method is run.
-        // Type Bool so that we can tell Harmony to skip the original method if we set anything.
-        //   bulletID, numOfProj, charge are all parameters of the original method and used for calculations.
-        //   __instance grabs the triggering instance.
-        //   ___forceShootDir grabs the forcShootDir field of our triggering instance.
-        //   __result is the returned result of the method, AKA how we modify what value is returned.
-        [HarmonyPrefix]
-        [HarmonyPatch("getShootRotation")] // Patching the getShootRotation method in the gun object.
-        static bool EvenSpread(Gun __instance, int bulletID, int numOfProj, float charge, Vector3 ___forceShootDir, ref Quaternion __result) 
-        {
-            if ((__instance.spread != 0.0f)&&(__instance.evenSpread != 0.0f)) // If the gun has spread and there's an even spread factor.
-            {
-                Vector3 vector = __instance.shootPosition.forward;
-                if (___forceShootDir != Vector3.zero)
-                {
-                    vector = ___forceShootDir;
-                }
-                float d = __instance.multiplySpread * Mathf.Clamp(1f + charge * __instance.chargeSpreadTo, 0f, float.PositiveInfinity);
-                float num = Random.Range(-__instance.spread, __instance.spread);
-                num /= (1f + __instance.projectileSpeed * 0.5f) * 0.5f;
-                // New Code start
-                var even = bulletID * ((__instance.spread * 2) / (numOfProj - 1)) - __instance.spread; // Direction the bullet would point in, if the shots were spread evenly.
-                even /= (1f + __instance.projectileSpeed * 0.5f) * 0.5f; // Modify by the same factor that spread is modified by
-                num = even + (1.0f - Mathf.Clamp(__instance.evenSpread * (1f + __instance.chargeEvenSpreadTo * charge), 0.0f, 1.0f)) * (num - even); // Use evenness factor to determine how much we align with the random vs even spread.
-                // New Code end
-                vector += Vector3.Cross(vector, Vector3.forward) * num * d;
-                __result = Quaternion.LookRotation(__instance.lockGunToDefault ? __instance.shootPosition.forward : vector);
-                return false; // Skip the original method.
-            }
-            return true; // Run the original method.
-        }
-
         [HarmonyPrefix]
         [HarmonyPatch("DoAttacks")]
         static bool SetAttacks(Gun __instance, ref int attacks)
