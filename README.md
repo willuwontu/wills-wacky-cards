@@ -91,6 +91,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <summary>Patches</summary>
 
 ----
+## v 1.8.7
+- Even Spread Patch pushed to separate mod.
+
+----
 ## v 1.8.6
 - Bug Fixes
 
