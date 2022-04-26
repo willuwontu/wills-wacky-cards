@@ -157,7 +157,7 @@ namespace WWC.MonoBehaviours
 
             var silenceHandler = attacker.GetComponent<SilenceHandler>();
             silenceHandler.RPCA_AddSilence(duration);
-
+            attacker.data.stats.RPCA_AddSlow(0.7f, false);
             StartBanish(attacker, duration);
         }
 
@@ -185,16 +185,11 @@ namespace WWC.MonoBehaviours
                     camera.enabled = true;
                 }
             }
-            var banish = attacker.gameObject.GetOrAddComponent<BanishedPlayer_Mono>();
-            banish.duration += f;
-            banish.go = true;
         }
 
         private void StopBanish(Player attacker)
         {
             attacker.data.stats.GetAdditionalData().isBanished = false;
-            var banish = attacker.gameObject.GetOrAddComponent<BanishedPlayer_Mono>();
-            UnityEngine.GameObject.Destroy(banish);
             banished.Remove(attacker);
             if (attacker.data.view.IsMine)
             {
@@ -237,51 +232,6 @@ namespace WWC.MonoBehaviours
         public void Destroy()
         {
             UnityEngine.Object.Destroy(this);
-        }
-    }
-
-    [DisallowMultipleComponent]
-    public class BanishedPlayer_Mono : ReversibleEffect, IPointEndHookHandler, IGameStartHookHandler
-    {
-        public float duration = 0f;
-        public bool go = false;
-
-        public float slow = 0.7f;
-        private Dictionary<Player, float> banished = new Dictionary<Player, float>();
-
-        public override void OnStart()
-        {
-            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
-            characterStatModifiersModifier.movementSpeed_mult = slow;
-        }
-
-        private void Update()
-        {
-            if (go)
-            {
-                duration -= Time.deltaTime;
-            }
-
-            if (duration <= 0f)
-            {
-                UnityEngine.GameObject.Destroy(this);
-            }
-        }
-
-        public void OnPointEnd()
-        {
-            UnityEngine.GameObject.Destroy(this);
-        }
-
-        public void OnGameStart()
-        {
-            UnityEngine.GameObject.Destroy(this);
-        }
-
-        public override void OnOnDestroy()
-        {
-            stats.movementSpeed /= slow;
-            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

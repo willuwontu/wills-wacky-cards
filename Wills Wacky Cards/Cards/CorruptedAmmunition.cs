@@ -13,6 +13,7 @@ namespace WWC.Cards
 {
     class CorruptedAmmunition : CustomCard
     {
+        public static CardInfo card = null;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.allowMultiple = false;

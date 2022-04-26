@@ -44,8 +44,12 @@ namespace WWC.MonoBehaviours
 
 		private void OnRevive()
         {
-			this.remainingDuration = upgradeCooldown;
-			this.isUpgrading = true;
+			if (this.isUpgrading)
+            {
+				this.remainingDuration = Mathf.Clamp(remainingDuration + (upgradeCooldown / 4f), 0, upgradeCooldown);
+				return;
+            }
+			this.counter = this.counter / 2f;
 		}
 
 		public void OnDisable()
@@ -82,7 +86,7 @@ namespace WWC.MonoBehaviours
 		private void ResetStuff()
 		{
 			this.remainingDuration = 0f;
-			this.counter = 0f;
+			this.counter = 0.1f;
 			this.upgradeLevel = 0;
 			this.currentUpgradeLevel = 0;
 			this.levelText.text = $"{upgradeLevel}";
@@ -122,7 +126,7 @@ namespace WWC.MonoBehaviours
         {
 			this.remainingDuration = 0;
 			this.isUpgrading = true;
-			this.counter = 0f;
+			this.counter = 0.1f;
 		}
 
 		private void Update()

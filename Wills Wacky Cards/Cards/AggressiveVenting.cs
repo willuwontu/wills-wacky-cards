@@ -196,7 +196,7 @@ namespace WWC.MonoBehaviours
                 }
             }
 
-            if (!(radiatingVisuals.Count() > 0) || (radiatingVisuals.Count() > 0 && radiatingVisuals[radiatingVisuals.Count() - 1].radius > 1f))
+            if (!(radiatingVisuals.Count() > 0) || (radiatingVisuals.Count() > 0 && radiatingVisuals[radiatingVisuals.Count() - 1].radius > 2f))
             {
                 radiatingVisuals.Add(AddRadiatingVisual());
             }

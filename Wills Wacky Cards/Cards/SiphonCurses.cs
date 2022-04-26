@@ -14,6 +14,7 @@ namespace WWC.Cards
 {
     class SiphonCurses : CustomCard
     {
+        public static CardInfo card = null;
         internal static CardCategory siphonCard = CustomCardCategories.instance.CardCategory("Siphon Curse");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
