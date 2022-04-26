@@ -28,6 +28,10 @@ namespace WWC.Patches
         [HarmonyPatch("CallTakeDamage")]
         static void BleedEffect(HealthHandler __instance, Vector2 damage, Vector2 position, Player damagingPlayer, Player ___player)
         {
+            if (___player.data.block.IsBlocking() || (bool)___player.data.playerVel.GetFieldValue("simulated"))
+            {
+                return;
+            }
             var bleed = ___player.data.stats.GetAdditionalData().Bleed;
             if (bleed > 0f)
             {

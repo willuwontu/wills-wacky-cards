@@ -17,6 +17,10 @@ namespace WWC.Extensions
         public float extraBlockTime;
         public bool useNewRespawnTime;
         public float newRespawnTime;
+        public float poisonResistance;
+        public float poisonDurationModifier;
+        public float poisonBurstModifier;
+        public float dealtDoTBurstModifier;
 
         public CharacterStatModifiersAdditionalData()
         {
@@ -29,6 +33,10 @@ namespace WWC.Extensions
             extraBlockTime = 0f;
             useNewRespawnTime = false;
             newRespawnTime = 0f;
+            poisonResistance = 1f;
+            poisonBurstModifier = 1f;
+            dealtDoTBurstModifier = 1f;
+            poisonDurationModifier = 1f;
         }
     }
     public static class CharacterStatModifiersExtension
@@ -64,6 +72,10 @@ namespace WWC.Extensions
             __instance.GetAdditionalData().extraBlockTime = 0f;
             __instance.GetAdditionalData().useNewRespawnTime = false;
             __instance.GetAdditionalData().newRespawnTime = 0f;
+            __instance.GetAdditionalData().poisonResistance = 1f;
+            __instance.GetAdditionalData().poisonBurstModifier = 1f;
+            __instance.GetAdditionalData().dealtDoTBurstModifier = 1f;
+            __instance.GetAdditionalData().poisonDurationModifier = 1f;
         }
     }
 }

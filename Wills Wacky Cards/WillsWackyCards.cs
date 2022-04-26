@@ -96,17 +96,11 @@ namespace WWC
             CustomCard.BuildCard<CursedKnowledge>();
             CustomCard.BuildCard<EnduranceTraining>();
             CustomCard.BuildCard<AdrenalineRush>();
-            CustomCard.BuildCard<RunicWards>();
-            CustomCard.BuildCard<HiltlessBlade>();
-            CustomCard.BuildCard<CorruptedAmmunition>();
+            
             CustomCard.BuildCard<HolyWater>();
             CustomCard.BuildCard<CleansingRitual>();
             CustomCard.BuildCard<BulletPoweredJetpack>();
-            CustomCard.BuildCard<CurseEater>(cardInfo => { CurseEater.card = cardInfo; });
-            CustomCard.BuildCard<GhostlyBody>();
-            CustomCard.BuildCard<ShadowBullets>();
-            CustomCard.BuildCard<SiphonCurses>();
-            CustomCard.BuildCard<Flagellation>();
+
             CustomCard.BuildCard<Banishment>();
             CustomCard.BuildCard<Resolute>();
             CustomCard.BuildCard<DimensionalShuffle>();
@@ -122,6 +116,17 @@ namespace WWC
                 CustomCard.BuildCard<EasyTarget>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
                 CustomCard.BuildCard<WeakMind>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
                 //CustomCard.BuildCard<ErodingDarkness>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            }
+
+            { // Curse Eater Class
+                CustomCard.BuildCard<CurseEater>(cardInfo => { CurseEater.card = cardInfo; });
+                CustomCard.BuildCard<GhostlyBody>(cardInfo => { GhostlyBody.card = cardInfo; });
+                CustomCard.BuildCard<ShadowBullets>(cardInfo => { ShadowBullets.card = cardInfo; });
+                CustomCard.BuildCard<SiphonCurses>(cardInfo => { SiphonCurses.card = cardInfo; });
+                CustomCard.BuildCard<Flagellation>(cardInfo => { Flagellation.card = cardInfo; });
+                CustomCard.BuildCard<RunicWards>(cardInfo => { RunicWards.card = cardInfo; });
+                CustomCard.BuildCard<HiltlessBlade>(cardInfo => { HiltlessBlade.card = cardInfo; });
+                CustomCard.BuildCard<CorruptedAmmunition>(cardInfo => { CorruptedAmmunition.card = cardInfo; });
             }
 
             { // Mechanic Class

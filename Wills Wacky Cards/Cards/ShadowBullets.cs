@@ -17,6 +17,7 @@ namespace WWC.Cards
 {
     class ShadowBullets : CustomCard
     {
+        public static CardInfo card = null;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             GameObject drill = null;
