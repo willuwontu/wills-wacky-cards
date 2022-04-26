@@ -8,19 +8,18 @@ using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
 using WWC.Interfaces;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
     class GyroscopicStabilizers : CustomCard
     {
-        public static CardCategory upgradeEmptyTime = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Empty Time");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeEmptyTime };
             cardInfo.allowMultiple = false;
             statModifiers.gravity = 1f/ 2.5f;
+            gameObject.GetOrAddComponent<ClassNameMono>().className = MechanicClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

@@ -12,6 +12,7 @@ using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using HarmonyLib;
+using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
@@ -52,6 +53,7 @@ namespace WWC.Cards
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
 
+            gameObject.GetOrAddComponent<ClassNameMono>().className = CurseEaterClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
