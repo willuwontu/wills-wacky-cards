@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
-namespace WWC.Cards.CurseEater
+namespace WWC.Cards
 {
     internal class CurseEaterClass : ClassHandler
     {

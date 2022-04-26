@@ -14,6 +14,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI.ProceduralImage;
 using UnboundLib.Utils;
+using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
@@ -26,6 +27,7 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.allowMultiple = false;
+            gameObject.GetOrAddComponent<ClassNameMono>();
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -197,7 +199,7 @@ namespace WWC.Cards
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    class Mechanic_Mono : ReversibleEffect, IPointStartHookHandler, IPlayerPickStartHookHandler, IGameStartHookHandler
+    class Mechanic_Mono : ReversibleEffect, IGameStartHookHandler
     {
         public override void OnStart()
         {
@@ -205,75 +207,11 @@ namespace WWC.MonoBehaviours
             this.SetLivesToEffect(int.MaxValue);
         }
 
-        private void CheckIfValid()
-        {
-            var haveCard = false;
-            for (int i = 0; i < player.data.currentCards.Count; i++)
-            {
-                if (player.data.currentCards[i].cardName.ToLower() == "Mechanic".ToLower())
-                {
-                    haveCard = true;
-                    break;
-                }
-            }
-
-            if (!haveCard)
-            {
-                var classCards = data.currentCards.Where(card => card.categories.Contains(Mechanic.MechanicClass)).ToList();
-                var cardIndeces = Enumerable.Range(0, player.data.currentCards.Count()).Where((index) => player.data.currentCards[index].categories.Contains(Mechanic.MechanicClass)).ToArray();
-                if (classCards.Count() > 0)
-                {
-                    CardInfo[] replacePool = null;
-                    if (classCards.Where(card => card.rarity == CardInfo.Rarity.Common).ToArray().Length > 0)
-                    {
-                        replacePool = classCards.Where(card => card.rarity == CardInfo.Rarity.Common).ToArray();
-                    }
-                    else if (classCards.Where(card => card.rarity == CardInfo.Rarity.Uncommon).ToArray().Length > 0)
-                    {
-                        replacePool = classCards.Where(card => card.rarity == CardInfo.Rarity.Uncommon).ToArray();
-                    }
-                    else if (classCards.Where(card => card.rarity == CardInfo.Rarity.Rare).ToArray().Length > 0)
-                    {
-                        replacePool = classCards.Where(card => card.rarity == CardInfo.Rarity.Rare).ToArray();
-                    }
-                    var replaced = replacePool[UnityEngine.Random.Range(0, replacePool.Length)];
-                    classCards.Remove(replaced);
-                    if (classCards.Count() > 1)
-                    {
-                        classCards.Shuffle();
-                    }
-                    classCards.Insert(0, Mechanic.card);
-
-                    StartCoroutine(ReplaceCards(player, cardIndeces, classCards.ToArray()));
-                }
-                else
-                {
-                    UnityEngine.GameObject.Destroy(this);
-                }
-            }
-        }
-
         private IEnumerator ReplaceCards(Player player, int[] indeces, CardInfo[] cards)
         {
             yield return ModdingUtils.Utils.Cards.instance.ReplaceCards(player, indeces, cards, null, true);
 
             yield break;
-        }
-
-        public void OnPlayerPickStart()
-        {
-            if (ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.Contains(WWC.Cards.Mechanic.MechanicClass))
-            {
-                ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.RemoveAll((category) => category == WWC.Cards.Mechanic.MechanicClass);
-            }
-
-
-            CheckIfValid();
-        }
-
-        public void OnPointStart()
-        {
-            CheckIfValid();
         }
 
         public void OnGameStart()

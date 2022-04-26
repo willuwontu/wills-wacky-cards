@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace WWC.Cards.Mechanic
+namespace WWC.Cards
 {
     internal class MechanicClass : ClassHandler
     {
