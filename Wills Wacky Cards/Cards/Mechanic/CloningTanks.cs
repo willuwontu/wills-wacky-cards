@@ -14,11 +14,9 @@ namespace WWC.Cards
 {
     class CloningTanks : CustomCard
     {
-        public static CardCategory upgradeLives = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Lives");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeLives };
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -45,6 +43,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Cloning Tanks";

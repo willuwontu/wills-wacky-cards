@@ -15,10 +15,8 @@ namespace WWC.Cards
 {
     class ImprovedCycling : CustomCard
     {
-        public static CardCategory upgradeFireRate = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Fire Rate");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeFireRate };
             cardInfo.allowMultiple = false;
             gun.timeBetweenBullets = 0.1f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
@@ -43,6 +41,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Improved Cycling";

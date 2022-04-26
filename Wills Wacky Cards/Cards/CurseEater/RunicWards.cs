@@ -1,31 +1,30 @@
-﻿using System;
-using System.Linq;
+﻿using HarmonyLib;
+using Photon.Pun;
 using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
-using UnboundLib.Cards;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
-using UnityEngine;
 using WillsWackyManagers.Utils;
+using UnboundLib.Cards;
+using UnityEngine;
 using WWC.MonoBehaviours;
 
 namespace WWC.Cards
 {
-    class CorruptedAmmunition : CustomCard
+    class RunicWards : CustomCard
     {
         public static CardInfo card = null;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.allowMultiple = false;
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
             ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory, CurseEater.CurseEaterClass, CustomCardCategories.instance.CardCategory("Corrupted Ammunition") };
-            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Shadow Bullets") };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.ExecuteAfterFrames(20, () => CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); }));
-            player.gameObject.GetOrAddComponent<CorruptedAmmunition_Mono>();
+            var blockMono = player.gameObject.GetOrAddComponent<RunicWardsBlock_Mono>();
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -33,13 +32,14 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
-            return "Corrupted Ammunition";
+            return "Runic Wards";
         }
         protected override string GetDescription()
         {
-            return "Fire a number of corrupted bullets equal to curses each battle. An enemy who is hit 7 times by them gains a random curse.";
+            return "For every 600 points of damage a person deals to you, they get a curse.";
         }
         protected override GameObject GetCardArt()
         {
@@ -47,7 +47,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return CardInfo.Rarity.Rare;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -56,8 +56,15 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Damage per Curse",
-                    amount = "+20%",
+                    stat = "Block per 2 Curses",
+                    amount = "+1",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Autoblock per 2 Curses",
+                    amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -71,7 +78,7 @@ namespace WWC.Cards
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.EvilPurple;
+            return CardThemeColor.CardThemeColorType.DefensiveBlue;
         }
         public override string GetModName()
         {
