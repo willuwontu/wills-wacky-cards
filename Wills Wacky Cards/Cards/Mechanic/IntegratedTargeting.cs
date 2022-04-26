@@ -15,11 +15,8 @@ namespace WWC.Cards
 {
     class IntegratedTargeting : CustomCard
     {
-        public static CardCategory upgradeTargeting = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Targeting");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeTargeting };
-
             gun.gravity = 0f;
             gun.spread = 0f;
             cardInfo.allowMultiple = false;
@@ -51,6 +48,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Integrated Targeting Sensors";

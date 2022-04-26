@@ -16,10 +16,8 @@ namespace WWC.Cards
 {
     class ChemicalAmmunition : CustomCard
     {
-        public static CardCategory upgradeAcid = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Acid");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeAcid };
             cardInfo.allowMultiple = false;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -52,6 +50,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Chemical Ammunition";

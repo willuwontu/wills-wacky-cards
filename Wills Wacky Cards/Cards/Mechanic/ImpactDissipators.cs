@@ -15,10 +15,8 @@ namespace WWC.Cards
 {
     class ImpactDissipators : CustomCard
     {
-        public static CardCategory upgradeDecay = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Decay");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeDecay };
             cardInfo.allowMultiple = false;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -40,6 +38,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Impact Dissipators";

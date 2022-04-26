@@ -50,8 +50,7 @@ namespace WWC.Cards
             gun.projectielSimulatonSpeed = .65f;
 
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory, CurseEater.CurseEaterClass, CustomCardCategories.instance.CardCategory("Shadow Bullets") };
-            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Corrupted Ammunition") };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -67,6 +66,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Shadow Bullets";

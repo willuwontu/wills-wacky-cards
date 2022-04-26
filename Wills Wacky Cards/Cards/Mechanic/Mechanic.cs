@@ -11,7 +11,6 @@ using WWC.Cards;
 using WWC.Interfaces;
 using WWC.MonoBehaviours;
 using TMPro;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using UnityEngine.UI.ProceduralImage;
 using UnboundLib.Utils;
@@ -24,32 +23,14 @@ namespace WWC.Cards
 
         public const string MechanicClassName = "Mechanic";
 
-        public static CardCategory MechanicClass = CustomCardCategories.instance.CardCategory("Mechanic");
-
-        public static void MechanicAddClassStuff(CharacterStatModifiers characterStats)
-        {
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.Add(CustomCardCategories.instance.CardCategory("Class"));
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == MechanicClass);
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Default"));
-        }
-
-        public static void MechanicRemoveClassStuff(CharacterStatModifiers characterStats)
-        {
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Class"));
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.Add(MechanicClass);
-        }
-
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Class"), CustomCardCategories.instance.CardCategory("NoRemove") };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             player.gameObject.AddComponent<Mechanic_Mono>();
-
-            MechanicAddClassStuff(characterStats);
 
             var abyssalCard = CardManager.cards.Values.Select(card => card.cardInfo).First(c => c.name.Equals("AbyssalCountdown"));
             var statMods = abyssalCard.gameObject.GetComponentInChildren<CharacterStatModifiers>();
@@ -133,10 +114,10 @@ namespace WWC.Cards
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            MechanicRemoveClassStuff(characterStats);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Mechanic";
@@ -302,8 +283,6 @@ namespace WWC.MonoBehaviours
 
         public override void OnOnDestroy()
         {
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Class"));
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(stats).blacklistedCategories.Add(WWC.Cards.Mechanic.MechanicClass);
             InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
