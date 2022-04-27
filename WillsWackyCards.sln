@@ -7,8 +7,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WillsWackyCards", "Wills Wa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WillsWackyManagers", "..\WillsWackyManagers\WillsWackyManagers\WillsWackyManagers.csproj", "{EB3BB52C-F0EE-4745-BA62-6A8DC0A6F8D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WillsWackyCardsClassCompat", "WillsWackyCardsClassCompat\WillsWackyCardsClassCompat.csproj", "{272D9A3C-D22A-4818-93E3-31FC23111F2F}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{EB3BB52C-F0EE-4745-BA62-6A8DC0A6F8D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EB3BB52C-F0EE-4745-BA62-6A8DC0A6F8D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EB3BB52C-F0EE-4745-BA62-6A8DC0A6F8D2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{272D9A3C-D22A-4818-93E3-31FC23111F2F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{272D9A3C-D22A-4818-93E3-31FC23111F2F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{272D9A3C-D22A-4818-93E3-31FC23111F2F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{272D9A3C-D22A-4818-93E3-31FC23111F2F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
