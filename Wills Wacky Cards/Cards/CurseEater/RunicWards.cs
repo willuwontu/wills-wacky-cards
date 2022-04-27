@@ -8,6 +8,7 @@ using WillsWackyManagers.Utils;
 using UnboundLib.Cards;
 using UnityEngine;
 using WWC.MonoBehaviours;
+using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
@@ -17,9 +18,9 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory, CurseEater.CurseEaterClass, CustomCardCategories.instance.CardCategory("Runic Wards") };
-            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Ghost Body") };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
             ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
+            gameObject.GetOrAddComponent<ClassNameMono>().className = CurseEaterClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -33,6 +34,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Runic Wards";

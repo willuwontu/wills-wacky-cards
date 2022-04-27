@@ -7,18 +7,17 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
     class Omnitool : CustomCard
     {
-        public static CardCategory upgradeTool = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Tool");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeTool };
+            gameObject.GetOrAddComponent<ClassNameMono>().className = MechanicClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -39,6 +38,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Omnitool";

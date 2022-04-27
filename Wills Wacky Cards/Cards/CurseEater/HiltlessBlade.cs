@@ -5,51 +5,62 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
+using WWC.Extensions;
 using WWC.MonoBehaviours;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using ModdingUtils.Extensions;
 using UnityEngine;
+using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
-    class Flagellation : CustomCard
+    class HiltlessBlade : CustomCard
     {
         public static CardInfo card = null;
-        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
+        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory, CurseEater.CurseEaterClass };
+            cardInfo.GetAdditionalData().canBeReassigned = false;
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
+            gameObject.GetOrAddComponent<ClassNameMono>().className = CurseEaterClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            player.gameObject.GetOrAddComponent<Flagellation_Mono>();
-            WillsWackyCards.instance.ExecuteAfterFrames(20, () => {
-                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
-                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
-                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
-                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
-                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); });
-            });
+            WillsWackyCards.instance.ExecuteAfterFrames(20, () => CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse); }));
+
+            WillsWackyCards.instance.ExecuteAfterFrames(10, () => player.gameObject.GetOrAddComponent<HiltlessBlade_Mono>());
+
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            //Drives me crazy
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
-            return "Flagellation";
+            return "Hiltless Blade";
         }
         protected override string GetDescription()
         {
-            return "Train your body to endure the horrors it contains.";
+            return "Sometimes it take a little pain to win.";
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_HiltlessBlade");
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {
@@ -62,15 +73,15 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "HP",
-                    amount = "+150%",
+                    stat = "Damage",
+                    amount = "+100%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Curses",
-                    amount = "+5",
+                    stat = "Curse",
+                    amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

@@ -8,19 +8,18 @@ using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
 using WWC.Interfaces;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
     class ImprovedCycling : CustomCard
     {
-        public static CardCategory upgradeFireRate = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Fire Rate");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeFireRate };
             cardInfo.allowMultiple = false;
             gun.timeBetweenBullets = 0.1f;
+            gameObject.GetOrAddComponent<ClassNameMono>().className = MechanicClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -43,6 +42,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Improved Cycling";

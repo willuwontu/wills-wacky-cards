@@ -8,22 +8,20 @@ using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
 using WWC.Interfaces;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
     class IntegratedTargeting : CustomCard
     {
-        public static CardCategory upgradeTargeting = CustomCardCategories.instance.CardCategory("Mechanic-Upgrade Targeting");
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.categories = new CardCategory[] { Mechanic.MechanicClass, upgradeTargeting };
-
             gun.gravity = 0f;
             gun.spread = 0f;
             cardInfo.allowMultiple = false;
 
+            gameObject.GetOrAddComponent<ClassNameMono>().className = MechanicClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -51,6 +49,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Integrated Targeting Sensors";

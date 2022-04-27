@@ -1,10 +1,10 @@
-﻿using System;
+﻿using ClassesManagerReborn.Util;
+using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using WillsWackyManagers.Utils;
 using WWC.MonoBehaviours;
@@ -18,8 +18,8 @@ namespace WWC.Cards
         {
             cardInfo.allowMultiple = false;
             ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
-            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory, CurseEater.CurseEaterClass, CustomCardCategories.instance.CardCategory("Corrupted Ammunition") };
-            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Shadow Bullets") };
+            cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
+            gameObject.GetOrAddComponent<ClassNameMono>().className = CurseEaterClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
@@ -33,6 +33,7 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
+        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Corrupted Ammunition";
