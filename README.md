@@ -86,9 +86,20 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Particle Wave Sequencer (Uncommon)
   - Personal Hammerspace (Common)
   - Portable Fabricators (Common)
+- Antidote (Rare)
 
 <details>
 <summary>Patches</summary>
+
+----
+## v 1.9.1
+- Compatibility with new class manager
+
+----
+## v 1.9.0
+- 1 new card (Antidote)
+- Compatibility with new class manager
+- Bug Fixes
 
 ----
 ## v 1.8.7
