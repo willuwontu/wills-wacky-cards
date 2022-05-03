@@ -60,8 +60,6 @@ namespace WWC.Cards
             CurseEaterRemoveClassStuff(characterStats);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
-
-        internal static CardInfo Card = null;
         protected override string GetTitle()
         {
             return "Curse Eater";

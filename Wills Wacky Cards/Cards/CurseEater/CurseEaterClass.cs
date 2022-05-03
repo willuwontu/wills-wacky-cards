@@ -12,23 +12,23 @@ namespace WWC.Cards
 
         public override IEnumerator Init()
         {
-            while (!(CorruptedAmmunition.Card && CurseEater.Card && Flagellation.Card && GhostlyBody.Card && HiltlessBlade.Card && RunicWards.Card && ShadowBullets.Card && SiphonCurses.Card)) yield return null;
-            ClassesRegistry.Register(CurseEater.Card, CardType.Entry);
-            ClassesRegistry.Register(CorruptedAmmunition.Card, CardType.Card, CurseEater.Card);
-            ClassesRegistry.Register(Flagellation.Card, CardType.Card, CurseEater.Card);
-            ClassesRegistry.Register(GhostlyBody.Card, CardType.Card, CurseEater.Card);
-            ClassesRegistry.Register(HiltlessBlade.Card, CardType.Card, CurseEater.Card);
-            ClassesRegistry.Register(RunicWards.Card, CardType.Card, CurseEater.Card);
-            ClassesRegistry.Register(ShadowBullets.Card, CardType.Card, CurseEater.Card);
-            ClassesRegistry.Register(SiphonCurses.Card, CardType.Card, CurseEater.Card);
+            while (!(CorruptedAmmunition.card && CurseEater.card && Flagellation.card && GhostlyBody.card && HiltlessBlade.card && RunicWards.card && ShadowBullets.card && SiphonCurses.card)) yield return null;
+            ClassesRegistry.Register(CurseEater.card, CardType.Entry & CardType.Gate);
+            ClassesRegistry.Register(CorruptedAmmunition.card, CardType.Card & CardType.Branch, CurseEater.card);
+            ClassesRegistry.Register(Flagellation.card, CardType.Card, CurseEater.card);
+            ClassesRegistry.Register(GhostlyBody.card, CardType.Card & CardType.Branch, CurseEater.card);
+            ClassesRegistry.Register(HiltlessBlade.card, CardType.Card, CurseEater.card);
+            ClassesRegistry.Register(RunicWards.card, CardType.Card & CardType.Branch, CurseEater.card);
+            ClassesRegistry.Register(ShadowBullets.card, CardType.Card & CardType.Branch, CurseEater.card);
+            ClassesRegistry.Register(SiphonCurses.card, CardType.Card, CurseEater.card);
         }
 
         public override IEnumerator PostInit()
         {
-            ClassesRegistry.Get(CorruptedAmmunition.Card).Blacklist(ShadowBullets.Card);
-            ClassesRegistry.Get(ShadowBullets.Card).Blacklist(CorruptedAmmunition.Card);
-            ClassesRegistry.Get(GhostlyBody.Card).Blacklist(RunicWards.Card);
-            ClassesRegistry.Get(RunicWards.Card).Blacklist(GhostlyBody.Card);
+            ClassesRegistry.Get(CorruptedAmmunition.card).Blacklist(ShadowBullets.card);
+            ClassesRegistry.Get(ShadowBullets.card).Blacklist(CorruptedAmmunition.card);
+            ClassesRegistry.Get(GhostlyBody.card).Blacklist(RunicWards.card);
+            ClassesRegistry.Get(RunicWards.card).Blacklist(GhostlyBody.card);
             yield break;
         }
     }

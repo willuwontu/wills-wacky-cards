@@ -39,6 +39,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Take A Number (Curse)
   - Heavy Shields (Curse)
   - Fumbled Mags (Curse)
+  - Poisonous Trauma (Curse)
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
@@ -87,9 +88,16 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Personal Hammerspace (Common)
   - Portable Fabricators (Common)
 - Antidote (Rare)
+- Poison Resistant (Uncommon)
+- Strong Body (Uncommon)
+- Bursting Poisons (Uncommon)
 
 <details>
 <summary>Patches</summary>
+
+----
+## v 1.9.2
+- Compatibility with new class manager
 
 ----
 ## v 1.9.1

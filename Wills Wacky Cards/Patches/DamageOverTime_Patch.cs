@@ -50,7 +50,7 @@ namespace WWC.Patches
                 float initialDamageTotal = occurences * initialDamage;
 
                 float burstDamage = initialDamageTotal * (1f - Mathf.Clamp(burstModifier, 0f, 1f));
-                player.data.healthHandler.DoDamage(damage.normalized * burstDamage, position, color, damagingWeapon, damagingPlayer, false, lethal, false);
+                player.data.healthHandler.DoDamage(damage.normalized * burstDamage, position, color, damagingWeapon, damagingPlayer, false, lethal, true);
 
                 float finalDamage = initialDamageTotal - burstDamage;
 

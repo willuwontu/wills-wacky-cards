@@ -42,7 +42,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.9.1"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.9.3"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -97,7 +97,7 @@ namespace WWC
             CustomCard.BuildCard<CursedKnowledge>();
             CustomCard.BuildCard<EnduranceTraining>();
             CustomCard.BuildCard<AdrenalineRush>();
-            
+
             CustomCard.BuildCard<HolyWater>();
             CustomCard.BuildCard<CleansingRitual>();
             CustomCard.BuildCard<BulletPoweredJetpack>();
@@ -109,6 +109,13 @@ namespace WWC
             CustomCard.BuildCard<FlySwatter>();
             CustomCard.BuildCard<AggressiveVenting>();
 
+            {
+                CustomCard.BuildCard<Antidote>();
+                CustomCard.BuildCard<PoisonResistant>();
+                CustomCard.BuildCard<StrongBody>();
+                CustomCard.BuildCard<BurstingPoisons>();
+            }
+
             { // Curses
                 CustomCard.BuildCard<MomentaryConfusion>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
                 CustomCard.BuildCard<FumbledMags>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
@@ -116,6 +123,7 @@ namespace WWC
                 CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
                 CustomCard.BuildCard<EasyTarget>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
                 CustomCard.BuildCard<WeakMind>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+                CustomCard.BuildCard<PoisonousTrauma>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
                 //CustomCard.BuildCard<ErodingDarkness>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
             }
 
@@ -132,20 +140,20 @@ namespace WWC
 
             { // Mechanic Class
                 CustomCard.BuildCard<Mechanic>(cardInfo => { Mechanic.card = cardInfo; });
-                CustomCard.BuildCard<ImprovedShieldCapacitors>();
-                CustomCard.BuildCard<PortableFabricator>();
-                CustomCard.BuildCard<CloningTanks>();
-                CustomCard.BuildCard<ChemicalAmmunition>();
-                CustomCard.BuildCard<CuttingLaser>();
-                CustomCard.BuildCard<GreyGoo>();
-                CustomCard.BuildCard<GyroscopicStabilizers>();
-                CustomCard.BuildCard<ImpactDissipators>();
-                CustomCard.BuildCard<ImprovedCycling>();
-                CustomCard.BuildCard<IntegratedTargeting>();
-                CustomCard.BuildCard<JumpBoots>();
-                CustomCard.BuildCard<Omnitool>();
-                CustomCard.BuildCard<ParticleWaveSequencer>();
-                CustomCard.BuildCard<PersonalHammerspace>();
+                CustomCard.BuildCard<ImprovedShieldCapacitors>(cardInfo => { ImprovedShieldCapacitors.card = cardInfo; });
+                CustomCard.BuildCard<PortableFabricator>(cardInfo => { PortableFabricator.card = cardInfo; });
+                CustomCard.BuildCard<CloningTanks>(cardInfo => { CloningTanks.card = cardInfo; });
+                CustomCard.BuildCard<ChemicalAmmunition>(cardInfo => { ChemicalAmmunition.card = cardInfo; });
+                CustomCard.BuildCard<CuttingLaser>(cardInfo => { CuttingLaser.card = cardInfo; });
+                CustomCard.BuildCard<GreyGoo>(cardInfo => { GreyGoo.card = cardInfo; });
+                CustomCard.BuildCard<GyroscopicStabilizers>(cardInfo => { GyroscopicStabilizers.card = cardInfo; });
+                CustomCard.BuildCard<ImpactDissipators>(cardInfo => { ImpactDissipators.card = cardInfo; });
+                CustomCard.BuildCard<ImprovedCycling>(cardInfo => { ImprovedCycling.card = cardInfo; });
+                CustomCard.BuildCard<IntegratedTargeting>(cardInfo => { IntegratedTargeting.card = cardInfo; });
+                CustomCard.BuildCard<JumpBoots>(cardInfo => { JumpBoots.card = cardInfo; });
+                CustomCard.BuildCard<Omnitool>(cardInfo => { Omnitool.card = cardInfo; });
+                CustomCard.BuildCard<ParticleWaveSequencer>(cardInfo => { ParticleWaveSequencer.card = cardInfo; });
+                CustomCard.BuildCard<PersonalHammerspace>(cardInfo => { PersonalHammerspace.card = cardInfo; });
             }
 
             if (debug)
