@@ -11,22 +11,22 @@ namespace WWC.Cards
 
         public override System.Collections.IEnumerator Init()
         {
-            while (!(ChemicalAmmunition.Card && CloningTanks.Card && CuttingLaser.Card && GreyGoo.Card && GyroscopicStabilizers.Card && ImpactDissipators.Card && ImprovedCycling.Card && ImprovedShieldCapacitors.Card && IntegratedTargeting.Card && JumpBoots.Card && Mechanic.Card && Omnitool.Card && ParticleWaveSequencer.Card && PersonalHammerspace.Card && PortableFabricator.Card)) yield return null;
-            ClassesRegistry.Register(Mechanic.Card, CardType.Entry);
-            ClassesRegistry.Register(ChemicalAmmunition.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(CloningTanks.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(CuttingLaser.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(GreyGoo.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(GyroscopicStabilizers.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(ImpactDissipators.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(ImprovedCycling.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(ImprovedShieldCapacitors.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(IntegratedTargeting.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(JumpBoots.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(Omnitool.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(ParticleWaveSequencer.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(PersonalHammerspace.Card, CardType.Card, Mechanic.Card);
-            ClassesRegistry.Register(PortableFabricator.Card, CardType.Card, Mechanic.Card);
+            while (!(ChemicalAmmunition.card && CloningTanks.card && CuttingLaser.card && GreyGoo.card && GyroscopicStabilizers.card && ImpactDissipators.card && ImprovedCycling.card && ImprovedShieldCapacitors.card && IntegratedTargeting.card && JumpBoots.card && Mechanic.card && Omnitool.card && ParticleWaveSequencer.card && PersonalHammerspace.card && PortableFabricator.card)) yield return null;
+            ClassesRegistry.Register(Mechanic.card, CardType.Entry);
+            ClassesRegistry.Register(ChemicalAmmunition.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(CloningTanks.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(CuttingLaser.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(GreyGoo.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(GyroscopicStabilizers.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(ImpactDissipators.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(ImprovedCycling.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(ImprovedShieldCapacitors.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(IntegratedTargeting.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(JumpBoots.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(Omnitool.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(ParticleWaveSequencer.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(PersonalHammerspace.card, CardType.Card, Mechanic.card);
+            ClassesRegistry.Register(PortableFabricator.card, CardType.Card, Mechanic.card);
         }
     }
 }
