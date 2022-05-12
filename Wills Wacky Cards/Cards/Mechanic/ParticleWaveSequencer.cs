@@ -28,7 +28,7 @@ namespace WWC.Cards
             {
                 upgrader.blockModifier.additionalBlocks_add += 1;
                 upgrader.blockModifier.cdMultiplier_mult /= 1.1f;
-                upgrader.upgradeTime += 2.5f;
+                upgrader.upgradeTimeAdd += 2.5f;
             }
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }

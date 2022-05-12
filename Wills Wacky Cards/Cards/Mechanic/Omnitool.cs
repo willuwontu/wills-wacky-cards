@@ -26,8 +26,8 @@ namespace WWC.Cards
 
             if (upgrader)
             {
-                upgrader.upgradeTime *= 0.5f;
-                upgrader.upgradeCooldown *= 0.5f;
+                upgrader.upgradeTimeMult *= 0.5f;
+                upgrader.upgradeCooldownMult *= 0.5f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");

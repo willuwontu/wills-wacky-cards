@@ -47,9 +47,6 @@ namespace WWC.Cards
             var upgrader = mechObj.AddComponent<MechanicUpgrader>();
             upgrader.soundUpgradeChargeLoop = abyssal.soundAbyssalChargeLoop;
             upgrader.counter = 0;
-            upgrader.upgradeTime = 6f;
-            upgrader.timeToEmpty = 0.5f;
-            upgrader.upgradeCooldown = 12f;
             upgrader.outerRing = abyssal.outerRing;
             upgrader.fill = abyssal.fill;
             upgrader.rotator = abyssal.rotator;

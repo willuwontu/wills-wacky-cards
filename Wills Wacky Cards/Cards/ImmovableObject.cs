@@ -117,7 +117,7 @@ namespace WWC.Cards
             statModifiers.jump = (float)Math.Pow(1.05f, stacks);
             statModifiers.numberOfJumps = stacks / 3;
             statModifiers.gravity = (float)Math.Pow(.95f, stacks);
-            statModifiers.lifeSteal = (float)Math.Pow(1.05f, stacks);
+            statModifiers.lifeSteal = (float)Math.Pow(1.05f, stacks) -1f;
             var block = this.gameObject.GetOrAddComponent<Block>();
             block.additionalBlocks = stacks / 7;
 

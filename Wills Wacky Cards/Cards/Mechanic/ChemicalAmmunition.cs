@@ -34,8 +34,8 @@ namespace WWC.Cards
             {
                 upgrader.gunStatModifier.damage_mult += 0.30f;
                 upgrader.gunStatModifier.reflects_add += 1;
-                upgrader.upgradeCooldown += 3f;
-                upgrader.upgradeTime += 3f;
+                upgrader.upgradeCooldownAdd += 3f;
+                upgrader.upgradeTimeAdd += 3f;
             }
 
             ObjectsToSpawn item = ((GameObject)Resources.Load("0 cards/Mayhem")).GetComponent<Gun>().objectsToSpawn[0];

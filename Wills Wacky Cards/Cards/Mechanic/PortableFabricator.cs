@@ -25,11 +25,11 @@ namespace WWC.Cards
             
             if (upgrader)
             {
-                upgrader.upgradeTime*= 0.7f;
+                upgrader.upgradeTimeMult *= 0.8f;
                 upgrader.characterDataModifier.health_mult += 0.5f;
                 upgrader.characterDataModifier.health_mult += 0.5f;
                 upgrader.characterStatModifiersModifier.sizeMultiplier_mult += 0.1f;
-                upgrader.upgradeCooldown *= 1.1f;
+                upgrader.upgradeCooldownMult *= 1.1f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -89,7 +89,7 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Upgrade Time",
-                    amount = "-30%",
+                    amount = "-20%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

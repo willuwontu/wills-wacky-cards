@@ -319,7 +319,7 @@ namespace WWC.MonoBehaviours
 
         private void OnDestroy()
         {
-            block.BlockAction -= OnBlock;
+            block.SuperFirstBlockAction -= OnBlock;
             InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
 
