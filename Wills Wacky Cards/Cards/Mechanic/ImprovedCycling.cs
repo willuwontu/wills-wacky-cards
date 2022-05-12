@@ -30,8 +30,8 @@ namespace WWC.Cards
             {
                 upgrader.gunStatModifier.bursts_add += 1;
                 upgrader.gunStatModifier.attackSpeed_mult *= 0.7f;
-                upgrader.upgradeTime += 1f;
-                upgrader.upgradeCooldown += 1f;
+                upgrader.upgradeTimeAdd += 1f;
+                upgrader.upgradeCooldownAdd += 1f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");

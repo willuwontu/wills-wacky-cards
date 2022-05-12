@@ -46,7 +46,7 @@ namespace WWC.MonoBehaviours
         {
 			if (this.isUpgrading)
             {
-				this.remainingDuration = Mathf.Clamp(remainingDuration + (upgradeCooldown / 4f), 0, upgradeCooldown);
+				this.remainingDuration = Mathf.Clamp(remainingDuration + (UpgradeCooldown / 4f), 0, UpgradeCooldown);
 				return;
             }
 			this.counter = this.counter / 2f;
@@ -106,7 +106,7 @@ namespace WWC.MonoBehaviours
 		private void RPCA_Upgrade()
 		{
 			var upgrade = this.data.player.gameObject.AddComponent<MechanicUpgrade>();
-			this.remainingDuration = this.upgradeCooldown;
+			this.remainingDuration = this.UpgradeCooldown;
 			this.upgradeLevel++;
 			this.levelText.text = $"{upgradeLevel}";
 
@@ -172,7 +172,7 @@ namespace WWC.MonoBehaviours
 					//this.isAbyssalForm = true;
 				}
 				this.remainingDuration -= TimeHandler.deltaTime;
-				this.counter = this.remainingDuration / this.upgradeCooldown;
+				this.counter = this.remainingDuration / this.UpgradeCooldown;
 				return;
 			}
 			if (this.isUpgrading)
@@ -191,7 +191,7 @@ namespace WWC.MonoBehaviours
             {
                 if (this.data.input.direction == Vector3.zero || this.data.input.direction == Vector3.down)
                 {
-                    this.counter += TimeHandler.deltaTime / this.upgradeTime;
+                    this.counter += TimeHandler.deltaTime / this.UpgradeTime;
                 }
                 else
                 {
@@ -205,10 +205,10 @@ namespace WWC.MonoBehaviours
 			}
             try
             {
-                this.counter = Mathf.Clamp(this.counter, -0.1f / this.upgradeTime, 1f);
+                this.counter = Mathf.Clamp(this.counter, -0.1f / this.UpgradeTime, 1f);
                 if (this.counter >= 1f && this.data.view.IsMine)
                 {
-                    this.remainingDuration = this.upgradeCooldown;
+                    this.remainingDuration = this.UpgradeCooldown;
                     base.GetComponentInParent<ChildRPC>().CallFunction("MechanicUpgrade");
                 }
             }
@@ -307,13 +307,35 @@ namespace WWC.MonoBehaviours
 		[Range(0f, 1f)]
 		public float counter;
 
-		public float upgradeTime = 5f;
+		private float upgradeTime = 6f;
 
-		public float timeToEmpty = 1f;
+		public float upgradeTimeAdd;
 
-		public float upgradeCooldown = 1;
+		public float upgradeTimeMult = 1f;
 
-		public float hpMultiplier = 2f;
+		public float UpgradeTime
+        {
+			get
+            {
+				return ((upgradeTime + upgradeTimeAdd) * upgradeTimeMult);
+            }
+        }
+        public float timeToEmpty = 1f;
+
+		private float upgradeCooldown = 12f;
+
+		public float upgradeCooldownAdd;
+
+		public float upgradeCooldownMult = 1f;
+
+		public float UpgradeCooldown
+        {
+			get
+            {
+				return ((upgradeCooldown + upgradeCooldownAdd) * upgradeCooldownMult);
+            }
+        }
+        public float hpMultiplier = 2f;
 
 		public int upgradeLevel = 0;
 

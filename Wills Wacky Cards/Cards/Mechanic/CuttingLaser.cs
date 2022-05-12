@@ -27,7 +27,8 @@ namespace WWC.Cards
 
             if (upgrader)
             {
-                upgrader.upgradeTime *= 0.75f;
+                upgrader.upgradeTimeMult *= 1.1f;
+                upgrader.upgradeCooldownMult *= 0.75f;
                 upgrader.gunStatModifier.damage_mult += 0.3f;
             }
 
@@ -81,8 +82,15 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Upgrade Time",
+                    stat = "Upgrade Cooldown",
                     amount = "-25%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Upgrade Time",
+                    amount = "+10%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

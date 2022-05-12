@@ -96,6 +96,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <summary>Patches</summary>
 
 ----
+## v 1.9.4
+- Mechanic's upgrade mechanic has been reworked to no longer depend on card order.
+
+----
 ## v 1.9.2
 - Compatibility with new class manager
 

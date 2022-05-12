@@ -38,7 +38,7 @@ namespace WWC.Cards
                         player.gameObject.AddComponent<TargetingSensors_Mono>();
                     }
                 });
-                upgrader.upgradeTime += 2f;
+                upgrader.upgradeTimeAdd += 2f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");

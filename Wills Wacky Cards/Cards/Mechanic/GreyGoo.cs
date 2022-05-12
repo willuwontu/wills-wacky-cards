@@ -26,7 +26,7 @@ namespace WWC.Cards
 
             if (upgrader)
             {
-                upgrader.upgradeTime *= 0.75f;
+                upgrader.upgradeTimeMult *= 0.75f;
                 upgrader.regenAdd += 5f;
             }
 

@@ -32,8 +32,8 @@ namespace WWC.Cards
             {
                 upgrader.characterStatModifiersModifier.respawns_add += 1;
                 upgrader.AttachCloneAction();
-                upgrader.upgradeCooldown += 5f;
-                upgrader.upgradeTime += 5f;
+                upgrader.upgradeCooldownAdd += 5f;
+                upgrader.upgradeTimeAdd += 5f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");

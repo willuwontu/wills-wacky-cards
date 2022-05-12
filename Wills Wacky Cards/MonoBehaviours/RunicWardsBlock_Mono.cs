@@ -239,7 +239,7 @@ namespace WWC.Patches
     class ProjectileHitPatchRPCA_DoHit
     {
         [HarmonyPatch("RPCA_DoHit")]
-        [HarmonyPriority(Priority.First)]
+        [HarmonyPriority(Priority.Last)]
         [HarmonyPrefix]
         private static void RunicWardAutoBlock(ProjectileHit __instance, Vector2 hitPoint, Vector2 hitNormal, Vector2 vel, int viewID, int colliderID, ref bool wasBlocked)
         {
