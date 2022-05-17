@@ -96,6 +96,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <summary>Patches</summary>
 
 ----
+## v 1.9.6
+- Fixed an issue with curse eater
+
+----
 ## v 1.9.5
 - Compatibility update for unbound.
 - Unstoppable Force and Immovable Object display their correct values now.
