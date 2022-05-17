@@ -13,13 +13,13 @@ namespace WWC.Cards
         public override IEnumerator Init()
         {
             while (!(CorruptedAmmunition.card && CurseEater.card && Flagellation.card && GhostlyBody.card && HiltlessBlade.card && RunicWards.card && ShadowBullets.card && SiphonCurses.card)) yield return null;
-            ClassesRegistry.Register(CurseEater.card, CardType.Entry & CardType.Gate);
-            ClassesRegistry.Register(CorruptedAmmunition.card, CardType.Card & CardType.Branch, CurseEater.card);
+            ClassesRegistry.Register(CurseEater.card, CardType.Entry);
+            ClassesRegistry.Register(CorruptedAmmunition.card, CardType.Card | CardType.Branch, CurseEater.card);
             ClassesRegistry.Register(Flagellation.card, CardType.Card, CurseEater.card);
-            ClassesRegistry.Register(GhostlyBody.card, CardType.Card & CardType.Branch, CurseEater.card);
+            ClassesRegistry.Register(GhostlyBody.card, CardType.Card | CardType.Branch, CurseEater.card);
             ClassesRegistry.Register(HiltlessBlade.card, CardType.Card, CurseEater.card);
-            ClassesRegistry.Register(RunicWards.card, CardType.Card & CardType.Branch, CurseEater.card);
-            ClassesRegistry.Register(ShadowBullets.card, CardType.Card & CardType.Branch, CurseEater.card);
+            ClassesRegistry.Register(RunicWards.card, CardType.Card | CardType.Branch, CurseEater.card);
+            ClassesRegistry.Register(ShadowBullets.card, CardType.Card | CardType.Branch, CurseEater.card);
             ClassesRegistry.Register(SiphonCurses.card, CardType.Card, CurseEater.card);
         }
 
