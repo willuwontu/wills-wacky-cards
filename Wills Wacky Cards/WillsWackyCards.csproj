@@ -20,7 +20,7 @@
   </PropertyGroup>
 	
   <ItemGroup>
-    <PackageReference Include="UnboundLib" Version="2.10.2" />
+    <PackageReference Include="UnboundLib" Version="2.11.2" />
   </ItemGroup>
 
   <ItemGroup>

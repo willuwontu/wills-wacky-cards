@@ -15,11 +15,14 @@ namespace WWC.Cards
 {
     class GyroscopicStabilizers : CustomCard
     {
+        public override void Callback()
+        {
+            gameObject.GetOrAddComponent<ClassNameMono>().className = MechanicClass.name;
+        }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.allowMultiple = false;
             statModifiers.gravity = 1f/ 2.5f;
-            gameObject.GetOrAddComponent<ClassNameMono>().className = MechanicClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

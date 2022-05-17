@@ -15,12 +15,15 @@ namespace WWC.Cards
     class RunicWards : CustomCard
     {
         public static CardInfo card = null;
+        public override void Callback()
+        {
+            gameObject.GetOrAddComponent<ClassNameMono>().className = CurseEaterClass.name;
+        }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
             ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
-            gameObject.GetOrAddComponent<ClassNameMono>().className = CurseEaterClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

@@ -11,12 +11,14 @@ namespace WWC.Cards
 {
     class AdrenalineRush : CustomCard
     {
-        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
+        public override void Callback()
         {
-            // Edits values on card itself, which are then applied to the player in `ApplyCardStats`
             var cardMono = gameObject.GetOrAddComponent<PointCard_Mono>();
             cardMono.multiplierPerPoint = -0.2f;
             cardMono.startValue = 1.30f;
+        }
+        public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
+        {
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

@@ -25,16 +25,9 @@ namespace WWC.Cards
 
         public static CardCategory CurseEaterClass = CustomCardCategories.instance.CardCategory("Curse Eater");
 
-        public static void CurseEaterAddClassStuff(CharacterStatModifiers characterStats)
+        public override void Callback()
         {
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.Add(CustomCardCategories.instance.CardCategory("Class"));
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == CurseEaterClass);
-        }
-
-        public static void CurseEaterRemoveClassStuff(CharacterStatModifiers characterStats)
-        {
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.RemoveAll((category) => category == CustomCardCategories.instance.CardCategory("Class"));
-            ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(characterStats).blacklistedCategories.Add(CurseEaterClass);
+            gameObject.GetOrAddComponent<ClassNameMono>();
         }
 
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
@@ -42,12 +35,10 @@ namespace WWC.Cards
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory, CustomCardCategories.instance.CardCategory("Class") };
             ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
-            gameObject.GetOrAddComponent<ClassNameMono>();
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            CurseEaterAddClassStuff(characterStats);
 
             var mono = player.gameObject.GetOrAddComponent<CurseEater_Mono>();
 
@@ -57,7 +48,6 @@ namespace WWC.Cards
 
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            CurseEaterRemoveClassStuff(characterStats);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
         protected override string GetTitle()
