@@ -19,6 +19,10 @@ namespace WWC.Cards
     class ShadowBullets : CustomCard
     {
         public static CardInfo card = null;
+        public override void Callback()
+        {
+            gameObject.GetOrAddComponent<ClassNameMono>().className = CurseEaterClass.name;
+        }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             GameObject drill = null;
@@ -52,8 +56,6 @@ namespace WWC.Cards
 
             cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseSpawnerCategory };
-
-            gameObject.GetOrAddComponent<ClassNameMono>().className = CurseEaterClass.name;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

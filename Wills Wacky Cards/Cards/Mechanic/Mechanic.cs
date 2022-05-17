@@ -24,10 +24,13 @@ namespace WWC.Cards
 
         public const string MechanicClassName = "Mechanic";
 
+        public override void Callback()
+        {
+            gameObject.GetOrAddComponent<ClassNameMono>();
+        }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.allowMultiple = false;
-            gameObject.GetOrAddComponent<ClassNameMono>();
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

@@ -20,6 +20,7 @@ namespace WWC.Cards
             var tracker = this.gameObject.GetOrAddComponent<MomentumCard_Mono>();
             tracker.card = cardInfo;
             tracker.title = "Unstoppable Force";
+            tracker.statsGenerator = GetStats;
 
             var stacks = MomentumTracker.stacks = Math.Max(MomentumTracker.stacks, 1);
 
@@ -27,6 +28,7 @@ namespace WWC.Cards
 
             cardInfo.cardStats = MomentumTracker.GetOffensiveMomentumStats(stacks);
             tracker.updated = true;
+            tracker.alwaysUpdate = true;
 
             cardInfo.categories = new CardCategory[] { WillsWackyManagers.Utils.RerollManager.instance.NoFlip, CustomCardCategories.instance.CardCategory("NoRandom") };
 
@@ -108,6 +110,7 @@ namespace WWC.Cards
                 tracker.title = "Unstoppable Force";
                 tracker.stacks = Math.Max(MomentumTracker.stacks, 1);
                 tracker.builtCard = true;
+                tracker.statsGenerator = GetStats;
             }
             stacks = tracker.stacks;
 

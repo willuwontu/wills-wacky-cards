@@ -13,9 +13,11 @@ namespace WWC.MonoBehaviours
         private TextMeshProUGUI cardName;
         public CardInfo card;
         public bool updated = false;
+        public bool alwaysUpdate = false;
         public bool builtCard = false;
         public int stacks;
         public string title;
+        public Func<CardInfoStat[]> statsGenerator;
 
         private StatHolder[] stats = new StatHolder[] { };
 
@@ -32,6 +34,12 @@ namespace WWC.MonoBehaviours
         private void Start()
         {
             TextMeshProUGUI[] allChildrenRecursive = this.gameObject.GetComponentsInChildren<TextMeshProUGUI>();
+
+            if (allChildrenRecursive.Length < 1)
+            {
+                return;
+            }
+
             GameObject effectText = allChildrenRecursive.Where(obj => obj.gameObject.name == "EffectText").FirstOrDefault().gameObject;
             GameObject titleText = allChildrenRecursive.Where(obj => obj.gameObject.name == "Text_Name").FirstOrDefault().gameObject;
 
@@ -54,10 +62,22 @@ namespace WWC.MonoBehaviours
         }
         private void Update()
         {
-            if (updated)
+            if (!this.cardName)
             {
+                return;
+            }
+
+            if (updated || (alwaysUpdate && (this.stacks != MomentumTracker.stacks)))
+            {
+                if (alwaysUpdate)
+                {
+                    this.stacks = MomentumTracker.stacks;
+                }
+
+                updated = false;
+
                 cardName.text = title.ToUpper();
-                foreach (var statInfo in card.cardStats)
+                foreach (var statInfo in (alwaysUpdate ? statsGenerator() : card.cardStats))
                 {
                     var stat = stats.Where((stat) => stat.stat.text == statInfo.stat).FirstOrDefault();
                     stat.value.text = statInfo.amount;
@@ -71,7 +91,6 @@ namespace WWC.MonoBehaviours
                     //    }
                     //}
                 }
-                updated = false;
             }
         }
     }
