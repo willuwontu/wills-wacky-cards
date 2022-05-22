@@ -96,6 +96,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <summary>Patches</summary>
 
 ----
+## v 1.9.7
+- Fixed Portable Fabricators
+
+----
 ## v 1.9.6
 - Fixed an issue with curse eater
 

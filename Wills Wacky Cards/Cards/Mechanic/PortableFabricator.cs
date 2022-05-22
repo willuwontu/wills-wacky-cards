@@ -30,7 +30,7 @@ namespace WWC.Cards
             {
                 upgrader.upgradeTimeMult *= 0.8f;
                 upgrader.characterDataModifier.health_mult += 0.5f;
-                upgrader.characterDataModifier.health_mult += 0.5f;
+                upgrader.characterDataModifier.maxHealth_mult += 0.5f;
                 upgrader.characterStatModifiersModifier.sizeMultiplier_mult += 0.1f;
                 upgrader.upgradeCooldownMult *= 1.1f;
             }
