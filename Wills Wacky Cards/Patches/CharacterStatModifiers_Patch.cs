@@ -11,6 +11,7 @@ namespace WWC.Patches
     class CharacterStatModifiers_Patch
     {
         [HarmonyPostfix]
+        [HarmonyPriority(Priority.First)]
         [HarmonyPatch("ConfigureMassAndSize")]
         static void MassAdjustment(CharacterStatModifiers __instance, CharacterData ___data)
         {

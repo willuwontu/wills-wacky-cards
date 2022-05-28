@@ -67,7 +67,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return RarityLib.Utils.RarityUtils.GetRarity("Epic");
         }
         protected override CardInfoStat[] GetStats()
         {

@@ -42,7 +42,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.9.7"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.9.8"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -68,10 +68,51 @@ namespace WWC
             instance = this;
 
             var harmony = new Harmony(ModId);
+
+            PluginInfo[] pluginInfos = BepInEx.Bootstrap.Chainloader.PluginInfos.Values.ToArray();
+            foreach (PluginInfo info in pluginInfos)
+            {
+                Assembly mod = Assembly.LoadFile(info.Location);
+                Type[] types = mod.GetTypes().Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(CustomCard))).ToArray();
+                foreach (Type type in types)
+                {
+                    if (type.Name == "EggCard")
+                    {
+                        MethodInfo getRarity = type.GetMethod("GetRarity", BindingFlags.NonPublic | BindingFlags.Instance);
+                        if (getRarity != null)
+                        {
+                            HarmonyMethod eggRarity = new HarmonyMethod(typeof(WWC.Patches.Egg_Patch).GetMethod("EggRarity", BindingFlags.Static | BindingFlags.NonPublic));
+                            harmony.Patch(getRarity, postfix: eggRarity);
+                            if (eggRarity != null)
+                            {
+                                harmony.Patch(getRarity, postfix: eggRarity);
+                            }
+                        }
+                    }
+                }
+            }
+
             harmony.PatchAll();
 
             remover = gameObject.AddComponent<CardRemover>();
             gameObject.AddComponent<InterfaceGameModeHooksManager>();
+
+            try
+            {
+                RarityLib.Utils.RarityUtils.AddRarity("Epic", 0.25f, new Color32(225, 0, 50, 255), new Color32(125, 0, 20, 255));
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
+            }
+            try
+            {
+                RarityLib.Utils.RarityUtils.AddRarity("E G G", 0.025f, new Color32(255, 243, 194, 255), new Color32(150, 140, 100, 255));
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogException(e);
+            }
 
             CustomCard.BuildCard<AmmoCache>();
             CustomCard.BuildCard<Shotgun>();
@@ -108,6 +149,7 @@ namespace WWC
             CustomCard.BuildCard<Boomerang>();
             CustomCard.BuildCard<FlySwatter>();
             CustomCard.BuildCard<AggressiveVenting>();
+            CustomCard.BuildCard<WheelOfFortune>();
 
             {
                 CustomCard.BuildCard<Antidote>();
@@ -225,6 +267,31 @@ namespace WWC
             if (debug)
             {
                 UnityEngine.Debug.Log(message);
+            }
+        }
+
+        public static void AddCardToPlayer(Player player, CardInfo card)
+        {
+            if (player is null || card is null)
+            {
+                return;
+            }
+
+            string cardID = card.gameObject.name;
+            int playerID = player.playerID;
+
+            NetworkingManager.RPC(typeof(WillsWackyCards), nameof(WillsWackyCards.URPCA_AddCardToPlayer), new object[] { playerID, cardID });
+        }
+
+        [UnboundRPC]
+        public static void URPCA_AddCardToPlayer(int playerId, string cardName)
+        {
+            var player = PlayerManager.instance.GetPlayerWithID(playerId);
+            CardInfo card = CardManager.cards.Values.Select(c => c.cardInfo).Where(c => c.gameObject.name == cardName).First();
+
+            if (card)
+            {
+                ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, card, false, "", 0, 0, true);
             }
         }
 

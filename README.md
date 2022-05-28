@@ -68,7 +68,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Bullet Powered Jetpack (Common)
 - Banishment (Uncommon)
 - Resolute (Uncommon)
-- Dimensional Shuffle (Uncommon)
+- Dimensional Shuffle (Epic)
 - Boomerang (Common)
 - Fly Swatter (Uncommon)
 - Aggressive Venting (Uncommon)
@@ -83,17 +83,23 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Improved Shield Capacitors (Common)
   - Integrated Targeting Sensors (Uncommon)
   - Jump Boots (Common)
-  - Omnitool (Uncommon)
+  - Omnitool (Epic)
   - Particle Wave Sequencer (Uncommon)
   - Personal Hammerspace (Common)
   - Portable Fabricators (Common)
 - Antidote (Rare)
-- Poison Resistant (Uncommon)
+- Poison Resistant (Epic)
 - Strong Body (Uncommon)
 - Bursting Poisons (Uncommon)
+- Wheel of Fortune (Epic)
 
 <details>
 <summary>Patches</summary>
+
+----
+## v 1.9.8
+- 1 new card (Wheel of Fortune)
+- Added a new Epic rarity that's between uncommon and rare.
 
 ----
 ## v 1.9.7

@@ -16,7 +16,7 @@ namespace WWC.Patches
         {
             if (__instance is DamageOverTime)
             {
-                UnityEngine.Debug.Log("DOT Stop Coroutines Called");
+                
             }
         }
     }
