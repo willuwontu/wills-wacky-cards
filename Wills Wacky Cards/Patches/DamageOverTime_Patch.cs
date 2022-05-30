@@ -46,20 +46,24 @@ namespace WWC.Patches
                 float initialTime = time;
                 float initialInterval = interval;
 
-                int occurences = Mathf.FloorToInt(initialInterval / initialTime);
-                float initialDamageTotal = occurences * initialDamage;
+                //UnityEngine.Debug.Log($"Initially intended to deal {string.Format("{0:F2}", initialDamage)} damage in {string.Format("{0:F2}", initialInterval)}s intervals over {string.Format("{0:F2}", initialTime)} seconds.");
 
-                float burstDamage = initialDamageTotal * (1f - Mathf.Clamp(burstModifier, 0f, 1f));
+                float burstDamage = initialDamage * (1f - Mathf.Clamp(burstModifier, 0f, 1f));
+
+                //UnityEngine.Debug.Log($"Dealing {string.Format("{0:F2}", burstDamage)} damage as a burst.");
+
                 player.data.healthHandler.DoDamage(damage.normalized * burstDamage, position, color, damagingWeapon, damagingPlayer, false, lethal, true);
 
-                float finalDamage = initialDamageTotal - burstDamage;
+                float finalDamage = initialDamage - burstDamage;
+
+                //UnityEngine.Debug.Log($"Now only scheduled to deal {string.Format("{0:F2}", finalDamage)} damage in {string.Format("{0:F2}", initialInterval)}s intervals over {string.Format("{0:F2}", initialTime)} seconds.");
 
                 if (finalDamage <= 0f)
                 {
                     return false;
                 }
 
-                damage = damage.normalized * (finalDamage / occurences);
+                damage = damage.normalized * (finalDamage);
             }
 
             return true;
