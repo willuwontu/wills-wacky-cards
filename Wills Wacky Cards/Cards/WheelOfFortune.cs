@@ -190,7 +190,7 @@ namespace WWC.MonoBehaviours
 
             RarityLib.Utils.RarityUtils.GetRarityData(CardInfo.Rarity.Common).color = new Color(0.8f, 0.8f, 0.8f, 1f);
 
-            this.description.text = $"You win {amount} <color=#{ColorUtility.ToHtmlStringRGB(RarityLib.Utils.RarityUtils.GetRarityData(this.currentRarity).color)}>{this.currentRarity.ToString()}{(amount > 1 ? "s" : "")}</color>!";
+            this.description.text = $"You win {amount} <color=#{ColorUtility.ToHtmlStringRGB(RarityLib.Utils.RarityUtils.GetRarityData(this.currentRarity).color)}>{this.currentRarity.ToString()}</color> card{(amount > 1 ? "s" : "")}!";
 
             RarityLib.Utils.RarityUtils.GetRarityData(CardInfo.Rarity.Common).color = origColor;
 

@@ -97,6 +97,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <summary>Patches</summary>
 
 ----
+## v 1.9.9
+- Patched an issue with bursting poisons and poisonous trauma
+
+----
 ## v 1.9.8
 - 1 new card (Wheel of Fortune)
 - Added a new Epic rarity that's between uncommon and rare.
