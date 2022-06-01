@@ -118,6 +118,7 @@
 
   <ItemGroup>
     <Folder Include="AssetsEmbedded\" />
+    <Folder Include="Cards\Godslayer\" />
   </ItemGroup>
 
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -18,7 +18,8 @@ namespace WWC.Cards
     {
         public override void Callback()
         {
-            gameObject.AddComponent<WheelOfFortune_Mono>();
+            var mono = gameObject.AddComponent<WheelOfFortune_Mono>();
+            mono.currentRarity = RarityLib.Utils.RarityUtils.Rarities.Values.ToArray()[UnityEngine.Random.Range(0, RarityLib.Utils.RarityUtils.Rarities.Values.ToArray().Length)].value;
         }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
@@ -75,7 +76,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return RarityLib.Utils.RarityUtils.GetRarity("Epic");
+            return WillsWackyCards.ScarceRarity;
         }
         protected override CardInfoStat[] GetStats()
         {
