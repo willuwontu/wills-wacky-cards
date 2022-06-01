@@ -42,7 +42,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.9.9"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.9.10"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -56,6 +56,22 @@ namespace WWC
         public static bool battleStarted = false;
 
         private bool debug = false;
+
+        public static CardInfo.Rarity ScarceRarity
+        {
+            get
+            {
+                return RarityLib.Utils.RarityUtils.GetRarity("Scarce");
+            }
+        }
+
+        public static CardInfo.Rarity EpicRarity
+        {
+            get
+            {
+                return RarityLib.Utils.RarityUtils.GetRarity("Epic");
+            }
+        }
 
         void Awake()
         {
@@ -81,6 +97,15 @@ namespace WWC
                         MethodInfo getRarity = type.GetMethod("GetRarity", BindingFlags.NonPublic | BindingFlags.Instance);
                         if (getRarity != null)
                         {
+                            try
+                            {
+                                RarityLib.Utils.RarityUtils.AddRarity("E G G", 0.025f, new Color32(255, 243, 194, 255), new Color32(150, 140, 100, 255));
+                            }
+                            catch (Exception e)
+                            {
+                                UnityEngine.Debug.LogException(e);
+                            }
+
                             HarmonyMethod eggRarity = new HarmonyMethod(typeof(WWC.Patches.Egg_Patch).GetMethod("EggRarity", BindingFlags.Static | BindingFlags.NonPublic));
                             harmony.Patch(getRarity, postfix: eggRarity);
                             if (eggRarity != null)
@@ -96,23 +121,6 @@ namespace WWC
 
             remover = gameObject.AddComponent<CardRemover>();
             gameObject.AddComponent<InterfaceGameModeHooksManager>();
-
-            try
-            {
-                RarityLib.Utils.RarityUtils.AddRarity("Epic", 0.25f, new Color32(225, 0, 50, 255), new Color32(125, 0, 20, 255));
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
-            try
-            {
-                RarityLib.Utils.RarityUtils.AddRarity("E G G", 0.025f, new Color32(255, 243, 194, 255), new Color32(150, 140, 100, 255));
-            }
-            catch (Exception e)
-            {
-                UnityEngine.Debug.LogException(e);
-            }
 
             CustomCard.BuildCard<AmmoCache>();
             CustomCard.BuildCard<Shotgun>();

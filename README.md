@@ -59,7 +59,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Cleansing Ritual (Uncommon)
 - Curse Eater (Common)
   - Corrupted Ammunition (Uncommon)
-  - Runic Wards (Uncommon)
+  - Runic Wards (Epic)
   - Ghostly Body (Uncommon)
   - Shadow Bullets (Uncommon)
   - Siphon Curses (Common)
@@ -68,7 +68,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Bullet Powered Jetpack (Common)
 - Banishment (Uncommon)
 - Resolute (Uncommon)
-- Dimensional Shuffle (Epic)
+- Dimensional Shuffle (Scarce)
 - Boomerang (Common)
 - Fly Swatter (Uncommon)
 - Aggressive Venting (Uncommon)
@@ -83,18 +83,25 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Improved Shield Capacitors (Common)
   - Integrated Targeting Sensors (Uncommon)
   - Jump Boots (Common)
-  - Omnitool (Epic)
+  - Omnitool (Scarce)
   - Particle Wave Sequencer (Uncommon)
   - Personal Hammerspace (Common)
   - Portable Fabricators (Common)
 - Antidote (Rare)
-- Poison Resistant (Epic)
+- Poison Resistant (Scarce)
 - Strong Body (Uncommon)
 - Bursting Poisons (Uncommon)
-- Wheel of Fortune (Epic)
+- Wheel of Fortune (Scarce)
 
 <details>
-<summary>Patches</summary>
+<summary>Change Log</summary>
+
+----
+## v 1.9.10
+- Added a new Scarcee rarity that's between uncommon and rare.
+- Epic rarity is now between rare and legendary.
+- Rarities are now added via WWM.
+- Runic Wards is now Epic rarity.
 
 ----
 ## v 1.9.9
