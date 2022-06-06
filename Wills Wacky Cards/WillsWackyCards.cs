@@ -36,13 +36,14 @@ namespace WWC
     [BepInDependency("pykess.rounds.plugins.moddingutils", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("pykess.rounds.plugins.cardchoicespawnuniquecardpatch", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("root.classes.manager.reborn", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("root.rarity.lib", BepInDependency.DependencyFlags.HardDependency)]
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
     public class WillsWackyCards : BaseUnityPlugin
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.9.10"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.9.11"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -97,14 +98,7 @@ namespace WWC
                         MethodInfo getRarity = type.GetMethod("GetRarity", BindingFlags.NonPublic | BindingFlags.Instance);
                         if (getRarity != null)
                         {
-                            try
-                            {
-                                RarityLib.Utils.RarityUtils.AddRarity("E G G", 0.025f, new Color32(255, 243, 194, 255), new Color32(150, 140, 100, 255));
-                            }
-                            catch (Exception e)
-                            {
-                                UnityEngine.Debug.LogException(e);
-                            }
+                            RarityLib.Utils.RarityUtils.AddRarity("E G G", 0.025f, new Color32(255, 243, 194, 255), new Color32(150, 140, 100, 255));
 
                             HarmonyMethod eggRarity = new HarmonyMethod(typeof(WWC.Patches.Egg_Patch).GetMethod("EggRarity", BindingFlags.Static | BindingFlags.NonPublic));
                             harmony.Patch(getRarity, postfix: eggRarity);

@@ -23,7 +23,8 @@ namespace WWC.Patches
                 ___data.playerVel.SetFieldValue("mass", massTarg);
             }
 
-            __instance.transform.root.localScale = new Vector3(Mathf.Clamp(__instance.transform.localScale.x, 0.5f, 15f), Mathf.Clamp(__instance.transform.localScale.y, 0.5f, 15f), 1.2f);
+            // Disabled out of fear of Tess coming after me.
+            //__instance.transform.root.localScale = new Vector3(Mathf.Clamp(__instance.transform.localScale.x, 0.5f, 15f), Mathf.Clamp(__instance.transform.localScale.y, 0.5f, 15f), 1.2f);
         }
 
         //[HarmonyPrefix]
