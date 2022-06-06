@@ -97,6 +97,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <summary>Change Log</summary>
 
 ----
+## v 1.9.11
+- Fix for Wheel of Fortune
+
+----
 ## v 1.9.10
 - Added a new Scarcee rarity that's between uncommon and rare.
 - Epic rarity is now between rare and legendary.
