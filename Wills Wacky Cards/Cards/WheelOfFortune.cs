@@ -34,11 +34,7 @@ namespace WWC.Cards
 
             WillsWackyCards.instance.ExecuteAfterFrames(5, () =>
             {
-                UnityEngine.Debug.Log($"Player {player.playerID} rolled {rarity.ToString()} rarity for their wheel.");
-                if (Photon.Pun.PhotonNetwork.OfflineMode || Photon.Pun.PhotonNetwork.IsMasterClient)
-                {
-                    WheelOfFortune_Mono.Picked(player);
-                }
+                WheelOfFortune_Mono.Picked(player);
             });
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -235,11 +231,11 @@ namespace WWC.MonoBehaviours
                 if (allValidCards.Length > 0)
                 {
                     newCard = allValidCards[UnityEngine.Random.Range(0, allValidCards.Length)];
-
                     newCards.Add(newCard);
-                    WillsWackyCards.instance.ExecuteAfterFrames(5, () => { WillsWackyCards.AddCardToPlayer(player, newCard); });
                 }
             }
+
+            ModdingUtils.Utils.Cards.instance.AddCardsToPlayer(player, newCards.ToArray(), false, null, null, null);
         }
         public static int CardAmountByRarity(CardInfo.Rarity rarity)
         {
