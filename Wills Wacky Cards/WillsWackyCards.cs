@@ -43,7 +43,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.9.12"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.9.13"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -86,30 +86,32 @@ namespace WWC
 
             var harmony = new Harmony(ModId);
 
-            PluginInfo[] pluginInfos = BepInEx.Bootstrap.Chainloader.PluginInfos.Values.ToArray();
-            foreach (PluginInfo info in pluginInfos)
-            {
-                Assembly mod = Assembly.LoadFile(info.Location);
-                Type[] types = mod.GetTypes().Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(CustomCard))).ToArray();
-                foreach (Type type in types)
-                {
-                    if (type.Name == "EggCard")
-                    {
-                        MethodInfo getRarity = type.GetMethod("GetRarity", BindingFlags.NonPublic | BindingFlags.Instance);
-                        if (getRarity != null)
-                        {
-                            RarityLib.Utils.RarityUtils.AddRarity("E G G", 0.025f, new Color32(255, 243, 194, 255), new Color32(150, 140, 100, 255));
+            //Disabled but nice to know that we can do this.
 
-                            HarmonyMethod eggRarity = new HarmonyMethod(typeof(WWC.Patches.Egg_Patch).GetMethod("EggRarity", BindingFlags.Static | BindingFlags.NonPublic));
-                            harmony.Patch(getRarity, postfix: eggRarity);
-                            if (eggRarity != null)
-                            {
-                                harmony.Patch(getRarity, postfix: eggRarity);
-                            }
-                        }
-                    }
-                }
-            }
+            //PluginInfo[] pluginInfos = BepInEx.Bootstrap.Chainloader.PluginInfos.Values.ToArray();
+            //foreach (PluginInfo info in pluginInfos)
+            //{
+            //    Assembly mod = Assembly.LoadFile(info.Location);
+            //    Type[] types = mod.GetTypes().Where(myType => myType.IsClass && !myType.IsAbstract && myType.IsSubclassOf(typeof(CustomCard))).ToArray();
+            //    foreach (Type type in types)
+            //    {
+            //        if (type.Name == "EggCard")
+            //        {
+            //            MethodInfo getRarity = type.GetMethod("GetRarity", BindingFlags.NonPublic | BindingFlags.Instance);
+            //            if (getRarity != null)
+            //            {
+            //                RarityLib.Utils.RarityUtils.AddRarity("E G G", 0.025f, new Color32(255, 243, 194, 255), new Color32(150, 140, 100, 255));
+
+            //                HarmonyMethod eggRarity = new HarmonyMethod(typeof(WWC.Patches.Egg_Patch).GetMethod("EggRarity", BindingFlags.Static | BindingFlags.NonPublic));
+            //                harmony.Patch(getRarity, postfix: eggRarity);
+            //                if (eggRarity != null)
+            //                {
+            //                    harmony.Patch(getRarity, postfix: eggRarity);
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
             harmony.PatchAll();
 
@@ -151,7 +153,7 @@ namespace WWC
             CustomCard.BuildCard<Boomerang>();
             CustomCard.BuildCard<FlySwatter>();
             CustomCard.BuildCard<AggressiveVenting>();
-            CustomCard.BuildCard<WheelOfFortune>();
+            CustomCard.BuildCard<WheelOfFortune>(card => { WheelOfFortune.card = card; });
 
             {
                 CustomCard.BuildCard<Antidote>();
@@ -272,6 +274,21 @@ namespace WWC
             }
         }
 
+        public static void SendDebugLog(object message, bool masterClientOnly = false)
+        {
+            if (!(masterClientOnly && !(PhotonNetwork.IsMasterClient || PhotonNetwork.OfflineMode)))
+            {
+                return;
+            }
+            NetworkingManager.RPC(typeof(WillsWackyCards), nameof(WillsWackyCards.URPCA_DebugLog), message);
+        }
+
+        [UnboundRPC]
+        public static void URPCA_DebugLog(object message)
+        {
+            UnityEngine.Debug.Log(message);
+        }
+
         public static void AddCardToPlayer(Player player, CardInfo card)
         {
             if (player is null || card is null)
@@ -282,7 +299,7 @@ namespace WWC
             string cardID = card.gameObject.name;
             int playerID = player.playerID;
 
-            NetworkingManager.RPC(typeof(WillsWackyCards), nameof(WillsWackyCards.URPCA_AddCardToPlayer), new object[] { playerID, cardID });
+            NetworkingManager.RPC(typeof(WillsWackyCards), nameof(WillsWackyCards.URPCA_AddCardToPlayer), playerID, cardID);
         }
 
         [UnboundRPC]

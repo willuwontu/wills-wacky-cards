@@ -28,11 +28,11 @@ namespace WWC.Cards
             
             if (upgrader)
             {
-                upgrader.upgradeTimeMult *= 0.8f;
-                upgrader.characterDataModifier.health_mult += 0.5f;
-                upgrader.characterDataModifier.maxHealth_mult += 0.5f;
+                upgrader.upgradeTimeMult *= 0.9f;
+                upgrader.characterDataModifier.health_mult += 0.6f;
+                upgrader.characterDataModifier.maxHealth_mult += 0.6f;
                 upgrader.characterStatModifiersModifier.sizeMultiplier_mult += 0.1f;
-                upgrader.upgradeCooldownMult *= 1.1f;
+                upgrader.upgradeCooldownMult *= 1.05f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -85,21 +85,21 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "HP per Upgrade",
-                    amount = "+50%",
+                    amount = "+60%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Upgrade Time",
-                    amount = "-20%",
+                    amount = "-10%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = false,
                     stat = "Upgrade Cooldown",
-                    amount = "+10%",
+                    amount = "+5%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
