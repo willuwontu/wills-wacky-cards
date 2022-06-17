@@ -16,6 +16,7 @@ namespace WWC.Cards
 {
     class WheelOfFortune : CustomCard
     {
+        public static CardInfo card;
         public override void Callback()
         {
             var mono = gameObject.AddComponent<WheelOfFortune_Mono>();
@@ -188,14 +189,14 @@ namespace WWC.MonoBehaviours
         }
         public static void Picked(Player player)
         {
-            CardInfo[] availableCards = UnboundLib.Utils.CardManager.cards.Values.Where(card => card.enabled).Select(card => card.cardInfo).Where(cardInfo => ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(player, cardInfo)).ToArray();
+            CardInfo[] availableCards = UnboundLib.Utils.CardManager.cards.Values.Where(card => card.enabled).Select(card => card.cardInfo).Where(cardInfo => ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(player, cardInfo) && (cardInfo != WWC.Cards.WheelOfFortune.card) && (!cardInfo.categories.Contains(WillsWackyManagers.Utils.CurseManager.instance.curseCategory))).ToArray();
             CardInfo.Rarity[] availableRarities = availableCards.Select(cardInfo => cardInfo.rarity).Distinct().ToArray();
 
             int rarityWeight = availableRarities.Select(rarity => CardAmountByRarity(rarity)).Sum();
             int randomWeight = UnityEngine.Random.Range(0, rarityWeight + 1);
 
-            UnityEngine.Debug.Log($"Player {player.playerID} has a total of {availableCards.Length} cards and {availableRarities.Length} distinct rarities available to them.");
-            UnityEngine.Debug.Log($"The rarities have the following rewards:\n{availableRarities.Select(rarity => $"{rarity.ToString()}: {WheelOfFortune_Mono.CardAmountByRarity(rarity)} card{(WheelOfFortune_Mono.CardAmountByRarity(rarity) != 1 ? "s" : "")};  Odds: {WheelOfFortune_Mono.CardAmountByRarity(rarity)}/{rarityWeight}")}");
+            WillsWackyCards.SendDebugLog($"Player {player.playerID} has a total of {availableCards.Length} cards and {availableRarities.Length} distinct rarities available to them.",true);
+            WillsWackyCards.SendDebugLog($"The rarities have the following rewards:\n{availableRarities.Select(rarity => $"{rarity.ToString()}: {WheelOfFortune_Mono.CardAmountByRarity(rarity)} card{(WheelOfFortune_Mono.CardAmountByRarity(rarity) != 1 ? "s" : "")};  Odds: {WheelOfFortune_Mono.CardAmountByRarity(rarity)}/{rarityWeight}")}",true);
 
             availableRarities.Shuffle();
             availableRarities.Shuffle();
@@ -212,26 +213,27 @@ namespace WWC.MonoBehaviours
                     break;
                 }
             }
-            UnityEngine.Debug.Log($"Player {player.playerID} rolled {chosenRarity.ToString()} rarity for their wheel.");
+            WillsWackyCards.SendDebugLog($"Player {player.playerID} rolled {chosenRarity.ToString()} rarity for their wheel.", true);
             CardInfo[] rarityCards = availableCards.Where(card => card.rarity == chosenRarity).ToArray();
-            UnityEngine.Debug.Log($"There {(rarityCards.Length != 1 ? "are" : "is")}  {rarityCards.Length} card{(rarityCards.Length != 1 ? "s" : "")} available in that rarity for the player.");
+            WillsWackyCards.SendDebugLog($"There {(rarityCards.Length != 1 ? "are" : "is")}  {rarityCards.Length} card{(rarityCards.Length != 1 ? "s" : "")} available in that rarity for the player.", true);
 
             List<CardInfo> newCards = new List<CardInfo>();
             int amount = WheelOfFortune_Mono.CardAmountByRarity(chosenRarity);
-            UnityEngine.Debug.Log($"Rolling {amount} {chosenRarity.ToString()} card{(amount > 1 ? "s" : "")} for Player {player.playerID} now.");
+            WillsWackyCards.SendDebugLog($"Rolling {amount} {chosenRarity.ToString()} card{(amount > 1 ? "s" : "")} for Player {player.playerID} now.", true);
 
             for (int i = 0; i < amount; i++)
             {
                 CardInfo newCard = null;
 
-                CardInfo[] allValidCards = rarityCards.Where(c => (!c.categories.Contains(CustomCardCategories.instance.CardCategory("CardManipulation"))) && (!c.categories.Contains(WillsWackyManagers.Utils.CurseManager.instance.curseCategory)) && (ModdingUtils.Utils.Cards.instance.CardDoesNotConflictWithCards(c, newCards.ToArray())) && (ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(player, c))).ToArray();
+                CardInfo[] allValidCards = rarityCards.Where(c => (c != WWC.Cards.WheelOfFortune.card) && (ModdingUtils.Utils.Cards.instance.CardDoesNotConflictWithCards(c, newCards.ToArray())) && (ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(player, c))).ToArray();
 
-                UnityEngine.Debug.Log($"There are {(allValidCards.Length != 1 ? "are" : "is")} valid {allValidCards.Length} card{(allValidCards.Length != 1 ? "s" : "")} available for the player to randomly roll into.");
+                WillsWackyCards.SendDebugLog($"There are {(allValidCards.Length != 1 ? "are" : "is")} valid {allValidCards.Length} card{(allValidCards.Length != 1 ? "s" : "")} available for the player to randomly roll into.", true);
 
                 if (allValidCards.Length > 0)
                 {
                     newCard = allValidCards[UnityEngine.Random.Range(0, allValidCards.Length)];
                     newCards.Add(newCard);
+                    WillsWackyCards.SendDebugLog($"{newCard.cardName} ({newCard.gameObject.name}) was chosen.", true);
                 }
             }
 
@@ -245,7 +247,7 @@ namespace WWC.MonoBehaviours
 
             float value = rarities.Where(r => r.value == rarity).First().relativeRarity;
             float min = rarities.Select(r => r.relativeRarity).Min();
-            float max = rarities.Select(r => r.relativeRarity).Max();
+            float max = 0.8f;
             float sum = rarities.Select(r => r.relativeRarity).Sum();
 
             result = ((int)(Mathf.Round((value/max) * 3f))) + 1;

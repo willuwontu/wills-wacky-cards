@@ -97,6 +97,12 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <summary>Change Log</summary>
 
 ----
+## v 1.9.13
+- Added some synchronized messages for Wheel of Fortune.
+- Changed how Wheel of Fortune calculates the amount of cards it gives.
+- Nerfed Cutting Lasers and Portable Fabricators again.
+
+----
 ## v 1.9.12
 - Fix for Wheel of Fortune
 
