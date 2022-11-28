@@ -876,12 +876,10 @@ namespace WWC
                 CardInfo removed = player.data.currentCards[cardId];
                 player.data.currentCards.RemoveAt(cardId);
                 CardBar cardbar = ModdingUtils.Utils.CardBarUtils.instance.PlayersCardBar(player);
-                CardInfo card = null;
                 for (int num = cardbar.transform.childCount - 1; num >= 0; num--)
                 {
                     if (((CardInfo)cardbar.transform.GetChild(num).gameObject.GetComponent<CardBarButton>().GetFieldValue("card")) == removed)
                     {
-                        card = (CardInfo)cardbar.transform.GetChild(num).gameObject.GetComponent<CardBarButton>().GetFieldValue("card");
                         Destroy(cardbar.transform.GetChild(num).gameObject);
                         break;
                     }
