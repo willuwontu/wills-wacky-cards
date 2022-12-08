@@ -189,7 +189,7 @@ namespace WWC.MonoBehaviours
 			}
             try
             {
-                if (this.data.input.direction == Vector3.zero || this.data.input.direction == Vector3.down)
+                if (this.data.input.direction == Vector3.zero || this.data.input.direction == Vector3.down || this.data.input.direction == Vector3.up)
                 {
                     this.counter += TimeHandler.deltaTime / this.UpgradeTime;
                 }
@@ -307,7 +307,7 @@ namespace WWC.MonoBehaviours
 		[Range(0f, 1f)]
 		public float counter;
 
-		private float upgradeTime = 6f;
+		private float upgradeTime = 4f;
 
 		public float upgradeTimeAdd;
 
@@ -322,7 +322,7 @@ namespace WWC.MonoBehaviours
         }
         public float timeToEmpty = 1f;
 
-		private float upgradeCooldown = 12f;
+		private float upgradeCooldown = 8f;
 
 		public float upgradeCooldownAdd;
 

@@ -30,9 +30,6 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var mono = gameObject.GetComponent<WheelOfFortune_Mono>();
-            CardInfo.Rarity rarity = mono.currentRarity;
-
             WillsWackyCards.instance.ExecuteAfterFrames(5, () =>
             {
                 WheelOfFortune_Mono.Picked(player);
@@ -61,7 +58,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return WillsWackyCards.ScarceRarity;
+            return WillsWackyCards.EpicRarity;
         }
         protected override CardInfoStat[] GetStats()
         {

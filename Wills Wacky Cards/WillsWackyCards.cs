@@ -43,7 +43,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.9.13"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.9.15"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -254,6 +254,24 @@ namespace WWC
             //var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
             //networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
             //networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
+
+            CardInfo ensnareCard = UnityEngine.Resources.Load<GameObject>("0 cards_needsnetworking/Ensnare").GetComponent<CardInfo>();
+            CardInfo remnantCard = UnityEngine.Resources.Load<GameObject>("0 cards_needsnetworking/Remnant").GetComponent<CardInfo>();
+            CardInfo blackHoleCard = UnityEngine.Resources.Load<GameObject>("1 cards_boring/BlackHole").GetComponent<CardInfo>();
+
+            ObservableCollection<CardInfo> activeCards = (ObservableCollection<CardInfo>)typeof(CardManager).GetField("activeCards", BindingFlags.Default | BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+
+            List<CardInfo> hiddenVanillaCards = new List<CardInfo>() { ensnareCard, remnantCard, blackHoleCard };
+
+            CardInfo[] defaultCards = ((CardInfo[])typeof(CardManager).GetField("defaultCards", BindingFlags.Default | BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)).Concat(hiddenVanillaCards).ToArray();
+            typeof(CardManager).GetField("defaultCards", BindingFlags.Default | BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, defaultCards);
+
+            foreach (var card in hiddenVanillaCards)
+            {
+                CardManager.cards.Add(card.gameObject.name, new Card("Vanilla", Unbound.config.Bind("Cards: " + "Vanilla", card.gameObject.name, true), card));
+                Photon.Pun.PhotonNetwork.PrefabPool.RegisterPrefab(card.gameObject.name, card.gameObject);
+                activeCards.Add(card);
+            }
         }
 
         private void OnJoinedRoomAction()

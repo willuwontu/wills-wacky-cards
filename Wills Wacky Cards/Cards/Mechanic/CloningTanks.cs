@@ -34,12 +34,13 @@ namespace WWC.Cards
             {
                 upgrader.characterStatModifiersModifier.respawns_add += 1;
                 upgrader.AttachCloneAction();
-                upgrader.upgradeCooldownAdd += 5f;
-                upgrader.upgradeTimeAdd += 5f;
+                upgrader.upgradeCooldownAdd += 3f;
+                upgrader.upgradeTimeAdd += 3f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
+
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
 
@@ -103,14 +104,14 @@ namespace WWC.Cards
                 {
                     positive = false,
                     stat = "Upgrade Time",
-                    amount = "+5s",
+                    amount = "+3s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = false,
                     stat = "Upgrade Cooldown",
-                    amount = "+5s",
+                    amount = "+3s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

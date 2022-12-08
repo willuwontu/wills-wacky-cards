@@ -31,6 +31,7 @@ namespace WWC.MonoBehaviours
         private GameObject chargeBarObj;
         public Image chargeImage;
         private float chargeTarget;
+        private Coroutine syncRoutine;
         //private HeatBar heatBar;
 
         private void Start()
@@ -56,10 +57,9 @@ namespace WWC.MonoBehaviours
                 }
             }
 
-            if (!(player is null) && player.gameObject.activeInHierarchy && !coroutineStarted)
+            if (!(player is null) && player.gameObject.activeInHierarchy && (!(syncRoutine != null)))
             {
-                coroutineStarted = true;
-                StartCoroutine(PeriodicSync());
+                syncRoutine = StartCoroutine(PeriodicSync());
             }
 
             SyncAttackInputs();
@@ -97,7 +97,7 @@ namespace WWC.MonoBehaviours
                 {
                     this.photonView.RPC(nameof(RPCA_SyncCharge), RpcTarget.All, gun.currentCharge);
                 }
-                yield return new WaitForSecondsRealtime(TimeHandler.deltaTime * 5f);
+                yield return new WaitForSecondsRealtime(TimeHandler.fixedDeltaTime * 5f);
             }
         }
 
