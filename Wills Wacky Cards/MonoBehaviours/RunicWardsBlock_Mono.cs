@@ -111,23 +111,10 @@ namespace WWC.MonoBehaviours
         {
             CheckIfValid();
             var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
-
-            if (!increased)
-            {
-                increased = true;
-                additionalBlocks = curses.Count() / 2;
-                block.additionalBlocks += additionalBlocks;
-            }
         }
 
         public void OnPointEnd()
         {
-            if (increased)
-            {
-                increased = false;
-                block.additionalBlocks -= additionalBlocks;
-            }
-
             if (PhotonNetwork.OfflineMode || photonView.IsMine)
             {
                 var blah = damageTracker.ToDictionary((kvp) => kvp.Key, (kvp) => kvp.Value);
@@ -151,10 +138,10 @@ namespace WWC.MonoBehaviours
             var person = PlayerManager.instance.GetPlayerWithID(id);
             var counter = amount;
 
-            while (counter >= damageNeeded)
+            if (counter >= damageNeeded)
             {
                 CurseManager.instance.CursePlayer(person, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(person, curse); });
-                counter -= damageNeeded;
+                counter = 0;
             }
 
             damageTracker[person] = counter;
@@ -163,11 +150,6 @@ namespace WWC.MonoBehaviours
 
         private void OnDestroy()
         {
-            if (increased)
-            {
-                increased = false;
-                block.additionalBlocks -= additionalBlocks;
-            }
             stats.WasDealtDamageAction -= OnWasDealtDamage;
             InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }

@@ -16,7 +16,7 @@ namespace WWC.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.damage = 0.8f;
+            gun.damage = 1.2f;
             List<ObjectsToSpawn> list = gun.objectsToSpawn.ToList<ObjectsToSpawn>();
             list.Add(new ObjectsToSpawn
             {
@@ -67,9 +67,9 @@ namespace WWC.Cards
             {
                 new CardInfoStat()
                 {
-                    positive = false,
+                    positive = true,
                     stat = "Damage",
-                    amount = "-20%",
+                    amount = "+20%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

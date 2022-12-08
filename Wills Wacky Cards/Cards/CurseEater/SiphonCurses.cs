@@ -29,11 +29,11 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            characterStats.movementSpeed *= 1.8f;
             WillsWackyCards.instance.ExecuteAfterFrames(20, () =>
             {
                 int cursesToFind = 3;
                 int cursesFound = 0;
-                player.gameObject.GetOrAddComponent<SiphonCurses_Mono>();
                 Dictionary<Player, List<int>> curseIndeces = new Dictionary<Player, List<int>>();
                 List<Player> allyPlayers = PlayerManager.instance.players.Where((pl) => pl.playerID != player.playerID && pl.teamID == player.teamID).ToList();
                 List<Player> enemyPlayers = PlayerManager.instance.players.Where((pl) => pl.playerID != player.playerID && pl.teamID != player.teamID).ToList();
@@ -118,6 +118,10 @@ namespace WWC.Cards
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
+        }
+        public override void OnReassignCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
+        {
+            characterStats.movementSpeed *= 1.8f;
         }
         protected override string GetTitle()
         {

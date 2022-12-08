@@ -11,10 +11,10 @@ namespace WWC.Patches
     [HarmonyPatch(typeof(CardChoice))] 
     class CardChoice_Patch
     {
-        [HarmonyPrefix]
-        [HarmonyPriority(Priority.Last)]
+        [HarmonyPostfix]
+        [HarmonyPriority(Priority.First)]
         [HarmonyPatch("SpawnUniqueCard")]
-        static void MomentumReplace(CardChoice __instance, GameObject __result, Vector3 pos, Quaternion rot)
+        static void MomentumReplace(CardChoice __instance, ref GameObject __result, Vector3 pos, Quaternion rot)
         {
             var card = __result.GetComponent<CardInfo>();
 
@@ -24,33 +24,33 @@ namespace WWC.Patches
                 {
                     UnboundLib.NetworkingManager.RPC(typeof(CardChoice_Patch), nameof(CardChoice_Patch.URPCA_IncrementMomentum));
                 }
-                //if (card.sourceCard == WWC.Cards.ImmovableObject.card)
-                //{
-                //    var temp = __result;
-                //    WillsWackyCards.instance.ExecuteAfterFrames(5, () => 
-                //    {
-                //        UnityEngine.GameObject.Destroy(temp);
-                //    });
+                if (card.sourceCard == WWC.Cards.ImmovableObject.card)
+                {
+                    var temp = __result;
+                    WillsWackyCards.instance.ExecuteAfterFrames(5, () =>
+                    {
+                        Photon.Pun.PhotonNetwork.Destroy(temp);
+                    });
 
-                //    var stacks = MomentumTracker.stacks;
-                //    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { MomentumTracker.createdDefenseCards[stacks].gameObject, pos, rot });
-                //    __result.GetComponent<CardInfo>().sourceCard = MomentumTracker.createdDefenseCards[stacks];
-                //    __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
-                //}
+                    var stacks = MomentumTracker.stacks;
+                    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { MomentumTracker.createdDefenseCards[stacks].gameObject, pos, rot });
+                    __result.GetComponent<CardInfo>().sourceCard = MomentumTracker.createdDefenseCards[stacks];
+                    __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
+                }
 
-                //if (card.sourceCard == WWC.Cards.UnstoppableForce.card)
-                //{
-                //    var temp = __result;
-                //    WillsWackyCards.instance.ExecuteAfterSeconds(0.5f, () =>
-                //    {
-                //        UnityEngine.GameObject.Destroy(temp);
-                //    });
+                if (card.sourceCard == WWC.Cards.UnstoppableForce.card)
+                {
+                    var temp = __result;
+                    WillsWackyCards.instance.ExecuteAfterFrames(5, () =>
+                    {
+                        Photon.Pun.PhotonNetwork.Destroy(temp);
+                    });
 
-                //    var stacks = MomentumTracker.stacks;
-                //    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { MomentumTracker.createdOffenseCards[stacks].gameObject, pos, rot });
-                //    __result.GetComponent<CardInfo>().sourceCard = MomentumTracker.createdOffenseCards[stacks];
-                //    __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
-                //}
+                    var stacks = MomentumTracker.stacks;
+                    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { MomentumTracker.createdOffenseCards[stacks].gameObject, pos, rot });
+                    __result.GetComponent<CardInfo>().sourceCard = MomentumTracker.createdOffenseCards[stacks];
+                    __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
+                }
             }
         }
 
