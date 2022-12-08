@@ -861,12 +861,12 @@ namespace WWC
         }
         public class CardRemover : MonoBehaviour
         {
-            public void DelayedRemoveCard(Player player, string cardName, int frames = 10)
+            public void DelayedRemoveCard(Player player, string cardName, int frames = 10, bool silent = false)
             {
-                StartCoroutine(RemoveCard(player, cardName, frames));
+                StartCoroutine(RemoveCard(player, cardName, frames, silent));
             }
 
-            IEnumerator RemoveCard(Player player, string cardName, int frames = 10)
+            IEnumerator RemoveCard(Player player, string cardName, int frames = 10, bool silent = false)
             {
                 yield return StartCoroutine(WaitFor.Frames(frames));
 
@@ -874,7 +874,31 @@ namespace WWC
                 {
                     if (player.data.currentCards[i].cardName == cardName)
                     {
-                        ModdingUtils.Utils.Cards.instance.RemoveCardFromPlayer(player, i);
+                        if (silent)
+                        {
+                            NetworkingManager.RPC(typeof(CardRemover), nameof(SilentRemove), player.playerID, i);
+                            break;
+                        }
+                        else
+                        {
+                            ModdingUtils.Utils.Cards.instance.RemoveCardFromPlayer(player, i);
+                            break;
+                        }
+                    }
+                }
+            }
+            [UnboundRPC]
+            public static void SilentRemove(int playerId, int cardId)
+            {
+                Player player = PlayerManager.instance.players.Find(p => p.playerID == playerId);
+                CardInfo removed = player.data.currentCards[cardId];
+                player.data.currentCards.RemoveAt(cardId);
+                CardBar cardbar = ModdingUtils.Utils.CardBarUtils.instance.PlayersCardBar(player);
+                for (int num = cardbar.transform.childCount - 1; num >= 0; num--)
+                {
+                    if (((CardInfo)cardbar.transform.GetChild(num).gameObject.GetComponent<CardBarButton>().GetFieldValue("card")) == removed)
+                    {
+                        Destroy(cardbar.transform.GetChild(num).gameObject);
                         break;
                     }
                 }
