@@ -78,7 +78,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Common;
+            return Rarities.Common;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -135,6 +135,7 @@ namespace WWC.Cards
             //if (!(GM_Test.instance != null && GM_Test.instance.gameObject.activeInHierarchy))
             {
                 MomentumTracker.stacks = MomentumTracker.stacks / 4;
+                MomentumTracker.ResetRarityBuff();
             }
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

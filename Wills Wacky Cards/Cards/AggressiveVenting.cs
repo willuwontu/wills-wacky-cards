@@ -228,11 +228,19 @@ namespace WWC.MonoBehaviours
         public void AddVentingVisual()
         {
             if (ventingVisual != null) { return; }
-            var card = CardChoice.instance.cards.First(c => c.name.Equals("ChillingPresence"));
+            var card = UnboundLib.Utils.CardManager.cards.Values.Select(card => card.cardInfo).First(c => c.name.Equals("ChillingPresence"));
             var statMods = card.gameObject.GetComponentInChildren<CharacterStatModifiers>();
             ventingVisual =  Instantiate(statMods.AddObjectToPlayer.GetComponentInChildren<LineEffect>().gameObject, player.transform);
             ventingVisual.name = "A_AgressiveVenting";
 
+            try
+            {
+                UnityEngine.GameObject.DestroyImmediate(ventingVisual.transform.root.GetComponentInChildren<SetTeamColorSpecific>());
+            }
+            catch
+            {
+
+            }
             effectRadius = ventingVisual.gameObject.GetComponent<LineEffect>();
             effectRadius.segments = 200;
             effectRadius.effects[0].mainCurveMultiplier = .5f;
@@ -248,10 +256,20 @@ namespace WWC.MonoBehaviours
 
         private LineEffect AddRadiatingVisual()
         {
-            var card = CardChoice.instance.cards.First(c => c.name.Equals("ChillingPresence"));
+            var card = UnboundLib.Utils.CardManager.cards.Values.Select(card => card.cardInfo).First(c => c.name.Equals("ChillingPresence"));
             var statMods = card.gameObject.GetComponentInChildren<CharacterStatModifiers>();
             var radiateObj = Instantiate(statMods.AddObjectToPlayer.GetComponentInChildren<LineEffect>().gameObject, ventingVisual.transform);
             var lineEffect = radiateObj.GetComponent<LineEffect>();
+
+            try
+            {
+                UnityEngine.GameObject.DestroyImmediate(radiateObj.transform.root.GetComponentInChildren<SetTeamColorSpecific>());
+            }
+            catch
+            {
+
+            }
+
             lineEffect.radius = 0f;
             lineEffect.segments = 100;
             lineEffect.effects[0].mainCurveMultiplier = .5f;

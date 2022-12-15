@@ -17,7 +17,7 @@ namespace WWC.MonoBehaviours
     {
         public float chargeToUse = 0f;
         public bool canShoot = true;
-        public float chargeTime = 1f;
+        public float chargeTime => GunChargePatch.Extensions.GunExtensions.GetAdditionalData(this.gun).chargeTime;
         public float MaxCharge => GunChargePatch.Extensions.GunExtensions.GetAdditionalData(this.gun).maxCharge;
 
         private Gun gun;
