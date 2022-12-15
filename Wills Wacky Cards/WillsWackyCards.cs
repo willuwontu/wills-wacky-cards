@@ -357,14 +357,16 @@ namespace WWC
                 CustomCard.BuildCard<BuildImmovableObject>(cardInfo => 
                 { 
                     MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); 
-                    ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); 
+                    ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);
+                    cardInfo.cardName = ImmovableObject.card.cardName;
                     //cardInfo.gameObject.AddComponent<MomentumPhoton>(); 
                 });
                 CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => 
                 { 
                     MomentumTracker.createdOffenseCards.Add(stacks, cardInfo); 
                     ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); 
-                    //cardInfo.gameObject.AddComponent<MomentumPhoton>(); 
+                    //cardInfo.gameObject.AddComponent<MomentumPhoton>();
+                    cardInfo.cardName = UnstoppableForce.card.cardName;
                     buildingCard = false; 
                 });
                 yield return new WaitUntil(() => !buildingCard);
@@ -425,6 +427,9 @@ namespace WWC
 
         IEnumerator PlayerPickStart(IGameModeHandler gm)
         {
+            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, 5f, 0f);
+            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, 5f, 0f);
+            MomentumTracker.rarityBuff += 5f;
             foreach (var player in PlayerManager.instance.players)
             {
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(SiphonCurses.siphonCard))
@@ -456,6 +461,8 @@ namespace WWC
 
         IEnumerator PlayerPickEnd(IGameModeHandler gm)
         {
+            MomentumTracker.offenseFlag = false;
+            MomentumTracker.defenseFlag = false;
             yield break;
         }
 

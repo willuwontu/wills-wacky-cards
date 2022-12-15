@@ -39,7 +39,7 @@ namespace WWC.Cards
                 var child = new GameObject("Plasma");
                 child.transform.SetParent(player.transform);
                 var plasmaWeapon = child.AddComponent<PlasmaWeapon_Mono>();
-                plasmaWeapon.chargeTime = 0.8f;
+                GunChargePatch.Extensions.GunExtensions.GetAdditionalData(gun).chargeTime = 0.8f;
                 characterStats.objectsAddedToPlayer.Add(child);
             }
 

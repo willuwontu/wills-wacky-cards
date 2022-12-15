@@ -11,13 +11,12 @@ namespace WWC.Patches
     {
         [HarmonyPrefix]
         [HarmonyPatch("DoAttacks")]
-        static bool SetAttacks(Gun __instance, ref int attacks)
+        static void SetAttacks(Gun __instance, ref int attacks)
         {
             if (__instance.GetAdditionalData().useAttacksPerAttack)
             {
                 attacks = __instance.GetAdditionalData().attacksPerAttack;
             }
-            return true;
         }
 
 
