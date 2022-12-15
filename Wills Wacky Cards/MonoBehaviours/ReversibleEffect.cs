@@ -24,6 +24,7 @@ namespace WWC.MonoBehaviours
         public CharacterStatModifiersModifier characterStatModifiersModifier = new CharacterStatModifiersModifier();
         public GravityModifier gravityModifier = new GravityModifier();
         public BlockModifier blockModifier = new BlockModifier();
+        public HealthHandlerModifier healthHandlerModifier = new HealthHandlerModifier();
 
         public bool applyImmediately = true;
         private bool modifiersActive;
@@ -177,6 +178,7 @@ namespace WWC.MonoBehaviours
             characterDataModifier.ApplyCharacterDataModifier(data);
             gravityModifier.ApplyGravityModifier(gravity);
             blockModifier.ApplyBlockModifier(block);
+            healthHandlerModifier.ApplyhealthHandlerModifier(health);
             modifiersActive = true;
         }
         public void ClearModifiers(bool clear = true)
@@ -188,6 +190,7 @@ namespace WWC.MonoBehaviours
             characterDataModifier.RemoveCharacterDataModifier(data, clear);
             gravityModifier.RemoveGravityModifier(gravity, clear);
             blockModifier.RemoveBlockModifier(block, clear);
+            healthHandlerModifier.RemoveHealthHandlerModifier(health, clear);
             modifiersActive = false;
 
         }

@@ -42,6 +42,9 @@
     <Reference Include="ModdingUtils">
       <HintPath>$(RoundsFolder)\BepInEx\plugins\ModdingUtils.dll</HintPath>
     </Reference>
+    <Reference Include="PlayerActionsHelper">
+      <HintPath>$(RoundsFolder)\BepInEx\plugins\PlayerActionsHelper.dll</HintPath>
+    </Reference>
     <Reference Include="CardChoiceSpawnUniqueCardPatch">
       <HintPath>$(RoundsFolder)\BepInEx\plugins\CardChoiceSpawnUniqueCardPatch.dll</HintPath>
     </Reference>

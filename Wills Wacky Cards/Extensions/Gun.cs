@@ -22,8 +22,6 @@ namespace WWC.Extensions
         public Minigun_Mono minigun;
         public bool useMinimumReloadSpeed;
         public bool useMinimumAttackSpeed;
-        public float chargeTime;
-        public bool beginCharge;
         public float frequency;
         public float amplitude;
 
@@ -42,8 +40,6 @@ namespace WWC.Extensions
             useMinimumReloadSpeed = false;
             minimumAttackSpeed = 1f;
             minimumReloadSpeed = 1f;
-            chargeTime = 1f;
-            beginCharge = false;
             frequency = 0.5f;
             amplitude = 0.5f;
         }
@@ -86,8 +82,6 @@ namespace WWC.Extensions
             __instance.GetAdditionalData().useMinimumAttackSpeed = false;
             __instance.GetAdditionalData().minimumAttackSpeed = 1f;
             __instance.GetAdditionalData().minimumReloadSpeed = 1f;
-            __instance.GetAdditionalData().chargeTime = 1f;
-            __instance.GetAdditionalData().beginCharge = false;
             __instance.GetAdditionalData().frequency = 0.5f;
             __instance.GetAdditionalData().amplitude = 0.5f;
         }

@@ -24,6 +24,7 @@ namespace WWC.Patches
                 {
                     UnboundLib.NetworkingManager.RPC(typeof(CardChoice_Patch), nameof(CardChoice_Patch.URPCA_IncrementMomentum));
                 }
+
                 if (card.sourceCard == WWC.Cards.ImmovableObject.card)
                 {
                     var temp = __result;
@@ -32,9 +33,10 @@ namespace WWC.Patches
                         Photon.Pun.PhotonNetwork.Destroy(temp);
                     });
 
-                    var stacks = MomentumTracker.stacks;
-                    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { MomentumTracker.createdDefenseCards[stacks].gameObject, pos, rot });
-                    __result.GetComponent<CardInfo>().sourceCard = MomentumTracker.createdDefenseCards[stacks];
+                    var stacks = MomentumTracker.stacks+1;
+                    var momentumCard = MomentumTracker.GetDefensecard();
+                    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { momentumCard.gameObject, pos, rot });
+                    __result.GetComponent<CardInfo>().sourceCard = momentumCard;
                     __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
                 }
 
@@ -46,18 +48,20 @@ namespace WWC.Patches
                         Photon.Pun.PhotonNetwork.Destroy(temp);
                     });
 
-                    var stacks = MomentumTracker.stacks;
-                    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { MomentumTracker.createdOffenseCards[stacks].gameObject, pos, rot });
-                    __result.GetComponent<CardInfo>().sourceCard = MomentumTracker.createdOffenseCards[stacks];
+                    var stacks = MomentumTracker.stacks+1;
+                    var momentumCard = MomentumTracker.GetOffensecard();
+                    __result = (GameObject)__instance.InvokeMethod("Spawn", new object[] { momentumCard.gameObject, pos, rot });
+                    __result.GetComponent<CardInfo>().sourceCard = momentumCard;
                     __result.GetComponentInChildren<DamagableEvent>().GetComponent<Collider2D>().enabled = false;
                 }
             }
         }
 
         [UnboundRPC]
-        private static void URPCA_IncrementMomentum()
+        internal static void URPCA_IncrementMomentum()
         {
             WWC.MonoBehaviours.MomentumTracker.stacks += 1;
+            //UnityEngine.Debug.Log($"Stacks increased to {WWC.MonoBehaviours.MomentumTracker.stacks}");
         }
 
         //[HarmonyPrefix]
