@@ -141,64 +141,85 @@ namespace WWC.MonoBehaviours
         {
             var activate = gun.IsReady(0f);
 
-            ventingVisual.SetActive(!activate);
+            if (ventingVisual)
+            {
+                ventingVisual.SetActive(!activate);
+            }
 
             if (activate)
             {
                 return;
             }
 
-            effectRadius.radius = CalculateRadius(gun.attackSpeed / gun.attackSpeedMultiplier) * (1- gun.ReadyAmount());
-
-            var radius = (float)effectRadius.InvokeMethod("GetRadius");
-            var hits = Physics2D.OverlapCircleAll(player.transform.position, radius);
-
-
-            foreach (var hit in hits)
+            if (effectRadius)
             {
-                if (hit.gameObject.GetComponent<Damagable>())
+                effectRadius.radius = CalculateRadius(gun.attackSpeed / gun.attackSpeedMultiplier) * (1 - gun.ReadyAmount());
+            }
+
+            try
+            {
+                var radius = (float)effectRadius.InvokeMethod("GetRadius");
+                var hits = Physics2D.OverlapCircleAll(player.transform.position, radius);
+
+                foreach (var hit in hits)
                 {
-                    var check = Physics2D.Linecast(player.transform.position, hit.gameObject.transform.position, checkMask);
-                    if (!check || check.collider.gameObject == hit.gameObject)
+                    if (hit.gameObject.GetComponent<Damagable>())
                     {
-                        var damagable = hit.gameObject.GetComponent<Damagable>();
-                        if (damagable)
+                        var check = Physics2D.Linecast(player.transform.position, hit.gameObject.transform.position, checkMask);
+                        if (!check || check.collider.gameObject == hit.gameObject)
                         {
-                            if (damagable.GetComponent<Player>() && damagable.GetComponent<Player>().teamID == player.teamID)
+                            var damagable = hit.gameObject.GetComponent<Damagable>();
+                            if (damagable)
                             {
-                                continue;
+                                if (damagable.GetComponent<Player>() && damagable.GetComponent<Player>().teamID == player.teamID)
+                                {
+                                    continue;
+                                }
+
+                                damagable.CallTakeDamage((((Vector2)hit.gameObject.transform.position - (Vector2)player.transform.position).normalized * CalculateDamage(gun.damage * gun.bulletDamageMultiplier) * (Time.deltaTime / gunDamageDealtOver) * (1 - gun.ReadyAmount()) * (1 - (Vector2.Distance((Vector2)hit.gameObject.transform.position, (Vector2)player.transform.position) / radius))), (check ? check.point : (Vector2)hit.gameObject.transform.position), null, player);
                             }
-
-                            damagable.CallTakeDamage((((Vector2)hit.gameObject.transform.position - (Vector2)player.transform.position).normalized * CalculateDamage(gun.damage * gun.bulletDamageMultiplier) * (Time.deltaTime / gunDamageDealtOver) * (1 - gun.ReadyAmount()) * (1 - (Vector2.Distance((Vector2)hit.gameObject.transform.position, (Vector2)player.transform.position) / radius))), (check ? check.point : (Vector2)hit.gameObject.transform.position), null, player);
                         }
-                    } 
+                    }
                 }
             }
-
-            var visuals = radiatingVisuals.ToArray();
-
-            foreach (var visual in visuals)
+            catch (Exception e)
             {
-                if (!visual.gameObject.activeSelf)
-                {
-                    visual.gameObject.SetActive(true);
-                }
-
-                if (visual.radius > effectRadius.radius)
-                {
-                    visual.radius = 0f;
-                    radiatingVisuals.Remove(visual);
-                    UnityEngine.GameObject.Destroy(visual.gameObject);
-                }
-                else
-                {
-                    visual.radius += TimeHandler.deltaTime * speed;
-                }
+                UnityEngine.Debug.Log($"Hit Checks");
+                UnityEngine.Debug.LogException(e);
             }
 
-            if (!(radiatingVisuals.Count() > 0) || (radiatingVisuals.Count() > 0 && radiatingVisuals[radiatingVisuals.Count() - 1].radius > 2f))
+            try
             {
-                radiatingVisuals.Add(AddRadiatingVisual());
+                var visuals = radiatingVisuals.ToArray();
+
+                foreach (var visual in visuals)
+                {
+                    if (!visual.gameObject.activeSelf)
+                    {
+                        visual.gameObject.SetActive(true);
+                    }
+
+                    if (visual.radius > effectRadius.radius)
+                    {
+                        visual.radius = 0f;
+                        radiatingVisuals.Remove(visual);
+                        UnityEngine.GameObject.Destroy(visual.gameObject);
+                    }
+                    else
+                    {
+                        visual.radius += TimeHandler.deltaTime * speed;
+                    }
+                }
+
+                if (!(radiatingVisuals.Count() > 0) || (radiatingVisuals.Count() > 0 && radiatingVisuals[radiatingVisuals.Count() - 1].radius > 2f))
+                {
+                    radiatingVisuals.Add(AddRadiatingVisual());
+                }
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.Log($"Last Section");
+                UnityEngine.Debug.LogException(e);
             }
 
             //gun.sinceAttack += TimeHandler.deltaTime * gun.attackSpeedMultiplier;

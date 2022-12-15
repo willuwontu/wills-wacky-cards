@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Photon.Pun;
 
 namespace WWC.MonoBehaviours
 {
@@ -94,13 +95,41 @@ namespace WWC.MonoBehaviours
             }
         }
     }
+
+    public class MomentumPhoton : MonoBehaviour, Photon.Pun.IPunInstantiateMagicCallback
+    {
+        CardInfo card;
+        public void OnPhotonInstantiate(Photon.Pun.PhotonMessageInfo info)
+        {
+            card = this.GetComponent<CardInfo>();
+            UnityEngine.Debug.Log($"{card.cardName} has been photon spawned.");
+            UnboundLib.ExtensionMethods.ExecuteAfterFrames(this, 1, () => { this.gameObject.GetComponent<PhotonView>().RPC(nameof(RPCA_SourceCard), RpcTarget.All, new object[] { }); });
+        }
+
+        [PunRPC]
+        private void RPCA_SourceCard()
+        {
+            UnityEngine.Debug.Log($"Card source for {card.cardName} set to {card.sourceCard}.");
+        }
+    }
+
     public class MomentumTracker
     {
         public static int stacks = 0;
         public static Dictionary<int, CardInfo> createdOffenseCards = new Dictionary<int, CardInfo>();
         public static Dictionary<int, CardInfo> createdDefenseCards = new Dictionary<int, CardInfo>();
 
-        public static void AddOfffenseCard(CardInfo cardInfo, Player player)
+        public static CardInfo GetOffensecard()
+        {
+            return createdOffenseCards[stacks < 0 ? 0 : stacks > 21 ? 21 : stacks];
+        }
+
+        public static CardInfo GetDefensecard()
+        {
+            return createdDefenseCards[stacks < 0 ? 0 : stacks > 21 ? 21 : stacks];
+        }
+
+        public static void AddOffenseCard(CardInfo cardInfo, Player player)
         {
             createdOffenseCards.Add(MomentumTracker.stacks, cardInfo);
             ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);

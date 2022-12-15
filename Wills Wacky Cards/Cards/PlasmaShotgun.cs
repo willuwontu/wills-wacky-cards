@@ -17,7 +17,7 @@ namespace WWC.Cards
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.reloadTimeAdd = 1.5f;
+            gun.reloadTimeAdd = 0.5f;
             gun.attackSpeed = 0.8f/0.3f;
             gun.numberOfProjectiles = 1;
             gun.projectileColor = Color.cyan;
@@ -35,45 +35,17 @@ namespace WWC.Cards
             gun.useCharge = true;
             gun.chargeNumberOfProjectilesTo += 10;
             gun.chargeSpreadTo += 0.5f;
-            gun.chargeSpeedTo = 5f;
+            gun.chargeSpeedTo = 6f;
             gun.dontAllowAutoFire = true;
-            gun.chargeDamageMultiplier *= 1f;
-            gun.GetAdditionalData().chargeTime = 1f;
+            gun.chargeDamageMultiplier *= 2f;
 
-            if (!player.GetComponent<PlasmaWeapon_Mono>())
+            if (!player.GetComponentInChildren<PlasmaWeapon_Mono>())
             {
-                var chargeBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
-                chargeBar.name = "ChargeBar";
-                chargeBar.Translate(new Vector3(.95f, -1.1f, 0));
-                chargeBar.localScale = new Vector3(0.6f, 1.4f, 1f);
-                chargeBar.Rotate(0f, 0f, 90f);
-                var plasmaShotgun = player.gameObject.GetOrAddComponent<PlasmaWeapon_Mono>();
-                var nameLabel = chargeBar.transform.Find("Canvas/PlayerName").gameObject;
-                var crown = chargeBar.transform.Find("Canvas/CrownPos").gameObject;
-
-                var grid = chargeBar.transform.Find("Canvas/Image/Grid");
-                grid.gameObject.SetActive(true);
-                grid.localScale = new Vector3(1f, .4f, 1f);
-
-                var gridBox = Instantiate(grid.transform.Find("Grid (8)"), grid);
-                gridBox.name = "Grid (9)";
-
-                for (int i = 1; i <= 9; i++)
-                {
-                    gridBox = grid.transform.Find($"Grid ({i})");
-                    gridBox.localScale = new Vector3(2f, 1f, 1f);
-                    if (i > 4)
-                    {
-                        gridBox.gameObject.SetActive(false);
-                    }
-                }
-
-                plasmaShotgun.chargeImage = chargeBar.transform.Find("Canvas/Image/Health").GetComponent<Image>();
-                plasmaShotgun.chargeImage.name = "Charge";
-                plasmaShotgun.chargeImage.color = new Color(255, 255, 255);
-                plasmaShotgun.chargeImage.SetAlpha(1);
-                Destroy(nameLabel);
-                Destroy(crown);
+                var child = new GameObject("Plasma");
+                child.transform.SetParent(player.transform);
+                var plasmaWeapon = child.AddComponent<PlasmaWeapon_Mono>();
+                plasmaWeapon.chargeTime = 1f;
+                characterStats.objectsAddedToPlayer.Add(child);
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
