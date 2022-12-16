@@ -108,7 +108,14 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Chemical ammunition no longer increases upgrade cooldown, and only increase upgrade time by 1.5 seconds.
 - Cloning tanks only adds 3 seconds to upgrade and cooldown times now.
 - Gyroscopic stabilizers now lets you upgrade while moving.
-
+- Impactor Dissipators now only increase cooldown by 25%.
+- Integrated increases cooldown instead of upgrade time, and only by 1 second now.
+- Plasma weapons are awesome. Also, no more stalling at the start of battle by them.
+- Savage wounds now increases damage instead of lowering it.
+- Wheel of Fortune is now Epic Rarity.
+- Bullet powered Jetpack now works with charged weapons.
+- Endurance Training and Adrenaline Rush now properly show their current stats.
+- 
 
 ----
 ## v 1.9.13
