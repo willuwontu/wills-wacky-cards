@@ -102,6 +102,8 @@ namespace WWC.MonoBehaviours
         private Gravity gravity;
         private WeaponHandler weaponHandler;
 
+        private static UnityEngine.Rendering.PostProcessing.PostProcessLayer LightingPost => GameObject.Find("Game/Visual/Rendering /Shake/Lighting/LightCamera").GetComponent<UnityEngine.Rendering.PostProcessing.PostProcessLayer>();
+
         private void Start()
         {
             InterfaceGameModeHooksManager.instance.RegisterHooks(this);
@@ -170,7 +172,7 @@ namespace WWC.MonoBehaviours
                     attacker.data.stats.GetAdditionalData().isBanished = true;
                     if (attacker.data.view.IsMine)
                     {
-                        camera.enabled = true;
+                        LightingPost.enabled = false;
                     }
                 }
                 banished[attacker] += f;
@@ -182,7 +184,7 @@ namespace WWC.MonoBehaviours
                 
                 if (attacker.data.view.IsMine)
                 {
-                    camera.enabled = true;
+                    LightingPost.enabled = false;
                 }
             }
         }
@@ -193,13 +195,20 @@ namespace WWC.MonoBehaviours
             banished.Remove(attacker);
             if (attacker.data.view.IsMine)
             {
-                camera.enabled = false;
+                LightingPost.enabled = true;
             }
         }
 
         public void OnPointStart()
         {
-
+            var people = banished.Keys.ToArray();
+            foreach (var person in people)
+            {
+                banished[person] = 0;
+                person.data.stats.GetAdditionalData().isBanished = false;
+                StopBanish(person);
+            }
+            banished.Clear();
         }
 
         public void OnPointEnd()
@@ -225,13 +234,13 @@ namespace WWC.MonoBehaviours
         {
             block.BlockProjectileAction -= OnBlockProjectile;
 
-            UnityEngine.GameObject.Destroy(camera);
+            LightingPost.enabled = true;
             InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
 
         public void Destroy()
         {
-            UnityEngine.Object.Destroy(this);
+            UnityEngine.GameObject.Destroy(this);
         }
     }
 }
