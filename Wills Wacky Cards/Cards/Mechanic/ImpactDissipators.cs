@@ -31,7 +31,7 @@ namespace WWC.Cards
             if (upgrader)
             {
                 upgrader.characterStatModifiersModifier.secondsToTakeDamageOver_add += 4f;
-                upgrader.upgradeCooldownMult *= 1.5f;
+                upgrader.upgradeCooldownMult *= 1.25f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -85,7 +85,7 @@ namespace WWC.Cards
                 {
                     positive = false,
                     stat = "Upgrade Cooldown",
-                    amount = "+50%",
+                    amount = "+25%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
