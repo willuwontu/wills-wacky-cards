@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Reflection;
 using ModdingUtils.MonoBehaviours;
 using UnboundLib;
 using UnityEngine;
 using HarmonyLib;
+using GunChargePatch.Extensions;
 
 namespace WWC.MonoBehaviours
 {
@@ -10,7 +12,7 @@ namespace WWC.MonoBehaviours
     public class BulletJumpEffect : ReversibleEffect
     {
         private float interval;
-        private bool continuous_trigger;
+        private bool ContinuousTrigger => (!(gun.attackSpeed / data.stats.attackSpeedMultiplier >= 0.3f || gun.useCharge || gun.dontAllowAutoFire));
         private Gun jumpGun;
 
         private readonly float minTimeFromGround = 0.1f; // minimum amount of time off the ground before this will engage
@@ -18,7 +20,6 @@ namespace WWC.MonoBehaviours
         public override void OnAwake()
         {
             jumpGun = player.gameObject.GetOrAddComponent<BulletJumpGun>();
-			continuous_trigger = !(gun.attackSpeed / data.stats.attackSpeedMultiplier >= 0.3f || gun.useCharge || gun.dontAllowAutoFire);
         }
 
         public override void OnStart()
@@ -32,6 +33,11 @@ namespace WWC.MonoBehaviours
         public override void OnUpdate()
         {
 			if (!data)
+            {
+				return;
+            }
+
+			if (data.dead)
             {
 				return;
             }
@@ -63,21 +69,26 @@ namespace WWC.MonoBehaviours
 				return;
             }
 
-			continuous_trigger = !(gun.attackSpeed / data.stats.attackSpeedMultiplier >= 0.3f || gun.useCharge || gun.dontAllowAutoFire);
-
 			// If we haven't pressed jump or aren't allowed to jump while holding it down
-			if (!(data.playerActions.Jump.WasPressed || (continuous_trigger && data.playerActions.Jump.IsPressed)))
+			if (!(data.playerActions.Jump.WasPressed || (ContinuousTrigger && data.playerActions.Jump.IsPressed)))
             {
 				return;
             }
-            // If the battle has started or we're in sandbox
-            if (WillsWackyCards.battleStarted || (GM_Test.instance != null && GM_Test.instance.gameObject.activeInHierarchy))
+
+			if (!((bool)(typeof(PlayerVelocity).GetField("simulated", BindingFlags.Instance | BindingFlags.GetField |
+                        BindingFlags.NonPublic).GetValue(data.playerVel))))
             {
-				continuous_trigger = !(gun.attackSpeed / data.stats.attackSpeedMultiplier >= 0.3f || gun.useCharge || gun.dontAllowAutoFire);
+				return;
+            }
+
+            // If the battle has started or we're in sandbox
+            if (true)
+            {
 				CopyGunStats(gun, jumpGun);
 				jumpGun.bursts = 1;
 				jumpGun.numberOfProjectiles = 1;
 				jumpGun.chargeNumberOfProjectilesTo = 0;
+				jumpGun.GetAdditionalData().attacksAtFullCharge = 1;
 				data.jump.Jump(true, 0.1f * gun.damage * gun.bulletDamageMultiplier * gun.projectileSpeed * gun.projectielSimulatonSpeed * (gun.useCharge ? gun.currentCharge * gun.chargeDamageMultiplier * gun.chargeSpeedTo : 1f));
 
                 jumpGun.SetFieldValue("forceShootDir",(Vector3) Vector3.down);
@@ -124,7 +135,7 @@ namespace WWC.MonoBehaviours
         }
         public bool GetContinuousTrigger()
         {
-            return continuous_trigger;
+            return ContinuousTrigger;
         }
 
 		public static void CopyGunStats(Gun copyFromGun, Gun copyToGun)
