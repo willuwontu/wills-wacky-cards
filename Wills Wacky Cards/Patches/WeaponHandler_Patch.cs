@@ -10,17 +10,17 @@ namespace WWC.Patches
     [HarmonyPatch(typeof(WeaponHandler))] 
     class WeaponHandler_Patch
     {
-        [HarmonyPrefix]
-        [HarmonyPatch("Attack")]
-        static bool ChargeAttack(WeaponHandler __instance)
-        {
-            var weaponHandler = __instance;
-            if (weaponHandler.gun.useCharge)
-            {
-                return false;
-            }
-            return true;
-        }
+        //[HarmonyPrefix]
+        //[HarmonyPatch("Attack")]
+        //static bool ChargeAttack(WeaponHandler __instance)
+        //{
+        //    var weaponHandler = __instance;
+        //    if (weaponHandler.gun.useCharge)
+        //    {
+        //        return false;
+        //    }
+        //    return true;
+        //}
 
         //[HarmonyPrefix]
         //[HarmonyPatch("SomeMethod")]

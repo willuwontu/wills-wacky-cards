@@ -64,6 +64,8 @@ namespace WWC.MonoBehaviours
 
             description = effectText.GetComponent<TextMeshProUGUI>();
             cardName = titleText.GetComponent<TextMeshProUGUI>();
+
+            OnPointStart();
         }
 
         public void OnPointStart()
@@ -153,6 +155,7 @@ namespace WWC.MonoBehaviours
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Debugging] Current number of points is {totalPointsEarned}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] Current number of points is {totalPointsEarned}");
         }
 
         private void OnDestroy()

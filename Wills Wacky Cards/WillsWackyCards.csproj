@@ -16,11 +16,11 @@
   </ItemGroup>
 	
   <PropertyGroup>
-    <RoundsFolder>D:\Program Files (x86)\Steam\steamapps\common\ROUNDS</RoundsFolder>
+    <RoundsFolder>E:\Program Files (x86)\Steam\steamapps\common\ROUNDS</RoundsFolder>
   </PropertyGroup>
 	
   <ItemGroup>
-    <PackageReference Include="UnboundLib" Version="3.1.2" />
+    <PackageReference Include="UnboundLib" Version="3.1.4" />
   </ItemGroup>
 
   <ItemGroup>
@@ -33,11 +33,17 @@
     <Reference Include="ClassesManagerReborn">
       <HintPath>$(RoundsFolder)\BepInEx\plugins\ClassesManagerReborn.dll</HintPath>
     </Reference>
+    <Reference Include="GunChargePatch">
+      <HintPath>$(RoundsFolder)\BepInEx\plugins\GunChargePatch.dll</HintPath>
+    </Reference>
     <Reference Include="MMHOOK_Assembly-CSharp">
       <HintPath>$(RoundsFolder)\BepInEx\plugins\MMHOOK_Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="ModdingUtils">
       <HintPath>$(RoundsFolder)\BepInEx\plugins\ModdingUtils.dll</HintPath>
+    </Reference>
+    <Reference Include="PlayerActionsHelper">
+      <HintPath>$(RoundsFolder)\BepInEx\plugins\PlayerActionsHelper.dll</HintPath>
     </Reference>
     <Reference Include="CardChoiceSpawnUniqueCardPatch">
       <HintPath>$(RoundsFolder)\BepInEx\plugins\CardChoiceSpawnUniqueCardPatch.dll</HintPath>
@@ -81,6 +87,9 @@
     <Reference Include="SonigonAudioEngine.Runtime">
       <HintPath>$(RoundsFolder)\Rounds_Data\Managed\SonigonAudioEngine.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Unity.Postprocessing.Runtime">
+      <HintPath>$(RoundsFolder)\Rounds_Data\Managed\Unity.Postprocessing.Runtime.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.TextMeshPro">
       <HintPath>$(RoundsFolder)\Rounds_Data\Managed\Unity.TextMeshPro.dll</HintPath>
     </Reference>
@@ -119,6 +128,8 @@
   <ItemGroup>
     <Folder Include="AssetsEmbedded\" />
     <Folder Include="Cards\Godslayer\" />
+    <Folder Include="Cards\AngelHunter\" />
+    <Folder Include="Cards\Commoner\" />
   </ItemGroup>
 
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -110,6 +110,7 @@ namespace WWC.MonoBehaviours
             this.blockModifier.cdMultiplier_mult = downMult;
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Debugging] Current number of points is {totalPointsEarned}");
+            //UnityEngine.Debug.Log($"[{WillsWackyCards.ModInitials}][Debugging] Current number of points is {totalPointsEarned}");
         }
 
         public override void OnOnDestroy()
