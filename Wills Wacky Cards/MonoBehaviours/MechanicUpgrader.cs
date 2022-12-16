@@ -195,7 +195,7 @@ namespace WWC.MonoBehaviours
                 }
                 else
                 {
-                    this.counter -= TimeHandler.deltaTime / this.timeToEmpty;
+                    this.counter -= TimeHandler.deltaTime / this.UpgradeTimeWhileMoving;
                 }
             }
 			catch (Exception e)
@@ -320,7 +320,16 @@ namespace WWC.MonoBehaviours
 				return ((upgradeTime + upgradeTimeAdd) * upgradeTimeMult);
             }
         }
-        public float timeToEmpty = 1f;
+
+		public float UpgradeTimeWhileMoving
+		{
+			get
+			{
+				return (timeToEmpty >= 0 ? timeToEmpty : ((timeToEmpty - upgradeTimeAdd) * upgradeTimeMult));
+			}
+		}
+
+		public float timeToEmpty = 1f;
 
 		private float upgradeCooldown = 8f;
 

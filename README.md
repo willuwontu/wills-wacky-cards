@@ -97,6 +97,20 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <summary>Change Log</summary>
 
 ----
+## v 1.9.15
+- Fixed issues with aggressive venting.
+- Banishment banishes to the shadow realm.
+- Flagellation now only gives +100% HP.
+- Removed unnecessary lines of code from ghostly body.
+- Runic wards no longer gives extra blocks, and will only give 1 curse at a time, regardless of if a player dealt 600 or 1800 damage.
+- Fly Swatter now swats enemies harder. Also spelling error fix.
+- Immovable Object and Unstoppable Force no longer causes issues with adding and removing cards. They also have gained a momentum mechanic to help them keep showing up in hands until picked.
+- Chemical ammunition no longer increases upgrade cooldown, and only increase upgrade time by 1.5 seconds.
+- Cloning tanks only adds 3 seconds to upgrade and cooldown times now.
+- Gyroscopic stabilizers now lets you upgrade while moving.
+
+
+----
 ## v 1.9.13
 - Added some synchronized messages for Wheel of Fortune.
 - Changed how Wheel of Fortune calculates the amount of cards it gives.

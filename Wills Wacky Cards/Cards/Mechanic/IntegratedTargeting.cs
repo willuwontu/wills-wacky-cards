@@ -40,7 +40,7 @@ namespace WWC.Cards
                         player.gameObject.AddComponent<TargetingSensors_Mono>();
                     }
                 });
-                upgrader.upgradeTimeAdd += 2f;
+                upgrader.upgradeCooldownAdd += 1f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -114,8 +114,8 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Upgrade Time",
-                    amount = "+2s",
+                    stat = "Cooldown Time",
+                    amount = "+1s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
