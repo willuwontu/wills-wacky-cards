@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Reflection;
 using ModdingUtils.MonoBehaviours;
 using UnboundLib;
 using UnityEngine;
 using HarmonyLib;
+using GunChargePatch.Extensions;
 
 namespace WWC.MonoBehaviours
 {
@@ -10,7 +12,7 @@ namespace WWC.MonoBehaviours
     public class BulletJumpEffect : ReversibleEffect
     {
         private float interval;
-        private bool continuous_trigger;
+        private bool ContinuousTrigger => (!(gun.attackSpeed / data.stats.attackSpeedMultiplier >= 0.3f || gun.useCharge || gun.dontAllowAutoFire));
         private Gun jumpGun;
 
         private readonly float minTimeFromGround = 0.1f; // minimum amount of time off the ground before this will engage
@@ -18,7 +20,6 @@ namespace WWC.MonoBehaviours
         public override void OnAwake()
         {
             jumpGun = player.gameObject.GetOrAddComponent<BulletJumpGun>();
-			continuous_trigger = !(gun.attackSpeed / data.stats.attackSpeedMultiplier >= 0.3f || gun.useCharge || gun.dontAllowAutoFire);
         }
 
         public override void OnStart()
@@ -31,6 +32,16 @@ namespace WWC.MonoBehaviours
 		}
         public override void OnUpdate()
         {
+			if (!data)
+            {
+				return;
+            }
+
+			if (data.dead)
+            {
+				return;
+            }
+
 			// If we still have normal jumps
 			if (data.currentJumps > 0)
             {
@@ -41,6 +52,12 @@ namespace WWC.MonoBehaviours
             {
 				return;
             }
+
+			if (!data.view.IsMine)
+            {
+				return;
+            }
+
 			// If we've jumped recently
 			if (data.sinceJump < interval)
             {
@@ -51,21 +68,33 @@ namespace WWC.MonoBehaviours
             {
 				return;
             }
+
 			// If we haven't pressed jump or aren't allowed to jump while holding it down
-			if (!(data.playerActions.Jump.WasPressed || (continuous_trigger && data.playerActions.Jump.IsPressed)))
+			if (!(data.playerActions.Jump.WasPressed || (ContinuousTrigger && data.playerActions.Jump.IsPressed)))
             {
 				return;
             }
-            // If the battle has started or we're in sandbox
-            if (WillsWackyCards.battleStarted || (GM_Test.instance != null && GM_Test.instance.gameObject.activeInHierarchy))
+
+			if (!((bool)(typeof(PlayerVelocity).GetField("simulated", BindingFlags.Instance | BindingFlags.GetField |
+                        BindingFlags.NonPublic).GetValue(data.playerVel))))
             {
-				continuous_trigger = !(gun.attackSpeed / data.stats.attackSpeedMultiplier >= 0.3f || gun.useCharge || gun.dontAllowAutoFire);
+				return;
+            }
+
+            // If the battle has started or we're in sandbox
+            if (true)
+            {
 				CopyGunStats(gun, jumpGun);
 				jumpGun.bursts = 1;
 				jumpGun.numberOfProjectiles = 1;
-				data.jump.Jump(true, 0.1f * gun.damage * gun.bulletDamageMultiplier * gun.projectileSpeed * gun.projectielSimulatonSpeed);
+				jumpGun.chargeNumberOfProjectilesTo = 0;
+				jumpGun.GetAdditionalData().attacksAtFullCharge = 1;
+				data.jump.Jump(true, 0.1f * gun.damage * gun.bulletDamageMultiplier * gun.projectileSpeed * gun.projectielSimulatonSpeed * (gun.useCharge ? gun.currentCharge * gun.chargeDamageMultiplier * gun.chargeSpeedTo : 1f));
+
                 jumpGun.SetFieldValue("forceShootDir",(Vector3) Vector3.down);
-                jumpGun.Attack(0f, true);
+                jumpGun.Attack((gun.useCharge ? gun.currentCharge: 0f), true);
+				gun.currentCharge = 0f;
+				this.photonView.RPC(nameof(this.RPCA_ReduceAmmo), Photon.Pun.RpcTarget.Others);
 				gunAmmo.SetFieldValue("currentAmmo", (int) gunAmmo.GetFieldValue("currentAmmo") - 1);
 				gunAmmo.SetFieldValue("freeReloadCounter", 0f);
 				gunAmmo.InvokeMethod("SetActiveBullets", false);
@@ -77,6 +106,21 @@ namespace WWC.MonoBehaviours
 				}
 			}
         }
+
+        [Photon.Pun.PunRPC]
+        private void RPCA_ReduceAmmo()
+        {
+			gunAmmo.SetFieldValue("currentAmmo", (int)gunAmmo.GetFieldValue("currentAmmo") - 1);
+			gunAmmo.SetFieldValue("freeReloadCounter", 0f);
+			gunAmmo.InvokeMethod("SetActiveBullets", false);
+			if ((int)gunAmmo.GetFieldValue("currentAmmo") <= 0)
+			{
+				gunAmmo.SetFieldValue("reloadCounter", (float)gunAmmo.InvokeMethod("ReloadTime"));
+				gun.isReloading = true;
+				gun.player.data.stats.InvokeMethod("OnOutOfAmmp", gunAmmo.maxAmmo);
+			}
+		}
+
         public override void OnOnDestroy()
         {
 			UnityEngine.GameObject.Destroy(jumpGun);
@@ -84,14 +128,6 @@ namespace WWC.MonoBehaviours
         public void SetInterval(float interval)
         {
             this.interval = interval;
-        }
-        public void SetContinuousTrigger(bool enabled)
-        {
-            continuous_trigger = enabled;
-        }
-        public bool GetContinuousTrigger()
-        {
-            return continuous_trigger;
         }
 
 		public static void CopyGunStats(Gun copyFromGun, Gun copyToGun)

@@ -37,8 +37,7 @@ namespace WWC.Cards
             {
                 upgrader.gunStatModifier.damage_mult += 0.30f;
                 upgrader.gunStatModifier.reflects_add += 1;
-                upgrader.upgradeCooldownAdd += 3f;
-                upgrader.upgradeTimeAdd += 3f;
+                upgrader.upgradeTimeAdd += 1.5f;
             }
 
             ObjectsToSpawn item = ((GameObject)Resources.Load("0 cards/Mayhem")).GetComponent<Gun>().objectsToSpawn[0];
@@ -104,14 +103,7 @@ namespace WWC.Cards
                 {
                     positive = false,
                     stat = "Upgrade Time",
-                    amount = "+3s",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Upgrade Cooldown",
-                    amount = "+3s",
+                    amount = "+1.5s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
@@ -191,7 +183,7 @@ namespace WWC.MonoBehaviours
     public class ChemicalBurns_Mono : MonoBehaviour, IPointEndHookHandler
     {
         private float lifetime = 4f;
-        private Color originalColor;
+        private Dictionary<SpriteRenderer, Color> originalColors;
         private Color acidColor = new Color(0.3f, 0.7f, 0.3f, 1f);
 
         public float damage = 55f;
@@ -201,7 +193,10 @@ namespace WWC.MonoBehaviours
         {
             if (this.GetComponent<Rigidbody2D>() && activated)
             {
-                this.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault().color = originalColor;
+                foreach (var sr in this.originalColors.Keys)
+                {
+                    sr.color = originalColors[sr];
+                }
             }
             InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
@@ -216,8 +211,12 @@ namespace WWC.MonoBehaviours
                 this.activated = true;
                 if (this.GetComponent<Rigidbody2D>())
                 {
-                    originalColor = this.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault().color;
-                    this.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault().color = acidColor;
+                    this.originalColors = this.GetComponentsInChildren<SpriteRenderer>().ToDictionary(sr=> sr, sr => sr.color);
+
+                    foreach (var sr in this.originalColors.Keys)
+                    {
+                        sr.color = acidColor;
+                    }
                 }
             }
             bool flag = false;
@@ -243,8 +242,12 @@ namespace WWC.MonoBehaviours
                 this.activated = true;
                 if (this.GetComponent<Rigidbody2D>())
                 {
-                    originalColor = this.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault().color;
-                    this.GetComponentsInChildren<SpriteRenderer>().FirstOrDefault().color = acidColor;
+                    this.originalColors = this.GetComponentsInChildren<SpriteRenderer>().ToDictionary(sr => sr, sr => sr.color);
+
+                    foreach (var sr in this.originalColors.Keys)
+                    {
+                        sr.color = acidColor;
+                    }
                 }
             }
         }

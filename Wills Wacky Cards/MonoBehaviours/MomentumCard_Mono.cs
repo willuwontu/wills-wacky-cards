@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Photon.Pun;
 
 namespace WWC.MonoBehaviours
 {
@@ -94,13 +95,55 @@ namespace WWC.MonoBehaviours
             }
         }
     }
+
+    public class MomentumPhoton : MonoBehaviour, Photon.Pun.IPunInstantiateMagicCallback
+    {
+        CardInfo card;
+        public void OnPhotonInstantiate(Photon.Pun.PhotonMessageInfo info)
+        {
+            card = this.GetComponent<CardInfo>();
+            UnityEngine.Debug.Log($"{card.cardName} has been photon spawned.");
+            UnboundLib.ExtensionMethods.ExecuteAfterFrames(this, 1, () => { this.gameObject.GetComponent<PhotonView>().RPC(nameof(RPCA_SourceCard), RpcTarget.All, new object[] { }); });
+        }
+
+        [PunRPC]
+        private void RPCA_SourceCard()
+        {
+            UnityEngine.Debug.Log($"Card source for {card.cardName} set to {card.sourceCard}.");
+        }
+    }
+
     public class MomentumTracker
     {
         public static int stacks = 0;
+        public static float rarityBuff = 0;
+        public static bool defenseFlag = false;
+        public static bool offenseFlag = false;
+
+        public static void ResetRarityBuff()
+        {
+            if (rarityBuff > 0)
+            {
+                RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, (-1 * rarityBuff), 1);
+                RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, (-1 * rarityBuff), 1);
+                rarityBuff = 0;
+            }
+        }
+
         public static Dictionary<int, CardInfo> createdOffenseCards = new Dictionary<int, CardInfo>();
         public static Dictionary<int, CardInfo> createdDefenseCards = new Dictionary<int, CardInfo>();
 
-        public static void AddOfffenseCard(CardInfo cardInfo, Player player)
+        public static CardInfo GetOffensecard(int offset = 0)
+        {
+            return createdOffenseCards[stacks + offset < 0 ? 0 : stacks + offset > 21 ? 21 : stacks + offset];
+        }
+
+        public static CardInfo GetDefensecard(int offset = 0)
+        {
+            return createdDefenseCards[stacks + offset < 0 ? 0 : stacks + offset > 21 ? 21 : stacks + offset];
+        }
+
+        public static void AddOffenseCard(CardInfo cardInfo, Player player)
         {
             createdOffenseCards.Add(MomentumTracker.stacks, cardInfo);
             ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);

@@ -74,7 +74,7 @@ namespace WWC.Cards
                 {
                     positive = false,
                     stat = "Reload Time",
-                    amount = "+0.25s%",
+                    amount = "+0.25s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
@@ -127,7 +127,7 @@ namespace WWC.MonoBehaviours
 
                 if (Vector2.Angle(Vector2.up, (person.transform.position - player.transform.position).normalized) <= 60f)
                 {
-                    person.data.playerVel.AddForce(Vector2.down * 10 * (float)player.data.playerVel.GetFieldValue("mass"), ForceMode2D.Impulse);
+                    person.data.playerVel.AddForce(Vector2.down * 20 * (float)player.data.playerVel.GetFieldValue("mass"), ForceMode2D.Impulse);
                 }
             }
         }

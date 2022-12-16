@@ -31,7 +31,7 @@ namespace WWC.Cards
 
             if (upgrader)
             {
-                upgrader.timeToEmpty += 5f;
+                upgrader.timeToEmpty -= 16f;
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -77,8 +77,8 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Progress is lost over",
-                    amount = "+5s",
+                    stat = "Upgrade time while moving.",
+                    amount = "15s",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()

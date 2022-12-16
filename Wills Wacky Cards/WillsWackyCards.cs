@@ -37,13 +37,15 @@ namespace WWC
     [BepInDependency("pykess.rounds.plugins.cardchoicespawnuniquecardpatch", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("root.classes.manager.reborn", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("root.rarity.lib", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("com.rounds.willuwontu.gunchargepatch", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("com.rounds.willuwontu.ActionHelper", BepInDependency.DependencyFlags.HardDependency)]
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
     public class WillsWackyCards : BaseUnityPlugin
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.9.14"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.9.15"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -254,6 +256,24 @@ namespace WWC
             //var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
             //networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
             //networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
+
+            //CardInfo ensnareCard = UnityEngine.Resources.Load<GameObject>("0 cards_needsnetworking/Ensnare").GetComponent<CardInfo>();
+            //CardInfo remnantCard = UnityEngine.Resources.Load<GameObject>("0 cards_needsnetworking/Remnant").GetComponent<CardInfo>();
+            //CardInfo blackHoleCard = UnityEngine.Resources.Load<GameObject>("1 cards_boring/BlackHole").GetComponent<CardInfo>();
+
+            //ObservableCollection<CardInfo> activeCards = (ObservableCollection<CardInfo>)typeof(CardManager).GetField("activeCards", BindingFlags.Default | BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+
+            //List<CardInfo> hiddenVanillaCards = new List<CardInfo>() { ensnareCard, remnantCard, blackHoleCard };
+
+            //CardInfo[] defaultCards = ((CardInfo[])typeof(CardManager).GetField("defaultCards", BindingFlags.Default | BindingFlags.Static | BindingFlags.NonPublic).GetValue(null)).Concat(hiddenVanillaCards).ToArray();
+            //typeof(CardManager).GetField("defaultCards", BindingFlags.Default | BindingFlags.Static | BindingFlags.NonPublic).SetValue(null, defaultCards);
+
+            //foreach (var card in hiddenVanillaCards)
+            //{
+            //    CardManager.cards.Add(card.gameObject.name, new Card("Vanilla", Unbound.config.Bind("Cards: " + "Vanilla", card.gameObject.name, true), card));
+            //    Photon.Pun.PhotonNetwork.PrefabPool.RegisterPrefab(card.gameObject.name, card.gameObject);
+            //    activeCards.Add(card);
+            //}
         }
 
         private void OnJoinedRoomAction()
@@ -330,12 +350,25 @@ namespace WWC
             var stacks = 0;
             var buildingCard = false;
             yield return StartCoroutine(WaitFor.Frames(7));
-            while (stacks <= 20)
+            while (stacks <= 21)
             {
                 MomentumTracker.stacks = stacks;
                 buildingCard = true;
-                CustomCard.BuildCard<BuildImmovableObject>(cardInfo => { MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); });
-                CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => { MomentumTracker.createdOffenseCards.Add(stacks, cardInfo); ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); buildingCard = false; });
+                CustomCard.BuildCard<BuildImmovableObject>(cardInfo => 
+                { 
+                    MomentumTracker.createdDefenseCards.Add(stacks, cardInfo); 
+                    ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo);
+                    cardInfo.cardName = ImmovableObject.card.cardName;
+                    //cardInfo.gameObject.AddComponent<MomentumPhoton>(); 
+                });
+                CustomCard.BuildCard<BuildUnstoppableForce>(cardInfo => 
+                { 
+                    MomentumTracker.createdOffenseCards.Add(stacks, cardInfo); 
+                    ModdingUtils.Utils.Cards.instance.AddHiddenCard(cardInfo); 
+                    //cardInfo.gameObject.AddComponent<MomentumPhoton>();
+                    cardInfo.cardName = UnstoppableForce.card.cardName;
+                    buildingCard = false; 
+                });
                 yield return new WaitUntil(() => !buildingCard);
                 yield return WaitFor.Frames(2);
                 stacks++;
@@ -394,6 +427,9 @@ namespace WWC
 
         IEnumerator PlayerPickStart(IGameModeHandler gm)
         {
+            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, 5f, 0f);
+            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, 5f, 0f);
+            MomentumTracker.rarityBuff += 5f;
             foreach (var player in PlayerManager.instance.players)
             {
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(SiphonCurses.siphonCard))
@@ -425,6 +461,8 @@ namespace WWC
 
         IEnumerator PlayerPickEnd(IGameModeHandler gm)
         {
+            MomentumTracker.offenseFlag = false;
+            MomentumTracker.defenseFlag = false;
             yield break;
         }
 

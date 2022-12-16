@@ -189,13 +189,13 @@ namespace WWC.MonoBehaviours
 			}
             try
             {
-                if (this.data.input.direction == Vector3.zero || this.data.input.direction == Vector3.down)
+                if (this.data.input.direction == Vector3.zero || this.data.input.direction == Vector3.down || this.data.input.direction == Vector3.up)
                 {
                     this.counter += TimeHandler.deltaTime / this.UpgradeTime;
                 }
                 else
                 {
-                    this.counter -= TimeHandler.deltaTime / this.timeToEmpty;
+                    this.counter -= TimeHandler.deltaTime / this.UpgradeTimeWhileMoving;
                 }
             }
 			catch (Exception e)
@@ -307,7 +307,7 @@ namespace WWC.MonoBehaviours
 		[Range(0f, 1f)]
 		public float counter;
 
-		private float upgradeTime = 6f;
+		private float upgradeTime = 4f;
 
 		public float upgradeTimeAdd;
 
@@ -320,9 +320,18 @@ namespace WWC.MonoBehaviours
 				return ((upgradeTime + upgradeTimeAdd) * upgradeTimeMult);
             }
         }
-        public float timeToEmpty = 1f;
 
-		private float upgradeCooldown = 12f;
+		public float UpgradeTimeWhileMoving
+		{
+			get
+			{
+				return (timeToEmpty >= 0 ? timeToEmpty : ((timeToEmpty - upgradeTimeAdd) * upgradeTimeMult));
+			}
+		}
+
+		public float timeToEmpty = 1f;
+
+		private float upgradeCooldown = 8f;
 
 		public float upgradeCooldownAdd;
 

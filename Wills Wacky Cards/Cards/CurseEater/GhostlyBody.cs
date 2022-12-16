@@ -95,8 +95,6 @@ namespace WWC.MonoBehaviours
     [DisallowMultipleComponent]
     class GhostBody_Mono : ReversibleEffect, IPointEndHookHandler, IPointStartHookHandler, IGameStartHookHandler
     {
-        private bool changedGravity = false;
-        private float prevGravity;
         private float multiplier = 0f;
         private bool increased = false;
         private int curseCount = 0;

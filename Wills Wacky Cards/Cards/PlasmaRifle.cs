@@ -30,47 +30,17 @@ namespace WWC.Cards
         {
             gun.useCharge = true;
             gun.chargeNumberOfProjectilesTo += 0;
-            gun.chargeSpeedTo = 2f;
+            gun.chargeSpeedTo = 3f;
             gun.dontAllowAutoFire = true;
             gun.chargeDamageMultiplier *= 3.5f;
-            gun.GetAdditionalData().chargeTime = 0.8f;
 
-            if (!player.GetComponent<PlasmaWeapon_Mono>())
+            if (!player.GetComponentInChildren<PlasmaWeapon_Mono>())
             {
-                var chargeBar = Instantiate(player.transform.Find("WobbleObjects/Healthbar"), player.transform.Find("WobbleObjects"));
-                chargeBar.name = "ChargeBar";
-                chargeBar.Translate(new Vector3(.95f, -1.1f, 0));
-                chargeBar.localScale.Set(0.5f, 1f, 1f);
-                chargeBar.localScale = new Vector3(0.6f, 1.4f, 1f);
-                chargeBar.Rotate(0f, 0f, 90f);
-                var plasmaRifle = player.gameObject.GetOrAddComponent<PlasmaWeapon_Mono>();
-                var nameLabel = chargeBar.transform.Find("Canvas/PlayerName").gameObject;
-                var crown = chargeBar.transform.Find("Canvas/CrownPos").gameObject;
-
-                var grid = chargeBar.transform.Find("Canvas/Image/Grid");
-                grid.gameObject.SetActive(true);
-                grid.localScale = new Vector3(1f, .4f, 1f);
-
-                var gridBox = Instantiate(grid.transform.Find("Grid (8)"), grid);
-                gridBox.name = "Grid (9)";
-
-                for (int i = 1; i <= 9; i++)
-                {
-                    gridBox = grid.transform.Find($"Grid ({i})");
-                    gridBox.localScale = new Vector3(2f, 1f, 1f);
-                    if (i > 4)
-                    {
-                        gridBox.gameObject.SetActive(false);
-                    }
-                }
-
-                plasmaRifle.chargeImage = chargeBar.transform.Find("Canvas/Image/Health").GetComponent<Image>();
-                UnityEngine.GameObject.Destroy(chargeBar.transform.Find("Canvas/Image/White").GetComponent<Image>().gameObject);
-                plasmaRifle.chargeImage.name = "Charge";
-                plasmaRifle.chargeImage.color = new Color(255, 255, 255);
-                plasmaRifle.chargeImage.SetAlpha(1);
-                Destroy(nameLabel);
-                Destroy(crown);
+                var child = new GameObject("Plasma");
+                child.transform.SetParent(player.transform);
+                var plasmaWeapon = child.AddComponent<PlasmaWeapon_Mono>();
+                GunChargePatch.Extensions.GunExtensions.GetAdditionalData(gun).chargeTime = 0.8f;
+                characterStats.objectsAddedToPlayer.Add(child);
             }
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -78,6 +48,7 @@ namespace WWC.Cards
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             gun.chargeDamageMultiplier /= 3.5f;
+            UnityEngine.GameObject.Destroy(player.gameObject.GetOrAddComponent<PlasmaWeapon_Mono>());
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 

@@ -14,16 +14,24 @@ namespace WWC.Cards
 {
     class SavageWounds : CustomCard
     {
+        static GameObject savageObject = null;
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
-            gun.damage = 0.8f;
+            gun.damage = 1.2f;
             List<ObjectsToSpawn> list = gun.objectsToSpawn.ToList<ObjectsToSpawn>();
-            list.Add(new ObjectsToSpawn
+
+            if (savageObject == null)
             {
-                AddToProjectile = new GameObject("Savage_Hit", new Type[]
+                savageObject = new GameObject("Savage_Hit", new Type[]
                 {
                     typeof(SavageWounds_Mono)
-                })
+                });
+                DontDestroyOnLoad(savageObject);
+            }
+
+            list.Add(new ObjectsToSpawn
+            {
+                AddToProjectile = savageObject
             });
             gun.objectsToSpawn = list.ToArray();
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
@@ -67,9 +75,9 @@ namespace WWC.Cards
             {
                 new CardInfoStat()
                 {
-                    positive = false,
+                    positive = true,
                     stat = "Damage",
-                    amount = "-20%",
+                    amount = "+20%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
