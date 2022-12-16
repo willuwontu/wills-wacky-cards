@@ -129,14 +129,6 @@ namespace WWC.MonoBehaviours
         {
             this.interval = interval;
         }
-        public void SetContinuousTrigger(bool enabled)
-        {
-            continuous_trigger = enabled;
-        }
-        public bool GetContinuousTrigger()
-        {
-            return ContinuousTrigger;
-        }
 
 		public static void CopyGunStats(Gun copyFromGun, Gun copyToGun)
 		{
