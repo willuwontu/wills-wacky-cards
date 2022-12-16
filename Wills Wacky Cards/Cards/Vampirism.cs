@@ -31,12 +31,13 @@ namespace WWC.Cards
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             player.gameObject.GetOrAddComponent<Vampirism_Mono>();
-            statModifiers.GetAdditionalData().Vampire = true;
+            characterStats.GetAdditionalData().Vampire = true;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             var vamprism = player.gameObject.GetOrAddComponent<Vampirism_Mono>();
+            characterStats.GetAdditionalData().Vampire = false;
             Destroy(vamprism);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
