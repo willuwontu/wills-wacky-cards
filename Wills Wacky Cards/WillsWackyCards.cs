@@ -45,7 +45,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.9.15"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.9.16"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -187,6 +187,7 @@ namespace WWC
             }
 
             { // Mechanic Class
+                Mechanic.cardBase = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("MechanicCardBase");
                 CustomCard.BuildCard<Mechanic>(cardInfo => { Mechanic.card = cardInfo; });
                 CustomCard.BuildCard<ImprovedShieldCapacitors>(cardInfo => { ImprovedShieldCapacitors.card = cardInfo; });
                 CustomCard.BuildCard<PortableFabricator>(cardInfo => { PortableFabricator.card = cardInfo; });
@@ -427,9 +428,9 @@ namespace WWC
 
         IEnumerator PlayerPickStart(IGameModeHandler gm)
         {
-            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, 5f, 0f);
-            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, 5f, 0f);
-            MomentumTracker.rarityBuff += 5f;
+            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, 1f, 0f);
+            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, 1f, 0f);
+            MomentumTracker.rarityBuff += 1f;
             foreach (var player in PlayerManager.instance.players)
             {
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(SiphonCurses.siphonCard))

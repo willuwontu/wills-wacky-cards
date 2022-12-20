@@ -56,7 +56,7 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_MechanicCardPlaceHolder");
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_Omnitool");
             }
             catch
             {
@@ -65,9 +65,14 @@ namespace WWC.Cards
 
             return art;
         }
+        protected override GameObject GetCardBase()
+        {
+            return Mechanic.cardBase;
+        }
+
         protected override CardInfo.Rarity GetRarity()
         {
-            return WillsWackyCards.ScarceRarity;
+            return Rarities.Epic;
         }
         protected override CardInfoStat[] GetStats()
         {

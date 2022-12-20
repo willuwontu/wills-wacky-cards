@@ -104,7 +104,7 @@ namespace WWC.MonoBehaviours
 
         public void OnBattleStart()
         {
-            shields = CurseManager.instance.GetAllCursesOnPlayer(player).Count() / 2;
+            shields = CurseManager.instance.GetAllCursesOnPlayer(player).Count();
         }
 
         public void OnPointStart()

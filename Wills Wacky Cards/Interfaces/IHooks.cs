@@ -355,7 +355,7 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IGameStartHookHandler
     {
-        public void OnGameStart();
+        void OnGameStart();
     }
     /// <summary>
     /// <para>An interface for a Game End gamemode hook.</para>
@@ -364,7 +364,7 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IGameEndHookHandler
     {
-        public void OnGameEnd();
+        void OnGameEnd();
     }
     /// <summary>
     /// <para>An interface for a Player Pick Start gamemode hook.</para>
@@ -373,7 +373,7 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IPlayerPickStartHookHandler
     {
-        public void OnPlayerPickStart();
+        void OnPlayerPickStart();
     }
     /// <summary>
     /// <para>An interface for a Player Pick End gamemode hook.</para>
@@ -382,7 +382,7 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IPlayerPickEndHookHandler
     {
-        public void OnPlayerPickEnd();
+        void OnPlayerPickEnd();
     }
     /// <summary>
     /// <para>An interface for a Point End gamemode hook.</para>
@@ -391,7 +391,7 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IPointEndHookHandler
     {
-        public void OnPointEnd();
+        void OnPointEnd();
     }
     /// <summary>
     /// <para>An interface for a Point Start gamemode hook.</para>
@@ -400,7 +400,7 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IPointStartHookHandler
     {
-        public void OnPointStart();
+        void OnPointStart();
     }
     /// <summary>
     /// <para>An interface for a Round End gamemode hook.</para>
@@ -409,7 +409,7 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IRoundEndHookHandler
     {
-        public void OnRoundEnd();
+        void OnRoundEnd();
     }
     /// <summary>
     /// <para>An interface for a Round Start gamemode hook.</para>
@@ -418,7 +418,7 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IRoundStartHookHandler
     {
-        public void OnRoundStart();
+        void OnRoundStart();
     }
     /// <summary>
     /// <para>An interface for a Pick Start gamemode hook.</para>
@@ -427,7 +427,7 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IPickStartHookHandler
     {
-        public void OnPickStart();
+        void OnPickStart();
     }
     /// <summary>
     /// <para>An interface for a Pick End gamemode hook.</para>
@@ -436,7 +436,7 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IPickEndHookHandler
     {
-        public void OnPickEnd();
+        void OnPickEnd();
     }
     /// <summary>
     /// <para>An interface for a Battle Start gamemode hook.</para>
@@ -445,6 +445,6 @@ namespace WWC.Interfaces
     /// </summary>
     public interface IBattleStartHookHandler
     {
-        public void OnBattleStart();
+        void OnBattleStart();
     }
 }

@@ -65,6 +65,10 @@ namespace WWC.Cards
 
             return art;
         }
+        protected override GameObject GetCardBase()
+        {
+            return Mechanic.cardBase;
+        }
         protected override CardInfo.Rarity GetRarity()
         {
             return CardInfo.Rarity.Common;
@@ -98,7 +102,7 @@ namespace WWC.Cards
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.TechWhite;
+            return CardThemeColor.CardThemeColorType.DefensiveBlue;
         }
         public override string GetModName()
         {

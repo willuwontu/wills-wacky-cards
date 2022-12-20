@@ -27,8 +27,13 @@ namespace WWC.Patches
             if (__instance.GetAdditionalData().speedDamageMultiplier != 0f)
             {
                 ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
+
+                var bulletSpeed = ___projectileSpeed * (__instance.useCharge ? ((GunChargePatch.Extensions.ProjectileHitExtensions.GetBulletCharge(bullet) * __instance.chargeSpeedTo)) : 1f);
+                float speedMult = (1f + ((bulletSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)));
+                float simulationMult = (1f + ((___projectielSimulatonSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)));
+
                 //float extraDamage = (bullet.damage * (1f + ((___projectileSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f))) * (1f + ((___projectielSimulatonSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)))) - bullet.damage;
-                bullet.damage *= (1f + ((___projectileSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f))) * (1f + ((___projectielSimulatonSpeed - 1f) * (__instance.GetAdditionalData().speedDamageMultiplier - 1f)));
+                bullet.damage *= speedMult * simulationMult;
                 //UnityEngine.Debug.Log(string.Format("[WWC] Bullet fired that deals {0} damage ({1} extra)", bullet.damage, extraDamage)); 
             }
 

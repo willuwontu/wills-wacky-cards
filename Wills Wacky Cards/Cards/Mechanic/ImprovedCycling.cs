@@ -60,7 +60,7 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_MechanicCardPlaceHolder");
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_ImprovedCycling");
             }
             catch
             {
@@ -68,6 +68,10 @@ namespace WWC.Cards
             }
 
             return art;
+        }
+        protected override GameObject GetCardBase()
+        {
+            return Mechanic.cardBase;
         }
         protected override CardInfo.Rarity GetRarity()
         {
@@ -109,7 +113,7 @@ namespace WWC.Cards
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.TechWhite;
+            return CardThemeColor.CardThemeColorType.FirepowerYellow;
         }
         public override string GetModName()
         {

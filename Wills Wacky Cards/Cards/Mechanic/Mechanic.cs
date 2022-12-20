@@ -21,6 +21,7 @@ namespace WWC.Cards
     public class Mechanic : CustomCard
     {
         public static CardInfo card = null;
+        public static GameObject cardBase = null;
 
         public const string MechanicClassName = "Mechanic";
 
@@ -141,6 +142,12 @@ namespace WWC.Cards
 
             return art;
         }
+
+        protected override GameObject GetCardBase()
+        {
+            return Mechanic.cardBase;
+        }
+
         protected override CardInfo.Rarity GetRarity()
         {
             return CardInfo.Rarity.Common;

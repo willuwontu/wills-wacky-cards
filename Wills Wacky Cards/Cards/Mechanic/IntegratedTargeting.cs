@@ -75,6 +75,10 @@ namespace WWC.Cards
 
             return art;
         }
+        protected override GameObject GetCardBase()
+        {
+            return Mechanic.cardBase;
+        }
         protected override CardInfo.Rarity GetRarity()
         {
             return CardInfo.Rarity.Uncommon;
