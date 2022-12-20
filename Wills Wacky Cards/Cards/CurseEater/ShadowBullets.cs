@@ -19,33 +19,22 @@ namespace WWC.Cards
     class ShadowBullets : CustomCard
     {
         public static CardInfo card = null;
+        public static GameObject shadowBullets = null;
         public override void Callback()
         {
             gameObject.GetOrAddComponent<ClassNameMono>().className = CurseEaterClass.name;
         }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            GameObject drill = null;
-
-            drill = GameObject.Find("A_ShadowBullet");
-
-            if (!drill)
+            if (!shadowBullets)
             {
-                var drillCard = UnboundLib.Utils.CardManager.cards.Values.Where((card) => card.cardInfo.cardName.ToLower() == "Drill Ammo".ToLower()).Select((card) => card.cardInfo).FirstOrDefault();
-
-                var drillGun = drillCard.gameObject.GetComponent<Gun>();
-
-                drill = Instantiate(drillGun.objectsToSpawn[0].AddToProjectile);
-                drill.name = "A_ShadowBullet";
-
-                var drillRay = drill.GetComponent<RayHitDrill>();
-
-                drillRay.metersOfDrilling = 5000f;
-                drillRay.speedModFlat = 0.9f;
-                drillRay.speedMod = 0.05f; 
+                shadowBullets = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("A_ShadowBullet");
+                var trail = shadowBullets.GetComponentInChildren<TrailRenderer>(true);
+                trail.sortingLayerName = "MostFront";
+                trail.sortingOrder = 10;
             }
 
-            gun.objectsToSpawn = new ObjectsToSpawn[] { new ObjectsToSpawn { AddToProjectile = drill } };
+            gun.objectsToSpawn = new ObjectsToSpawn[] { new ObjectsToSpawn { AddToProjectile = shadowBullets } };
 
             gun.unblockable = true;
             gun.bulletDamageMultiplier = 0.75f;

@@ -97,6 +97,16 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <summary>Change Log</summary>
 
 ----
+## v 1.10.0
+- Mechanic Update!!!! All mechanic cards now have art. Mechanic Art is best art.
+- Runic Wards now grants an autoblock for every curse you have.
+- Omnitool is back to being an Epic.
+- Gyroscopic Stabilizers is now a Legendary (WWC's first legendary).
+- Basic Physics and Alternate Physics now correctly interact with Plasma weapons.
+- Shadow Bullets no longer throws an error up initialization.
+- Momentum Cards now build up momentum at a slower pace.
+
+----
 ## v 1.9.15
 - Fixed issues with aggressive venting.
 - Banishment banishes to the shadow realm.
@@ -115,7 +125,6 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Wheel of Fortune is now Epic Rarity.
 - Bullet powered Jetpack now works with charged weapons.
 - Endurance Training and Adrenaline Rush now properly show their current stats.
-- 
 
 ----
 ## v 1.9.13
