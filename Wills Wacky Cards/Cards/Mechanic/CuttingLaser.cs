@@ -13,8 +13,12 @@ using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
-    class CuttingLaser : CustomCard
+    class CuttingLaser : CustomMechanicCard
     {
+        protected override GameObject GetAccessory()
+        {
+            return WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("Gun Accessory");
+        }
         public override void Callback()
         {
             gameObject.GetOrAddComponent<ClassNameMono>().className = MechanicClass.name;
@@ -58,7 +62,7 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_CuttingLasers");
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("C_CuttingLasers");
             }
             catch
             {

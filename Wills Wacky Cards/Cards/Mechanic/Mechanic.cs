@@ -18,8 +18,13 @@ using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
-    public class Mechanic : CustomCard
+    public class Mechanic : CustomMechanicCard
     {
+        protected override GameObject GetAccessory()
+        {
+            return WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("Wrench Accessory");
+        }
+
         public static CardInfo card = null;
         public static GameObject cardBase = null;
 
@@ -29,6 +34,7 @@ namespace WWC.Cards
         {
             gameObject.GetOrAddComponent<ClassNameMono>();
         }
+
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             cardInfo.allowMultiple = false;
@@ -102,7 +108,7 @@ namespace WWC.Cards
 
             RectTransform rect = null;
 
-            var levelFrame = Instantiate<GameObject>(WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("LevelFrame"), upgradeCanvas.transform);
+            var levelFrame = Instantiate<GameObject>(WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("LevelFrame"), upgradeCanvas.transform);
             rect = levelFrame.GetComponent<RectTransform>();
             rect.localScale = Vector3.one;
             rect.localPosition = new Vector3(-375, 0, 0);
@@ -133,7 +139,7 @@ namespace WWC.Cards
 
             try
             {
-                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_Mechanic");
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("C_Mechanic");
             }
             catch
             {

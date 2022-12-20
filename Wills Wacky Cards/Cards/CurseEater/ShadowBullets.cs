@@ -28,7 +28,7 @@ namespace WWC.Cards
         {
             if (!shadowBullets)
             {
-                shadowBullets = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("A_ShadowBullet");
+                shadowBullets = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("A_ShadowBullet");
                 var trail = shadowBullets.GetComponentInChildren<TrailRenderer>(true);
                 trail.sortingLayerName = "MostFront";
                 trail.sortingOrder = 10;

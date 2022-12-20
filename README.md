@@ -97,6 +97,11 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <summary>Change Log</summary>
 
 ----
+## v 1.10.01
+
+- Small Visual Update
+
+----
 ## v 1.10.0
 - Mechanic Update!!!! All mechanic cards now have art. Mechanic Art is best art.
 - Runic Wards now grants an autoblock for every curse you have.

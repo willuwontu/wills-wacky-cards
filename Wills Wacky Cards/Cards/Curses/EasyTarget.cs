@@ -44,7 +44,7 @@ namespace WWC.Cards.Curses
 
             try
             {
-                art = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("C_EasyTarget");
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("C_EasyTarget");
             }
             catch
             {

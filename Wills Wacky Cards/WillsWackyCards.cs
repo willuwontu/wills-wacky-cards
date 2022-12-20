@@ -45,7 +45,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.10.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.10.1"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -55,6 +55,8 @@ namespace WWC
 
         public static WillsWackyCards instance { get; private set; }
         public static CardRemover remover;
+
+        public AssetBundle WWCAssets { get; private set; }
 
         public static bool battleStarted = false;
 
@@ -78,7 +80,27 @@ namespace WWC
 
         void Awake()
         {
+            WWCAssets = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets;
 
+            { // Mechanic Class
+                Mechanic.cardBase = WWCAssets.LoadAsset<GameObject>("MechanicCardBase");
+
+                CustomMechanicCard.BuildUnityMechanicCard<Mechanic>(WWCAssets.LoadAsset<GameObject>("__WWC__Mechanic"), cardInfo => { Mechanic.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<ImprovedShieldCapacitors>(WWCAssets.LoadAsset<GameObject>("ISC"), cardInfo => { ImprovedShieldCapacitors.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<PortableFabricator>(WWCAssets.LoadAsset<GameObject>("PF"), cardInfo => { PortableFabricator.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<CloningTanks>(WWCAssets.LoadAsset<GameObject>("CT"), cardInfo => { CloningTanks.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<CuttingLaser>(WWCAssets.LoadAsset<GameObject>("CL"), cardInfo => { CuttingLaser.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<GreyGoo>(WWCAssets.LoadAsset<GameObject>("GG"), cardInfo => { GreyGoo.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<GyroscopicStabilizers>(WWCAssets.LoadAsset<GameObject>("GS"), cardInfo => { GyroscopicStabilizers.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<ImpactDissipators>(WWCAssets.LoadAsset<GameObject>("ID"), cardInfo => { ImpactDissipators.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<ImprovedCycling>(WWCAssets.LoadAsset<GameObject>("IC"), cardInfo => { ImprovedCycling.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<IntegratedTargeting>(WWCAssets.LoadAsset<GameObject>("IT"), cardInfo => { IntegratedTargeting.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<JumpBoots>(WWCAssets.LoadAsset<GameObject>("JB"), cardInfo => { JumpBoots.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<Omnitool>(WWCAssets.LoadAsset<GameObject>("OT"), cardInfo => { Omnitool.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<ParticleWaveSequencer>(WWCAssets.LoadAsset<GameObject>("PWS"), cardInfo => { ParticleWaveSequencer.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<PersonalHammerspace>(WWCAssets.LoadAsset<GameObject>("PH"), cardInfo => { PersonalHammerspace.card = cardInfo; });
+                CustomMechanicCard.BuildUnityMechanicCard<ChemicalAmmunition>(WWCAssets.LoadAsset<GameObject>("__WWC__ChemicalAmmunition"), cardInfo => { ChemicalAmmunition.card = cardInfo; });
+            }
         }
         void Start()
         {
@@ -184,25 +206,6 @@ namespace WWC
                 CustomCard.BuildCard<RunicWards>(cardInfo => { RunicWards.card = cardInfo; });
                 CustomCard.BuildCard<HiltlessBlade>(cardInfo => { HiltlessBlade.card = cardInfo; });
                 CustomCard.BuildCard<CorruptedAmmunition>(cardInfo => { CorruptedAmmunition.card = cardInfo; });
-            }
-
-            { // Mechanic Class
-                Mechanic.cardBase = WillsWackyManagers.WillsWackyManagers.instance.WWWMAssets.LoadAsset<GameObject>("MechanicCardBase");
-                CustomCard.BuildCard<Mechanic>(cardInfo => { Mechanic.card = cardInfo; });
-                CustomCard.BuildCard<ImprovedShieldCapacitors>(cardInfo => { ImprovedShieldCapacitors.card = cardInfo; });
-                CustomCard.BuildCard<PortableFabricator>(cardInfo => { PortableFabricator.card = cardInfo; });
-                CustomCard.BuildCard<CloningTanks>(cardInfo => { CloningTanks.card = cardInfo; });
-                CustomCard.BuildCard<ChemicalAmmunition>(cardInfo => { ChemicalAmmunition.card = cardInfo; });
-                CustomCard.BuildCard<CuttingLaser>(cardInfo => { CuttingLaser.card = cardInfo; });
-                CustomCard.BuildCard<GreyGoo>(cardInfo => { GreyGoo.card = cardInfo; });
-                CustomCard.BuildCard<GyroscopicStabilizers>(cardInfo => { GyroscopicStabilizers.card = cardInfo; });
-                CustomCard.BuildCard<ImpactDissipators>(cardInfo => { ImpactDissipators.card = cardInfo; });
-                CustomCard.BuildCard<ImprovedCycling>(cardInfo => { ImprovedCycling.card = cardInfo; });
-                CustomCard.BuildCard<IntegratedTargeting>(cardInfo => { IntegratedTargeting.card = cardInfo; });
-                CustomCard.BuildCard<JumpBoots>(cardInfo => { JumpBoots.card = cardInfo; });
-                CustomCard.BuildCard<Omnitool>(cardInfo => { Omnitool.card = cardInfo; });
-                CustomCard.BuildCard<ParticleWaveSequencer>(cardInfo => { ParticleWaveSequencer.card = cardInfo; });
-                CustomCard.BuildCard<PersonalHammerspace>(cardInfo => { PersonalHammerspace.card = cardInfo; });
             }
 
             if (debug)
