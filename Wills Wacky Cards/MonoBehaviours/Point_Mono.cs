@@ -48,6 +48,7 @@ namespace WWC.MonoBehaviours
 
         public void OnPointStart()
         {
+            this.ClearModifiers();
             UpdateMultipliers();
             this.ApplyModifiers();
         }
@@ -60,28 +61,6 @@ namespace WWC.MonoBehaviours
         public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this);
-        }
-
-        private void ChangeStats(bool apply = true)
-        {
-            var upMult = MultiplierCalculation(startValue, totalPointsEarned, multiplierPerPoint, true);
-            var downMult = MultiplierCalculation(startValue, totalPointsEarned, multiplierPerPoint, false);
-
-            if (!apply)
-            {
-                upMult = 1f/upMult;
-                downMult = 1f/downMult;
-            }
-
-            data.maxHealth *= upMult;
-            data.health *= upMult;
-            stats.InvokeMethod("ConfigureMassAndSize");
-            stats.movementSpeed *= upMult;
-            stats.jump *= upMult;
-            gravity.gravityForce *= downMult;
-            gun.damage *= upMult;
-            gunAmmo.reloadTimeMultiplier *= downMult;
-            block.cdMultiplier *= downMult;
         }
 
         private void UpdateMultipliers()
