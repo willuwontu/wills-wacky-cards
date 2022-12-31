@@ -15,17 +15,20 @@ using UnityEngine;
 using UnityEngine.UI.ProceduralImage;
 using UnboundLib.Utils;
 using ClassesManagerReborn.Util;
+using Sirenix.OdinInspector;
 
 namespace WWC.Cards
 {
     public class Mechanic : CustomMechanicCard
     {
+        public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
         protected override GameObject GetAccessory()
         {
             return WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("Wrench Accessory");
         }
-
+        
         public static CardInfo card = null;
+
         public static GameObject cardBase = null;
 
         public const string MechanicClassName = "Mechanic";
@@ -63,7 +66,6 @@ namespace WWC.Cards
             upgrader.still = abyssal.still;
             upgrader.gunStatModifier.damage_mult = 1.3f;
             upgrader.characterDataModifier.maxHealth_mult = 1.3f;
-            upgrader.characterDataModifier.health_mult = 1.3f;
 
 
             WillsWackyCards.instance.ExecuteAfterFrames(5, () => 
@@ -72,9 +74,9 @@ namespace WWC.Cards
 
                 WillsWackyCards.instance.ExecuteAfterFrames(5, () =>
                 {
-                    var COs = mechObj.GetComponentsInChildren<Transform>().Where(child => child.parent == mechObj.transform).Select(child => child.gameObject).ToArray();
+                    var COs2 = mechObj.GetComponentsInChildren<Transform>().Where(child => child.parent == mechObj.transform).Select(child => child.gameObject).ToArray();
 
-                    foreach (var CO in COs)
+                    foreach (var CO in COs2)
                     {
                         if (CO.transform != mechObj.transform.Find("Canvas"))
                         {

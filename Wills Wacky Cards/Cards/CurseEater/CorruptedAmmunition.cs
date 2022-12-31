@@ -11,8 +11,9 @@ using WWC.MonoBehaviours;
 
 namespace WWC.Cards
 {
-    class CorruptedAmmunition : CustomCard
+    class CorruptedAmmunition : CustomClassCard
     {
+        public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public static CardInfo card = null;
         public override void Callback()
         {

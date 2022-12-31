@@ -9,11 +9,15 @@ using WWC.Extensions;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using UnboundLib.Utils;
+using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards.Curses
 {
-    class EasyTarget : CustomCard
+    class EasyTarget : CustomCard, ISaveableCard
     {
+        private static CardInfo card;
+        public CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             statModifiers.sizeMultiplier = 2.5f;

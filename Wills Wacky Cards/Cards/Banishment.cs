@@ -129,7 +129,7 @@ namespace WWC.MonoBehaviours
 
                 foreach (var person in players)
                 {
-                    banished[person] -= Time.deltaTime;
+                    banished[person] -= TimeHandler.deltaTime;
 
                     if (banished[person] <= 0f)
                     {

@@ -13,8 +13,9 @@ using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
-    class SiphonCurses : CustomCard
+    class SiphonCurses : CustomClassCard
     {
+        public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public static CardInfo card = null;
         internal static CardCategory siphonCard = CustomCardCategories.instance.CardCategory("Siphon Curse");
         public override void Callback()

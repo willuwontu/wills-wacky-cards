@@ -444,7 +444,6 @@ namespace WWC.MonoBehaviours
 			applyImmediately = true;
 			this.SetLivesToEffect(int.MaxValue);
 
-			characterDataModifier.health_mult = 0.7f;
 			characterDataModifier.maxHealth_mult = 0.7f;
 		}
 

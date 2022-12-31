@@ -16,6 +16,10 @@ namespace WWC.Cards
 {
     class ChemicalAmmunition : CustomMechanicCard
     {
+        internal static CardInfo card = null;
+
+        public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
+
         protected override GameObject GetAccessory()
         {
             return WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("Gun Accessory");
@@ -58,7 +62,6 @@ namespace WWC.Cards
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 
-        internal static CardInfo card = null;
         protected override string GetTitle()
         {
             return "Chemical Ammunition";

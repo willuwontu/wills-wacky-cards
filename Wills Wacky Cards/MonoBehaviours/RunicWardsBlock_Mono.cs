@@ -16,7 +16,6 @@ namespace WWC.MonoBehaviours
     {
         public int shields = 0;
         public int additionalBlocks = 0;
-        private bool increased;
         internal Dictionary<Player, float> damageTracker = new Dictionary<Player, float>();
         private float damageNeeded = 600f;
 

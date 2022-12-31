@@ -12,8 +12,9 @@ using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
-    class RunicWards : CustomCard
+    class RunicWards : CustomClassCard
     {
+        public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public static CardInfo card = null;
         public override void Callback()
         {

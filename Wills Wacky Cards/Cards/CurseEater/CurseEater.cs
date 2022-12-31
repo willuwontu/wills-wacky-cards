@@ -17,8 +17,9 @@ using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
-    public class CurseEater : CustomCard
+    public class CurseEater : CustomClassCard
     {
+        public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public static CardInfo card = null;
 
         public const string CurseEaterClassName = "Curse Eater";

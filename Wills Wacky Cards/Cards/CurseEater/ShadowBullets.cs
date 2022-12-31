@@ -16,8 +16,9 @@ using ClassesManagerReborn.Util;
 
 namespace WWC.Cards
 {
-    class ShadowBullets : CustomCard
+    class ShadowBullets : CustomClassCard
     {
+        public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public static CardInfo card = null;
         public static GameObject shadowBullets = null;
         public override void Callback()

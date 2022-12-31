@@ -41,7 +41,7 @@ namespace WWC.Cards
 
             foreach (int index in curseIndeces)
             {
-                Func<CardInfo, Player, Gun, GunAmmo, CharacterData, HealthHandler, Gravity, Block, CharacterStatModifiers, bool> condition = (card, player, g, ga, d, h, gr, b, s) =>
+                Func<CardInfo, Player, Gun, GunAmmo, CharacterData, HealthHandler, Gravity, Block, CharacterStatModifiers, bool> condition = (card, p, g, ga, d, h, gr, b, s) =>
                 {
                     var result = true;
 

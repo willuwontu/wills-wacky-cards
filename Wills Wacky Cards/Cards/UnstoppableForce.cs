@@ -115,12 +115,13 @@ namespace WWC.Cards
             stacks = tracker.stacks;
 
             gun.ammo = stacks;
-            gun.attackSpeed = (float)Math.Pow(.95f, stacks);
-            gun.projectileSpeed = (float)Math.Pow(1.05f, stacks);
+            gun.attackSpeed = (float)Math.Pow(.96f, stacks);
+            gun.projectileSpeed = (float)Math.Pow(1.04f, stacks);
             gun.reflects = stacks / 2;
-            gun.damage = (float)Math.Pow(1.05f, stacks);
+            gun.damage = (float)Math.Pow(1.04f, stacks);
             gun.bursts = stacks / 10;
             gun.numberOfProjectiles = stacks / 5;
+            gun.reloadTime = (float)Math.Pow(1.04f, stacks);
 
             cardInfo.cardStats = MomentumTracker.GetOffensiveMomentumStats(stacks);
             tracker.updated = true;

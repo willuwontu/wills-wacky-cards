@@ -95,14 +95,6 @@ namespace WWC.MonoBehaviours
         private float maxDuration = 0.2f;
         private float nextCheck = 0f;
 
-        private StatHolder[] stats = new StatHolder[] { };
-
-        private class StatHolder
-        {
-            public TextMeshProUGUI stat;
-            public TextMeshProUGUI value;
-        }
-
         private void Awake()
         {
 

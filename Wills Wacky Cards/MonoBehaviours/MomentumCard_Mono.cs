@@ -80,7 +80,7 @@ namespace WWC.MonoBehaviours
                 cardName.text = title.ToUpper();
                 foreach (var statInfo in (alwaysUpdate ? statsGenerator() : card.cardStats))
                 {
-                    var stat = stats.Where((stat) => stat.stat.text == statInfo.stat).FirstOrDefault();
+                    var stat = stats.Where((stat2) => stat2.stat.text == statInfo.stat).FirstOrDefault();
                     stat.value.text = statInfo.amount;
                     //foreach (var stat in stats)
                     //{
@@ -119,6 +119,7 @@ namespace WWC.MonoBehaviours
         public static float rarityBuff = 0;
         public static bool defenseFlag = false;
         public static bool offenseFlag = false;
+        public const int maxStacks = 21;
 
         public static void ResetRarityBuff()
         {
@@ -135,12 +136,12 @@ namespace WWC.MonoBehaviours
 
         public static CardInfo GetOffensecard(int offset = 0)
         {
-            return createdOffenseCards[stacks + offset < 0 ? 0 : stacks + offset > 21 ? 21 : stacks + offset];
+            return createdOffenseCards[stacks + offset < 0 ? 0 : stacks + offset > maxStacks ? maxStacks : stacks + offset];
         }
 
         public static CardInfo GetDefensecard(int offset = 0)
         {
-            return createdDefenseCards[stacks + offset < 0 ? 0 : stacks + offset > 21 ? 21 : stacks + offset];
+            return createdDefenseCards[stacks + offset < 0 ? 0 : stacks + offset > maxStacks ? maxStacks : stacks + offset];
         }
 
         public static void AddOffenseCard(CardInfo cardInfo, Player player)
@@ -173,21 +174,21 @@ namespace WWC.MonoBehaviours
                 {
                     positive = true,
                     stat = "Attack Speed",
-                    amount = string.Format("+{0:F0}%",(1f - (float) Math.Pow(.95f, stacks)) * 100f),
+                    amount = string.Format("+{0:F0}%",(1f - (float) Math.Pow(.96f, stacks)) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Bullet Speed",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, stacks) -1f) * 100f),
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.04f, stacks) -1f) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Damage",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, stacks) -1f) * 100f),
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.04f, stacks) -1f) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -210,6 +211,13 @@ namespace WWC.MonoBehaviours
                     stat = "Bullets",
                     amount = $"+{stacks/5}",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Reload Time",
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.04f, stacks) -1f) * 100f),
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
@@ -228,21 +236,21 @@ namespace WWC.MonoBehaviours
                 {
                     positive = true,
                     stat = "Gravity",
-                    amount = string.Format("-{0:F0}%",(1f - (float) Math.Pow(.95f, stacks)) * 100f),
+                    amount = string.Format("-{0:F0}%",(1f - (float) Math.Pow(.96f, stacks)) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Health",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, stacks) -1f) * 100f),
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.04f, stacks) -1f) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Jump Height",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, stacks) -1f) * 100f),
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.04f, stacks) -1f) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -263,7 +271,14 @@ namespace WWC.MonoBehaviours
                 {
                     positive = true,
                     stat = "Lifesteal",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.05f, stacks) -1f) * 100f),
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.04f, stacks) -1f) * 100f),
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                },
+                new CardInfoStat()
+                {
+                    positive = false,
+                    stat = "Block CD",
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.04f, stacks) -1f) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

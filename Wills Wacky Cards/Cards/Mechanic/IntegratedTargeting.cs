@@ -15,6 +15,7 @@ namespace WWC.Cards
 {
     class IntegratedTargeting : CustomMechanicCard
     {
+        public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
         protected override GameObject GetAccessory()
         {
             return WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("Gun Accessory");

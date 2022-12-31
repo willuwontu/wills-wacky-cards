@@ -73,7 +73,7 @@ namespace WWC.MonoBehaviours
             UpdateMultiplier();
             foreach (var statInfo in CurrentStats())
             {
-                var stat = stats.Where((stat) => { /*UnityEngine.Debug.Log($"Comparing {stat.stat.text} to {statInfo.stat}");*/ return stat.stat.text == statInfo.stat; }).FirstOrDefault();
+                var stat = stats.Where((stat2) => { /*UnityEngine.Debug.Log($"Comparing {stat.stat.text} to {statInfo.stat}");*/ return stat2.stat.text == statInfo.stat; }).FirstOrDefault();
                 stat.value.text = statInfo.amount;
 
                 if (statInfo.positive)

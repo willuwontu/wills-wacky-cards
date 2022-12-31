@@ -80,7 +80,6 @@ namespace WWC.MonoBehaviours
             var downMult = MultiplierCalculation(startValue, totalPointsEarned, multiplierPerPoint, false);
 
             this.characterDataModifier.maxHealth_mult = upMult;
-            this.characterDataModifier.health_mult = upMult;
             this.characterStatModifiersModifier.movementSpeed_mult = upMult;
             this.characterStatModifiersModifier.jump_mult = upMult;
             this.gravityModifier.gravityForce_mult = downMult;

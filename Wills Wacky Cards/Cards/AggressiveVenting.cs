@@ -228,7 +228,7 @@ namespace WWC.MonoBehaviours
         public void AddVentingVisual()
         {
             if (ventingVisual != null) { return; }
-            var card = UnboundLib.Utils.CardManager.cards.Values.Select(card => card.cardInfo).First(c => c.name.Equals("ChillingPresence"));
+            var card = UnboundLib.Utils.CardManager.cards.Values.Select(card2 => card2.cardInfo).First(c => c.name.Equals("ChillingPresence"));
             var statMods = card.gameObject.GetComponentInChildren<CharacterStatModifiers>();
             ventingVisual =  Instantiate(statMods.AddObjectToPlayer.GetComponentInChildren<LineEffect>().gameObject, player.transform);
             ventingVisual.name = "A_AgressiveVenting";
@@ -256,7 +256,7 @@ namespace WWC.MonoBehaviours
 
         private LineEffect AddRadiatingVisual()
         {
-            var card = UnboundLib.Utils.CardManager.cards.Values.Select(card => card.cardInfo).First(c => c.name.Equals("ChillingPresence"));
+            var card = UnboundLib.Utils.CardManager.cards.Values.Select(card2 => card2.cardInfo).First(c => c.name.Equals("ChillingPresence"));
             var statMods = card.gameObject.GetComponentInChildren<CharacterStatModifiers>();
             var radiateObj = Instantiate(statMods.AddObjectToPlayer.GetComponentInChildren<LineEffect>().gameObject, ventingVisual.transform);
             var lineEffect = radiateObj.GetComponent<LineEffect>();

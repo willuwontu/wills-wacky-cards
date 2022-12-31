@@ -15,6 +15,7 @@ namespace WWC.Cards
 {
     class GyroscopicStabilizers : CustomMechanicCard
     {
+        public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
         protected override GameObject GetAccessory()
         {
             return WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("Wrench Accessory");

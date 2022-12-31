@@ -29,7 +29,6 @@ namespace WWC.MonoBehaviours
             {
                 multiplier *= 2.5f;
             }
-            this.characterDataModifier.health_mult = multiplier;
             this.characterDataModifier.maxHealth_mult = multiplier;
             this.ApplyModifiers();
         }

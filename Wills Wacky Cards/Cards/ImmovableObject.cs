@@ -114,14 +114,15 @@ namespace WWC.Cards
             }
             stacks = tracker.stacks;
 
-            statModifiers.regen = stacks/5f;
-            statModifiers.health = (float)Math.Pow(1.05f, stacks);
-            statModifiers.jump = (float)Math.Pow(1.05f, stacks);
+            statModifiers.regen = stacks;
+            statModifiers.health = (float)Math.Pow(1.04f, stacks);
+            statModifiers.jump = (float)Math.Pow(1.04f, stacks);
             statModifiers.numberOfJumps = stacks / 3;
-            statModifiers.gravity = (float)Math.Pow(.95f, stacks);
-            statModifiers.lifeSteal = (float)Math.Pow(1.05f, stacks) -1f;
+            statModifiers.gravity = (float)Math.Pow(.96f, stacks);
+            statModifiers.lifeSteal = (float)Math.Pow(1.04f, stacks) -1f;
             var block = this.gameObject.GetOrAddComponent<Block>();
             block.additionalBlocks = stacks / 7;
+            block.cdMultiplier = (float)Math.Pow(1.04f, stacks);
 
             cardInfo.cardStats = MomentumTracker.GetDefensiveMomentumStats(stacks);
             tracker.updated = true;

@@ -14,6 +14,7 @@ namespace WWC.Cards
 {
     class PortableFabricator : CustomMechanicCard
     {
+        public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
         protected override GameObject GetAccessory()
         {
             return WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("Wrench Accessory");
@@ -33,7 +34,6 @@ namespace WWC.Cards
             if (upgrader)
             {
                 upgrader.upgradeTimeMult *= 0.9f;
-                upgrader.characterDataModifier.health_mult += 0.6f;
                 upgrader.characterDataModifier.maxHealth_mult += 0.6f;
                 upgrader.characterStatModifiersModifier.sizeMultiplier_mult += 0.1f;
                 upgrader.upgradeCooldownMult *= 1.05f;

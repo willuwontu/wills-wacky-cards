@@ -21,7 +21,9 @@ using WWC.Cards.Curses;
 using WWC.Cards.Testing;
 using WWC.Interfaces;
 using WWC.Extensions;
+using WWC.UnityTools;
 using WillsWackyManagers.Utils;
+using WillsWackyManagers.UnityTools;
 using WWC.MonoBehaviours;
 using HarmonyLib;
 using Photon.Pun;
@@ -80,35 +82,36 @@ namespace WWC
 
         void Awake()
         {
-            WWCAssets = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets;
+            instance = this;
 
-            { // Mechanic Class
-                Mechanic.cardBase = WWCAssets.LoadAsset<GameObject>("MechanicCardBase");
+            WWCAssets = AssetUtils.LoadAssetBundleFromResources("wwcstuff", typeof(WillsWackyCards).Assembly);
 
-                CustomMechanicCard.BuildUnityMechanicCard<Mechanic>(WWCAssets.LoadAsset<GameObject>("__WWC__Mechanic"), cardInfo => { Mechanic.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<ImprovedShieldCapacitors>(WWCAssets.LoadAsset<GameObject>("ISC"), cardInfo => { ImprovedShieldCapacitors.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<PortableFabricator>(WWCAssets.LoadAsset<GameObject>("PF"), cardInfo => { PortableFabricator.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<CloningTanks>(WWCAssets.LoadAsset<GameObject>("CT"), cardInfo => { CloningTanks.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<CuttingLaser>(WWCAssets.LoadAsset<GameObject>("CL"), cardInfo => { CuttingLaser.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<GreyGoo>(WWCAssets.LoadAsset<GameObject>("GG"), cardInfo => { GreyGoo.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<GyroscopicStabilizers>(WWCAssets.LoadAsset<GameObject>("GS"), cardInfo => { GyroscopicStabilizers.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<ImpactDissipators>(WWCAssets.LoadAsset<GameObject>("ID"), cardInfo => { ImpactDissipators.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<ImprovedCycling>(WWCAssets.LoadAsset<GameObject>("IC"), cardInfo => { ImprovedCycling.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<IntegratedTargeting>(WWCAssets.LoadAsset<GameObject>("IT"), cardInfo => { IntegratedTargeting.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<JumpBoots>(WWCAssets.LoadAsset<GameObject>("JB"), cardInfo => { JumpBoots.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<Omnitool>(WWCAssets.LoadAsset<GameObject>("OT"), cardInfo => { Omnitool.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<ParticleWaveSequencer>(WWCAssets.LoadAsset<GameObject>("PWS"), cardInfo => { ParticleWaveSequencer.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<PersonalHammerspace>(WWCAssets.LoadAsset<GameObject>("PH"), cardInfo => { PersonalHammerspace.card = cardInfo; });
-                CustomMechanicCard.BuildUnityMechanicCard<ChemicalAmmunition>(WWCAssets.LoadAsset<GameObject>("__WWC__ChemicalAmmunition"), cardInfo => { ChemicalAmmunition.card = cardInfo; });
+            var harmony = new Harmony(ModId);
+            harmony.PatchAll();
+
+            UnityEngine.Debug.Log("WWC Awake");
+
+            { // Mechanic Class Load Necessary Assets
+                Mechanic.cardBase = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("MechanicCardBase");
+
+
+            }
+
+            { // Build the cards
+                GameObject cardLoader = WWCAssets.LoadAsset<GameObject>("WWC CardManager");
+                foreach (CardBuilder classManager in cardLoader.GetComponentsInChildren<CardBuilder>())
+                {
+                    classManager.BuildCards();
+                }
+                foreach (WillsWackyManagers.UnityTools.CardBuilder cardManager in cardLoader.GetComponentsInChildren<WillsWackyManagers.UnityTools.CardBuilder>())
+                {
+                    cardManager.BuildCards();
+                }
             }
         }
         void Start()
         {
             Unbound.RegisterCredits(ModName, new string[] { "willuwontu" }, new string[] { "github", "Ko-Fi" }, new string[] { "https://github.com/willuwontu/wills-wacky-cards", "https://ko-fi.com/willuwontu" });
-
-            instance = this;
-
-            var harmony = new Harmony(ModId);
 
             try
             {
@@ -150,12 +153,10 @@ namespace WWC
             //    }
             //}
 
-            harmony.PatchAll();
-
             remover = gameObject.AddComponent<CardRemover>();
             gameObject.AddComponent<InterfaceGameModeHooksManager>();
 
-            CustomCard.BuildCard<AmmoCache>();
+            //CustomCard.BuildCard<AmmoCache>();
             CustomCard.BuildCard<Shotgun>();
             CustomCard.BuildCard<SlowDeath>();
             CustomCard.BuildCard<Vampirism>();
@@ -211,14 +212,14 @@ namespace WWC
             }
 
             { // Curse Eater Class
-                CustomCard.BuildCard<CurseEater>(cardInfo => { CurseEater.card = cardInfo; });
-                CustomCard.BuildCard<GhostlyBody>(cardInfo => { GhostlyBody.card = cardInfo; });
-                CustomCard.BuildCard<ShadowBullets>(cardInfo => { ShadowBullets.card = cardInfo; });
-                CustomCard.BuildCard<SiphonCurses>(cardInfo => { SiphonCurses.card = cardInfo; });
-                CustomCard.BuildCard<Flagellation>(cardInfo => { Flagellation.card = cardInfo; });
-                CustomCard.BuildCard<RunicWards>(cardInfo => { RunicWards.card = cardInfo; });
-                CustomCard.BuildCard<HiltlessBlade>(cardInfo => { HiltlessBlade.card = cardInfo; });
-                CustomCard.BuildCard<CorruptedAmmunition>(cardInfo => { CorruptedAmmunition.card = cardInfo; });
+                //CustomCard.BuildCard<CurseEater>(cardInfo => { CurseEater.card = cardInfo; });
+                //CustomCard.BuildCard<GhostlyBody>(cardInfo => { GhostlyBody.card = cardInfo; });
+                //CustomCard.BuildCard<ShadowBullets>(cardInfo => { ShadowBullets.card = cardInfo; });
+                //CustomCard.BuildCard<SiphonCurses>(cardInfo => { SiphonCurses.card = cardInfo; });
+                //CustomCard.BuildCard<Flagellation>(cardInfo => { Flagellation.card = cardInfo; });
+                //CustomCard.BuildCard<RunicWards>(cardInfo => { RunicWards.card = cardInfo; });
+                //CustomCard.BuildCard<HiltlessBlade>(cardInfo => { HiltlessBlade.card = cardInfo; });
+                //CustomCard.BuildCard<CorruptedAmmunition>(cardInfo => { CorruptedAmmunition.card = cardInfo; });
             }
 
             if (debug)
@@ -323,7 +324,7 @@ namespace WWC
         [UnboundRPC]
         public static void URPCA_DebugLog(object message)
         {
-            UnityEngine.Debug.Log(message);
+            WillsWackyCards.instance.DebugLog(message);
         }
 
         public static void AddCardToPlayer(Player player, CardInfo card)
@@ -367,7 +368,7 @@ namespace WWC
             var stacks = 0;
             var buildingCard = false;
             yield return StartCoroutine(WaitFor.Frames(7));
-            while (stacks <= 21)
+            while (stacks <= MomentumTracker.maxStacks)
             {
                 MomentumTracker.stacks = stacks;
                 buildingCard = true;
@@ -444,9 +445,9 @@ namespace WWC
 
         IEnumerator PlayerPickStart(IGameModeHandler gm)
         {
-            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, 1f, 0f);
-            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, 1f, 0f);
-            MomentumTracker.rarityBuff += 1f;
+            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, 0.75f, 0f);
+            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, 0.75f, 0f);
+            MomentumTracker.rarityBuff += 0.75f;
             foreach (var player in PlayerManager.instance.players)
             {
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(SiphonCurses.siphonCard))
