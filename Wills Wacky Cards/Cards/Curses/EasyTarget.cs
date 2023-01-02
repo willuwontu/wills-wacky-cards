@@ -14,7 +14,7 @@ using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards.Curses
 {
-    class EasyTarget : CustomCard, ISaveableCard
+    class EasyTarget : CustomCard, ICurseCard, ISaveableCard
     {
         private static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }

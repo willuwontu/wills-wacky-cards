@@ -47,6 +47,9 @@
     <Reference Include="ModdingUtils">
       <HintPath>$(RoundsFolder)\BepInEx\plugins\ModdingUtils.dll</HintPath>
     </Reference>
+    <Reference Include="PickNCards">
+      <HintPath>$(RoundsFolder)\BepInEx\plugins\PickNCards.dll</HintPath>
+    </Reference>
     <Reference Include="PlayerActionsHelper">
       <HintPath>$(RoundsFolder)\BepInEx\plugins\PlayerActionsHelper.dll</HintPath>
     </Reference>

@@ -29,11 +29,14 @@ namespace WWC.Cards
                 WillsWackyCards.instance.ExecuteAfterFrames(20, () => {
                     foreach (var item in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
                     {
-                        CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f); });
                         CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse, 3f); });
                         CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse, 3f); });
                         CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse, 3f); });
                     } 
+                    for (int i = 0; i < PlayerManager.instance.players.Count/2; i++)
+                    {
+                        CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f); });
+                    }
                 });
             }
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
@@ -78,7 +81,7 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Curse per Foe",
+                    stat = "Curse per 2 Foes",
                     amount = "+1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },

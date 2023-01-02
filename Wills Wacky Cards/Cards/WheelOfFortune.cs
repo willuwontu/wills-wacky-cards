@@ -11,6 +11,7 @@ using WWC.Interfaces;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using TMPro;
+using RarityLib.Utils;
 
 namespace WWC.Cards
 {
@@ -58,7 +59,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return WillsWackyCards.EpicRarity;
+            return Rarities.Rare;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -135,24 +136,31 @@ namespace WWC.MonoBehaviours
 
             if (!this.locked)
             {
-                CardInfo.Rarity[] availableRarities = UnboundLib.Utils.CardManager.cards.Values.Where(card => card.enabled).Select(card => card.cardInfo).Where(cardInfo => ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(player, cardInfo)).Select(cardInfo => cardInfo.rarity).Distinct().ToArray();
+                CardInfo.Rarity[] availableRarities = UnboundLib.Utils.CardManager.cards.Values.Where(card => card.enabled).Select(card => card.cardInfo).Where(cardInfo => ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(player, cardInfo)).Select(cardInfo => cardInfo.rarity).Distinct().OrderByDescending(rarity => RarityUtils.GetRarityData(rarity).relativeRarity).ToArray();
 
                 if (!(availableRarities.Length > 0))
                 {
                     return;
                 }
 
-                int rarityWeight = availableRarities.Select(rarity => CardAmountByRarity(rarity)).Sum();
-                int randomWeight = UnityEngine.Random.Range(0, rarityWeight + 1);
+                //int rarityWeight = availableRarities.Select(rarity => CardAmountByRarity(rarity)).Sum();
+                //int randomWeight = UnityEngine.Random.Range(0, rarityWeight + 1);
 
-                availableRarities.Shuffle();
+                //availableRarities.Shuffle();
 
                 for (int i = 0; i < availableRarities.Length; i++)
                 {
-                    randomWeight -= CardAmountByRarity(availableRarities[i]);
-
-                    if (randomWeight <= 0)
+                    if (currentRarity == availableRarities[i])
                     {
+                        if (i == availableRarities.Length - 1)
+                        {
+                            i = 0;
+                        }
+                        else
+                        {
+                            i++;
+                        }
+
                         this.currentRarity = availableRarities[i];
                         break;
                     }
@@ -202,6 +210,9 @@ namespace WWC.MonoBehaviours
                     break;
                 }
             }
+
+            chosenRarity = availableRarities.GetRandom<CardInfo.Rarity>();
+
             WillsWackyCards.SendDebugLog($"Player {player.playerID} rolled {chosenRarity.ToString()} rarity for their wheel.", true);
             CardInfo[] rarityCards = availableCards.Where(card => card.rarity == chosenRarity).ToArray();
             WillsWackyCards.SendDebugLog($"There {(rarityCards.Length != 1 ? "are" : "is")}  {rarityCards.Length} card{(rarityCards.Length != 1 ? "s" : "")} available in that rarity for the player.", true);
@@ -232,7 +243,31 @@ namespace WWC.MonoBehaviours
         {
             int result = 0;
 
-            RarityLib.Utils.Rarity[] rarities = RarityLib.Utils.RarityUtils.Rarities.Values.OrderBy(r => r.relativeRarity).ThenBy(r => r.name).ToArray().ToArray();
+            Rarity[] rarities = RarityUtils.Rarities.Values.OrderBy(r => r.relativeRarity).ThenBy(r => r.name).ToArray().ToArray();
+            Dictionary<CardInfo.Rarity, int> positions = new Dictionary<CardInfo.Rarity, int>();
+
+            int currentStep = 1;
+            for (int i = 0; i < rarities.Length; i++)
+            {
+                if (i == 0)
+                {
+                    positions.Add(rarities[i].value, currentStep);
+                }
+                else
+                {
+                    if (rarities[i].relativeRarity == rarities[i - 1].relativeRarity)
+                    {
+                        positions.Add(rarities[i].value, currentStep);
+                    }
+                    else
+                    {
+                        currentStep++;
+                        positions.Add(rarities[i].value, currentStep);
+                    }
+                }
+            }
+
+            return positions[rarity];
 
             float value = rarities.Where(r => r.value == rarity).First().relativeRarity;
             float min = rarities.Select(r => r.relativeRarity).Min();
@@ -242,6 +277,46 @@ namespace WWC.MonoBehaviours
             result = ((int)(Mathf.Round((value/max) * 3f))) + 1;
 
             return result;
+        }
+
+        public static int RarityDistance(CardInfo.Rarity from, CardInfo.Rarity to) 
+        {
+            Rarity[] rarities = RarityUtils.Rarities.Values.OrderBy(r => r.relativeRarity).ThenBy(r => r.name).ToArray().ToArray();
+            Dictionary<CardInfo.Rarity, int> positions = new Dictionary<CardInfo.Rarity, int>();
+
+            int currentStep = 0;
+            for (int i = 0; i < rarities.Length; i++)
+            {
+                if (i == 0)
+                {
+                    positions.Add(rarities[i].value, currentStep);
+                }
+                else
+                {
+                    if (rarities[i].relativeRarity == rarities[i - 1].relativeRarity)
+                    {
+                        positions.Add(rarities[i].value, currentStep);
+                    }
+                    else
+                    {
+                        currentStep++;
+                        positions.Add(rarities[i].value, currentStep);
+                    }
+                }
+            }
+
+            return Mathf.Abs(positions[from] - positions[to]);
+        }
+
+        float GetDistance(CardInfo.Rarity r1, CardInfo.Rarity r2)
+        {
+            float rarity = RarityUtils.GetRarityData(r2).relativeRarity;
+            float oRarity = RarityUtils.GetRarityData(r2).relativeRarity;
+            if (oRarity > rarity)
+                oRarity = oRarity / rarity;
+            else
+                oRarity = rarity / oRarity;
+            return oRarity - 1;
         }
     }
 }

@@ -9,12 +9,14 @@ using WWC.Extensions;
 using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards
 {
-    class UnstoppableForce : CustomCard
+    class UnstoppableForce : CustomCard, ISaveableCard
     {
-        public static CardInfo card = null;
+        public static CardInfo card;
+        public CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             var tracker = this.gameObject.GetOrAddComponent<MomentumCard_Mono>();

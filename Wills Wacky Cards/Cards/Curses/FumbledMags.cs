@@ -12,10 +12,11 @@ using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using Photon.Pun;
+using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards.Curses
 {
-    class FumbledMags : CustomCard
+    class FumbledMags : CustomCard, ICurseCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {

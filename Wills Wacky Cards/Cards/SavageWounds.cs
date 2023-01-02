@@ -18,7 +18,7 @@ namespace WWC.Cards
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             gun.damage = 1.2f;
-            List<ObjectsToSpawn> list = gun.objectsToSpawn.ToList<ObjectsToSpawn>();
+            List<ObjectsToSpawn> list = new List<ObjectsToSpawn>();
 
             if (savageObject == null)
             {

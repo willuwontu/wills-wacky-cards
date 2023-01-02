@@ -40,6 +40,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Heavy Shields (Curse)
   - Fumbled Mags (Curse)
   - Poisonous Trauma (Curse)
+  - Severed Fate (Curse)
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
@@ -95,6 +96,12 @@ This is a mod containing a few cards I came up with while fiddling around with t
 
 <details>
 <summary>Change Log</summary>
+
+----
+## v 1.11.0
+
+- Moved nearly all cards to unity.
+- Added some new curses. 
 
 ----
 ## v 1.10.01

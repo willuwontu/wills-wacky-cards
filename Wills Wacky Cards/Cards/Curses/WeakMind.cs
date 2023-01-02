@@ -9,10 +9,11 @@ using WillsWackyManagers.Utils;
 using WWC.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards.Curses
 {
-    class WeakMind : CustomCard
+    class WeakMind : CustomCard, ICurseCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {

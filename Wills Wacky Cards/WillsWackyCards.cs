@@ -41,13 +41,14 @@ namespace WWC
     [BepInDependency("root.rarity.lib", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rounds.willuwontu.gunchargepatch", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rounds.willuwontu.ActionHelper", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("pykess.rounds.plugins.pickncards", BepInDependency.DependencyFlags.HardDependency)]
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
     public class WillsWackyCards : BaseUnityPlugin
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.10.0"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.11.0"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -64,22 +65,6 @@ namespace WWC
 
         private bool debug = false;
 
-        public static CardInfo.Rarity ScarceRarity
-        {
-            get
-            {
-                return RarityLib.Utils.RarityUtils.GetRarity("Scarce");
-            }
-        }
-
-        public static CardInfo.Rarity EpicRarity
-        {
-            get
-            {
-                return RarityLib.Utils.RarityUtils.GetRarity("Epic");
-            }
-        }
-
         void Awake()
         {
             instance = this;
@@ -89,43 +74,42 @@ namespace WWC
             var harmony = new Harmony(ModId);
             harmony.PatchAll();
 
-            UnityEngine.Debug.Log("WWC Awake");
-
-            { // Mechanic Class Load Necessary Assets
-                Mechanic.cardBase = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("MechanicCardBase");
-
-
-            }
+            //UnityEngine.Debug.Log("WWC Awake");
 
             { // Build the cards
+                Mechanic.cardBase = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("MechanicCardBase");
                 GameObject cardLoader = WWCAssets.LoadAsset<GameObject>("WWC CardManager");
                 foreach (CardBuilder classManager in cardLoader.GetComponentsInChildren<CardBuilder>())
                 {
                     classManager.BuildCards();
                 }
-                foreach (WillsWackyManagers.UnityTools.CardBuilder cardManager in cardLoader.GetComponentsInChildren<WillsWackyManagers.UnityTools.CardBuilder>())
-                {
-                    cardManager.BuildCards();
-                }
+                //foreach (WillsWackyManagers.UnityTools.CardBuilder cardManager in cardLoader.GetComponentsInChildren<WillsWackyManagers.UnityTools.CardBuilder>())
+                //{
+                //    cardManager.BuildCards();
+                //}
             }
+
         }
         void Start()
         {
             Unbound.RegisterCredits(ModName, new string[] { "willuwontu" }, new string[] { "github", "Ko-Fi" }, new string[] { "https://github.com/willuwontu/wills-wacky-cards", "https://ko-fi.com/willuwontu" });
 
-            try
-            {
-                foreach (var device in InControl.InputManager.Devices)
-                {
-                    UnityEngine.Debug.Log(device);
-                }
-                InControl.InputManager.OnDeviceAttached += (device) => UnityEngine.Debug.Log("Device Attached");
-                InControl.InputManager.OnDeviceDetached += (device) => UnityEngine.Debug.Log("Device Removed");
-            }
-            catch
-            {
+            remover = gameObject.AddComponent<CardRemover>();
+            gameObject.AddComponent<InterfaceGameModeHooksManager>();
 
-            }
+            //try
+            //{
+            //    foreach (var device in InControl.InputManager.Devices)
+            //    {
+            //        UnityEngine.Debug.Log(device);
+            //    }
+            //    InControl.InputManager.OnDeviceAttached += (device) => UnityEngine.Debug.Log("Device Attached");
+            //    InControl.InputManager.OnDeviceDetached += (device) => UnityEngine.Debug.Log("Device Removed");
+            //}
+            //catch
+            //{
+
+            //}
             //Disabled but nice to know that we can do this.
 
             //PluginInfo[] pluginInfos = BepInEx.Bootstrap.Chainloader.PluginInfos.Values.ToArray();
@@ -153,63 +137,60 @@ namespace WWC
             //    }
             //}
 
-            remover = gameObject.AddComponent<CardRemover>();
-            gameObject.AddComponent<InterfaceGameModeHooksManager>();
+            ////CustomCard.BuildCard<AmmoCache>();
+            //CustomCard.BuildCard<Shotgun>();
+            //CustomCard.BuildCard<SlowDeath>();
+            //CustomCard.BuildCard<Vampirism>();
+            //CustomCard.BuildCard<BasicPhysics>();
+            //CustomCard.BuildCard<BasicAlternatePhysics>();
+            ////CustomCard.BuildCard<Minigun>();
+            //CustomCard.BuildCard<WildAim>();
+            //CustomCard.BuildCard<RunningShoes>();
+            //CustomCard.BuildCard<JumpingShoes>();
+            //CustomCard.BuildCard<Hex>();
+            //CustomCard.BuildCard<Gatling>();
+            //CustomCard.BuildCard<PlasmaRifle>();
+            //CustomCard.BuildCard<PlasmaShotgun>();
+            //CustomCard.BuildCard<UnstoppableForce>(cardInfo => { UnstoppableForce.card = cardInfo; });
+            //CustomCard.BuildCard<ImmovableObject>(cardInfo => { ImmovableObject.card = cardInfo; });
+            //CustomCard.BuildCard<HotPotato>();
+            //CustomCard.BuildCard<SavageWounds>();
+            //CustomCard.BuildCard<RitualisticSacrifice>();
+            //CustomCard.BuildCard<ForbiddenMagics>();
+            //CustomCard.BuildCard<PurifyingLight>();
+            //CustomCard.BuildCard<CursedKnowledge>();
+            //CustomCard.BuildCard<EnduranceTraining>();
+            //CustomCard.BuildCard<AdrenalineRush>();
 
-            //CustomCard.BuildCard<AmmoCache>();
-            CustomCard.BuildCard<Shotgun>();
-            CustomCard.BuildCard<SlowDeath>();
-            CustomCard.BuildCard<Vampirism>();
-            CustomCard.BuildCard<BasicPhysics>();
-            CustomCard.BuildCard<BasicAlternatePhysics>();
-            //CustomCard.BuildCard<Minigun>();
-            CustomCard.BuildCard<WildAim>();
-            CustomCard.BuildCard<RunningShoes>();
-            CustomCard.BuildCard<JumpingShoes>();
-            CustomCard.BuildCard<Hex>();
-            CustomCard.BuildCard<Gatling>();
-            CustomCard.BuildCard<PlasmaRifle>();
-            CustomCard.BuildCard<PlasmaShotgun>();
-            CustomCard.BuildCard<UnstoppableForce>(cardInfo => { UnstoppableForce.card = cardInfo; });
-            CustomCard.BuildCard<ImmovableObject>(cardInfo => { ImmovableObject.card = cardInfo; });
-            CustomCard.BuildCard<HotPotato>();
-            CustomCard.BuildCard<SavageWounds>();
-            CustomCard.BuildCard<RitualisticSacrifice>();
-            CustomCard.BuildCard<ForbiddenMagics>();
-            CustomCard.BuildCard<PurifyingLight>();
-            CustomCard.BuildCard<CursedKnowledge>();
-            CustomCard.BuildCard<EnduranceTraining>();
-            CustomCard.BuildCard<AdrenalineRush>();
+            //CustomCard.BuildCard<HolyWater>();
+            //CustomCard.BuildCard<CleansingRitual>();
+            //CustomCard.BuildCard<BulletPoweredJetpack>();
 
-            CustomCard.BuildCard<HolyWater>();
-            CustomCard.BuildCard<CleansingRitual>();
-            CustomCard.BuildCard<BulletPoweredJetpack>();
+            //CustomCard.BuildCard<Banishment>();
+            //CustomCard.BuildCard<Resolute>();
+            //CustomCard.BuildCard<DimensionalShuffle>();
+            //CustomCard.BuildCard<Boomerang>();
+            //CustomCard.BuildCard<FlySwatter>();
+            //CustomCard.BuildCard<AggressiveVenting>();
+            //CustomCard.BuildCard<WheelOfFortune>(card => { WheelOfFortune.card = card; });
 
-            CustomCard.BuildCard<Banishment>();
-            CustomCard.BuildCard<Resolute>();
-            CustomCard.BuildCard<DimensionalShuffle>();
-            CustomCard.BuildCard<Boomerang>();
-            CustomCard.BuildCard<FlySwatter>();
-            CustomCard.BuildCard<AggressiveVenting>();
-            CustomCard.BuildCard<WheelOfFortune>(card => { WheelOfFortune.card = card; });
+            //{
+            //    CustomCard.BuildCard<Antidote>();
+            //    CustomCard.BuildCard<PoisonResistant>();
+            //    CustomCard.BuildCard<StrongBody>();
+            //    CustomCard.BuildCard<BurstingPoisons>();
+            //}
 
-            {
-                CustomCard.BuildCard<Antidote>();
-                CustomCard.BuildCard<PoisonResistant>();
-                CustomCard.BuildCard<StrongBody>();
-                CustomCard.BuildCard<BurstingPoisons>();
-            }
-
-            { // Curses
-                CustomCard.BuildCard<MomentaryConfusion>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-                CustomCard.BuildCard<FumbledMags>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-                CustomCard.BuildCard<ShakyBullets>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-                CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-                CustomCard.BuildCard<EasyTarget>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-                CustomCard.BuildCard<WeakMind>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-                CustomCard.BuildCard<PoisonousTrauma>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-                //CustomCard.BuildCard<ErodingDarkness>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
-            }
+            //{ // Curses
+            //    CustomCard.BuildCard<MomentaryConfusion>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            //    CustomCard.BuildCard<FumbledMags>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            //    CustomCard.BuildCard<ShakyBullets>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            //    CustomCard.BuildCard<Bleed>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            //    CustomCard.BuildCard<EasyTarget>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            //    CustomCard.BuildCard<WeakMind>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            //    CustomCard.BuildCard<PoisonousTrauma>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            //    //CustomCard.BuildCard<ErodingDarkness>(cardInfo => { CurseManager.instance.RegisterCurse(cardInfo); });
+            //}
 
             { // Curse Eater Class
                 //CustomCard.BuildCard<CurseEater>(cardInfo => { CurseEater.card = cardInfo; });

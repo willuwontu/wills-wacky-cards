@@ -1,7 +1,7 @@
 {
 	"name":"WillsWackyCards",
 	"author_name":"willuwontu",
-    "version_number":"1.10.1",
+    "version_number":"1.11.0",
 	"website_url":"https://github.com/willuwontu/wills-wacky-cards",
 	"displayName":"Will's Wacky Cards",
 	"description":"Small addition of cards to the game.",
@@ -20,6 +20,7 @@
 		"willuwontu-WillsWackyManagers-1.4.9",
 		"willuwontu-PlayerActionsHelper-0.0.0",
 		"willuwontu-GunChargePatch-0.0.0",
-		"Root-GunProjectileSizePatch-1.1.2"
+		"Root-GunProjectileSizePatch-1.1.2",
+		"Pykess-Pick_N_Cards-0.2.5"
 	]
 }

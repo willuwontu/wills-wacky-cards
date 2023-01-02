@@ -5,20 +5,38 @@ using System.Text;
 using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
-using WWC.Extensions;
 using WWC.MonoBehaviours;
-using WWC.Interfaces;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using WillsWackyManagers.UnityTools;
+using DrawNCards;
 
 namespace WWC.Cards.Curses
 {
-    class ErodingDarkness : CustomCard, ICurseCard, ISaveableCard
+    class SeveredFate : CustomCard, ICurseCard, IConditionalCard
     {
         private static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }
+        public bool Condition(Player player, CardInfo card)
+        {
+            if (card != SeveredFate.card)
+            {
+                return true;
+            }
+
+            if (!player)
+            {
+                return true;
+            }
+
+            if (DrawNCards.DrawNCards.GetPickerDraws(player.playerID) < 2)
+            {
+                return false;
+            }
+
+            return true;
+        }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
@@ -26,23 +44,22 @@ namespace WWC.Cards.Curses
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            player.gameObject.AddComponent<ErodingDarkness_Mono>();
+            DrawNCards.DrawNCards.SetPickerDraws(player.playerID, DrawNCards.DrawNCards.GetPickerDraws(player.playerID) - 1);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var mono = player.gameObject.GetComponent<ErodingDarkness_Mono>();
-            UnityEngine.GameObject.Destroy(mono);
+            DrawNCards.DrawNCards.SetPickerDraws(player.playerID, DrawNCards.DrawNCards.GetPickerDraws(player.playerID) + 1);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Eroding Darkness";
+            return "Severed Fate";
         }
         protected override string GetDescription()
         {
-            return "Sometimes you come back with more than you left with.";
+            return "Snip and Shear\nBy Odin's tears\nYou will lose your way";
         }
         protected override GameObject GetCardArt()
         {
@@ -50,7 +67,7 @@ namespace WWC.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Rare;
+            return Rarities.Exotic;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -59,9 +76,9 @@ namespace WWC.Cards.Curses
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Every Other Round",
-                    amount = "+1 Curse",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                    stat = "Hand Size",
+                    amount = "-1",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
@@ -76,63 +93,6 @@ namespace WWC.Cards.Curses
         public override bool GetEnabled()
         {
             return true;
-        }
-    }
-
-    class ErodingDarkness_Mono : MonoBehaviour, IRoundStartHookHandler
-    {
-        private int rounds = 0;
-
-
-        private CharacterData data;
-        private Player player;
-        private Block block;
-        private HealthHandler health;
-        private CharacterStatModifiers stats;
-        private Gun gun;
-        private GunAmmo gunAmmo;
-        private Gravity gravity;
-        private WeaponHandler weaponHandler;
-
-        private void Start()
-        {
-            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
-            data = GetComponentInParent<CharacterData>();
-        }
-
-        private void Update()
-        {
-            if (!player)
-            {
-                if (!(data is null))
-                {
-                    player = data.player;
-                    weaponHandler = data.weaponHandler;
-                    gun = weaponHandler.gun;
-                    gunAmmo = gun.GetComponentInChildren<GunAmmo>();
-                    block = data.block;
-                    stats = data.stats;
-                    health = data.healthHandler;
-                    gravity = player.GetComponent<Gravity>();
-                }
-
-            }
-        }
-
-        public void OnRoundStart()
-        {
-            rounds += 1;
-
-            if (rounds >= 2)
-            {
-                CurseManager.instance.CursePlayer(player);
-                rounds = 0;
-            }
-        }
-
-        private void OnDestroy()
-        {
-            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
     }
 }

@@ -10,10 +10,11 @@ using WWC.Extensions;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
+using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards.Curses
 {
-    class PoisonousTrauma : CustomCard
+    class PoisonousTrauma : CustomCard, ICurseCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {

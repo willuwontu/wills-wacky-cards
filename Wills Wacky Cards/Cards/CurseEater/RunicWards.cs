@@ -51,7 +51,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return WillsWackyCards.EpicRarity;
+            return Rarities.Epic;
         }
         protected override CardInfoStat[] GetStats()
         {
