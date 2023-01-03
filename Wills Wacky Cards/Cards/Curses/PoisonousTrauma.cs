@@ -62,7 +62,7 @@ namespace WWC.Cards.Curses
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.PoisonGreen;
+            return CurseManager.instance.ToxicGreen;
         }
         public override string GetModName()
         {

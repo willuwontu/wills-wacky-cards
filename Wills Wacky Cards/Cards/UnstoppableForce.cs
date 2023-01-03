@@ -13,7 +13,7 @@ using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards
 {
-    class UnstoppableForce : CustomCard, ISaveableCard
+    internal class UnstoppableForce : CustomCard, ISaveableCard
     {
         public static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }

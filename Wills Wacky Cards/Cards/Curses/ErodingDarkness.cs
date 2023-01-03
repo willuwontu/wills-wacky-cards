@@ -15,10 +15,29 @@ using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards.Curses
 {
-    class ErodingDarkness : CustomCard, ICurseCard, ISaveableCard
+    class ErodingDarkness : CustomCard, IConditionalCard
     {
         private static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }
+        public bool Condition(Player player, CardInfo card)
+        {
+            if (card != ErodingDarkness.card)
+            {
+                return true;
+            }
+
+            if (!player)
+            {
+                return true;
+            }
+
+            if (CurseManager.instance.GetAllCursesOnPlayer(player).Length < 3)
+            {
+                return false;
+            }
+
+            return true;
+        }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
@@ -50,7 +69,7 @@ namespace WWC.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Rare;
+            return Rarities.Mythical;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -59,9 +78,9 @@ namespace WWC.Cards.Curses
                 new CardInfoStat()
                 {
                     positive = false,
-                    stat = "Every Other Round",
+                    stat = "Every Round",
                     amount = "+1 Curse",
-                    simepleAmount = CardInfoStat.SimpleAmount.aLotLower
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
@@ -81,18 +100,8 @@ namespace WWC.Cards.Curses
 
     class ErodingDarkness_Mono : MonoBehaviour, IRoundStartHookHandler
     {
-        private int rounds = 0;
-
-
         private CharacterData data;
         private Player player;
-        private Block block;
-        private HealthHandler health;
-        private CharacterStatModifiers stats;
-        private Gun gun;
-        private GunAmmo gunAmmo;
-        private Gravity gravity;
-        private WeaponHandler weaponHandler;
 
         private void Start()
         {
@@ -107,27 +116,13 @@ namespace WWC.Cards.Curses
                 if (!(data is null))
                 {
                     player = data.player;
-                    weaponHandler = data.weaponHandler;
-                    gun = weaponHandler.gun;
-                    gunAmmo = gun.GetComponentInChildren<GunAmmo>();
-                    block = data.block;
-                    stats = data.stats;
-                    health = data.healthHandler;
-                    gravity = player.GetComponent<Gravity>();
                 }
-
             }
         }
 
         public void OnRoundStart()
         {
-            rounds += 1;
-
-            if (rounds >= 2)
-            {
-                CurseManager.instance.CursePlayer(player);
-                rounds = 0;
-            }
+            CurseManager.instance.CursePlayer(player);
         }
 
         private void OnDestroy()
