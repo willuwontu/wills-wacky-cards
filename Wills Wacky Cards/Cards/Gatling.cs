@@ -29,12 +29,17 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var gatling = player.gameObject.GetOrAddComponent<Gatling_Mono>();
+            var gatling = player.gameObject.AddComponent<Gatling_Mono>();
             gatling.rampUp *= 0.7f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            var mono = player.gameObject.GetComponent<Gatling_Mono>();
+            if (mono)
+            {
+                UnityEngine.GameObject.Destroy(mono);
+            }
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 

@@ -60,7 +60,7 @@ namespace WWC.Cards.Curses
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.EvilPurple;
+            return CurseManager.instance.FallenPurple;
         }
         public override string GetModName()
         {

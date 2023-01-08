@@ -42,13 +42,14 @@ namespace WWC
     [BepInDependency("com.rounds.willuwontu.gunchargepatch", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.rounds.willuwontu.ActionHelper", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("pykess.rounds.plugins.pickncards", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("com.root.player.time", BepInDependency.DependencyFlags.HardDependency)]
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
     public class WillsWackyCards : BaseUnityPlugin
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.11.3"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.11.9"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -252,6 +253,8 @@ namespace WWC
             GameModeManager.AddHook(GameModeHooks.HookRoundStart, RoundStart);
             GameModeManager.AddHook(GameModeHooks.HookRoundEnd, RoundEnd);
 
+            ModdingUtils.Utils.Cards.instance.AddCardValidationFunction(OnlyUnstoppableOrImmovable);
+
             //var networkEvents = gameObject.AddComponent<NetworkEventCallbacks>();
             //networkEvents.OnJoinedRoomEvent += OnJoinedRoomAction;
             //networkEvents.OnLeftRoomEvent += OnLeftRoomAction;
@@ -273,6 +276,21 @@ namespace WWC
             //    Photon.Pun.PhotonNetwork.PrefabPool.RegisterPrefab(card.gameObject.name, card.gameObject);
             //    activeCards.Add(card);
             //}
+        }
+
+        private bool OnlyUnstoppableOrImmovable(Player player, CardInfo card)
+        {
+            if ((card != ImmovableObject.card) || (card != UnstoppableForce.card))
+            {
+                return true;
+            }
+
+            if (((List<GameObject>)CardChoice.instance.GetFieldValue("spawnedCards")).Select(obj => obj.GetComponent<CardInfo>()).Any(c => (c == ImmovableObject.card) || (c == UnstoppableForce.card)))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         private void OnJoinedRoomAction()
@@ -426,9 +444,10 @@ namespace WWC
 
         IEnumerator PlayerPickStart(IGameModeHandler gm)
         {
-            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, 0.75f, 0f);
-            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, 0.75f, 0f);
-            MomentumTracker.rarityBuff += 0.75f;
+            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, 0.25f, 0f);
+            RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, 0.25f, 0f);
+            MomentumTracker.rarityBuff += 0.25f;
+
             foreach (var player in PlayerManager.instance.players)
             {
                 if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(SiphonCurses.siphonCard))
@@ -495,6 +514,8 @@ namespace WWC
         IEnumerator GameStart(IGameModeHandler gm)
         {
             MomentumTracker.stacks = 0;
+
+            MissedOpportunities.cardsSeen = new Dictionary<int, List<CardInfo>>();
 
             foreach (var player in PlayerManager.instance.players)
             {

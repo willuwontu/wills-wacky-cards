@@ -10,9 +10,9 @@ namespace WWC.Patches
     [HarmonyPatch(typeof(Block))] 
     class Block_Patch
     {
-        [HarmonyPrefix]
+        [HarmonyPostfix]
         [HarmonyPatch(nameof(Block.IsBlocking))]
-        static bool IncreasedBlockTime(Block __instance, ref bool __result, CharacterData ___data)
+        static void IncreasedBlockTime(Block __instance, ref bool __result, CharacterData ___data)
         {
 
             if (__instance.sinceBlock < (0.3 + ___data.stats.GetAdditionalData().extraBlockTime))
@@ -20,9 +20,7 @@ namespace WWC.Patches
                 __instance.ShowStatusEffectBlock();
             }
 
-            __result = __instance.sinceBlock < (0.3 + ___data.stats.GetAdditionalData().extraBlockTime);
-
-            return false;
+            __result = __result || __instance.sinceBlock < (0.3 + ___data.stats.GetAdditionalData().extraBlockTime);
         }
 
         //[HarmonyPrefix]

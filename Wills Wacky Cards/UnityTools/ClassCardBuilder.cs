@@ -23,18 +23,21 @@ namespace WWC.UnityTools
         [SerializeField]
         [NonSerialized]
         [OdinSerialize]
+        [Searchable]
         public ClassCardRegistrationInfo[] cardsToRegister = new ClassCardRegistrationInfo[0];
 
         [AssetsOnly]
         [ShowInInspector]
         [NonSerialized]
         [OdinSerialize]
+        [Searchable]
         public CardCardList[] blackList = new CardCardList[0];
 
         [AssetsOnly]
         [ShowInInspector]
         [NonSerialized]
         [OdinSerialize]
+        [Searchable]
         public CardCardList[] whiteList = new CardCardList[0];
 
         public override void BuildCards()

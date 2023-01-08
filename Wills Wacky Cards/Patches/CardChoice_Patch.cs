@@ -5,12 +5,146 @@ using WWC.MonoBehaviours;
 using WWC.Extensions;
 using UnboundLib;
 using UnboundLib.Networking;
+using System.Collections;
+using System.Collections.Generic;
+using System;
+using WWC.Cards.Curses;
+using Photon.Pun;
 
 namespace WWC.Patches
 {
     [HarmonyPatch(typeof(CardChoice))] 
     class CardChoice_Patch
     {
+        class SimpleEnumerator : IEnumerable
+        {
+            public IEnumerator enumerator;
+            public Action prefixAction, postfixAction;
+            public Action<object> preItemAction, postItemAction;
+            public Func<object, object> itemAction;
+            IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+            public IEnumerator GetEnumerator()
+            {
+                prefixAction();
+                while (enumerator.MoveNext())
+                {
+                    var item = enumerator.Current;
+                    preItemAction(item);
+                    yield return itemAction(item);
+                    postItemAction(item);
+                }
+                postfixAction();
+            }
+        }
+        [HarmonyPostfix]
+        [HarmonyPatch("ReplaceCards")]
+        static void GetSpawnedCards(CardChoice __instance, List<GameObject> ___spawnedCards, ref IEnumerator __result)
+        {
+            Action prefixAction = () => { };
+            Action<object> preItemAction = (item) => {  };
+            Action<object> postItemAction = (item) => {  };
+            Func<object, object> itemAction = (item) => { return item; };
+
+            Action postfixAction = () =>
+            {
+                List<string> cardNames = new List<string>();
+                foreach (var cardObj in ___spawnedCards)
+                {
+                    var card = cardObj.GetComponent<CardInfo>();
+                    if (card)
+                    {
+                        cardNames.Add(cardObj.name.Replace("(Clone)",""));
+                        //UnityEngine.Debug.Log(cardObj.name.Replace("(Clone)", ""));
+                    }
+                }
+
+                UnboundLib.NetworkingManager.RPC(typeof(MissedOpportunities), nameof(MissedOpportunities.URPCA_CardsSeen), new object[] { __instance.pickrID, cardNames.ToArray() });
+            };
+
+            var myEnumerator = new SimpleEnumerator()
+            {
+                enumerator = __result,
+                prefixAction = prefixAction,
+                postfixAction = postfixAction,
+                preItemAction = preItemAction,
+                postItemAction = postItemAction,
+                itemAction = itemAction
+            };
+            __result = myEnumerator.GetEnumerator();
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("IDoEndPick")]
+        static void GetPickedCard(CardChoice __instance, GameObject pickedCard, ref IEnumerator __result)
+        {
+            Action prefixAction = () =>
+            {
+                if (!YardSale.yardSaleActive)
+                {
+                    return;
+                }
+
+                if (pickedCard != null && pickedCard.GetComponent<CardInfo>() & (PlayerManager.instance.GetPlayerWithID(CardChoice.instance.pickrID).data.view.IsMine || PhotonNetwork.OfflineMode))
+                {
+                    //UnityEngine.Debug.Log("Sending URPCA");
+                    UnboundLib.NetworkingManager.RPC(typeof(YardSale), nameof(YardSale.URPCA_AddToListOfCardsToRemove), new object[] { YardSale.yardSalePlayer.playerID, pickedCard.name.Replace("(Clone)", "") });
+                }
+            };
+            Action<object> preItemAction = (item) => { };
+            Action<object> postItemAction = (item) => { };
+            Func<object, object> itemAction = (item) => { return item; };
+
+            Action postfixAction = () =>
+            {
+            };
+
+            var myEnumerator = new SimpleEnumerator()
+            {
+                enumerator = __result,
+                prefixAction = prefixAction,
+                postfixAction = postfixAction,
+                preItemAction = preItemAction,
+                postItemAction = postItemAction,
+                itemAction = itemAction
+            };
+            __result = myEnumerator.GetEnumerator();
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("ReplaceCards")]
+        static void OnlyModifyCardsGeneratedDuringPick(CardChoice __instance, GameObject pickedCard, ref IEnumerator __result)
+        {
+            Action prefixAction = () => {
+                if (!YardSale.yardSaleActive)
+                {
+                    return;
+                }
+                YardSale.generatingCardsDuringYardSale = true;
+            };
+            Action<object> preItemAction = (item) => { };
+            Action<object> postItemAction = (item) => { };
+            Func<object, object> itemAction = (item) => { return item; };
+
+            Action postfixAction = () => {
+                if (!YardSale.yardSaleActive)
+                {
+                    return;
+                }
+                YardSale.generatingCardsDuringYardSale = false;
+            };
+
+            var myEnumerator = new SimpleEnumerator()
+            {
+                enumerator = __result,
+                prefixAction = prefixAction,
+                postfixAction = postfixAction,
+                preItemAction = preItemAction,
+                postItemAction = postItemAction,
+                itemAction = itemAction
+            };
+            __result = myEnumerator.GetEnumerator();
+        }
+
         [HarmonyPostfix]
         [HarmonyPriority(Priority.First)]
         [HarmonyPatch("SpawnUniqueCard")]

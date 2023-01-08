@@ -33,7 +33,7 @@ namespace WWC.Cards
                         CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse, 3f); });
                         CurseManager.instance.CursePlayer(item, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(item, curse, 3f); });
                     } 
-                    for (int i = 0; i < PlayerManager.instance.players.Count/2; i++)
+                    for (int i = 0; i < PlayerManager.instance.players.Where(other => other.teamID != player.teamID).Count()/2; i++)
                     {
                         CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f); });
                     }

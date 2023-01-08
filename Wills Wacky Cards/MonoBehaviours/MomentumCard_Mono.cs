@@ -207,16 +207,9 @@ namespace WWC.MonoBehaviours
                 },
                 new CardInfoStat()
                 {
-                    positive = true,
-                    stat = "Bullets",
-                    amount = $"+{stacks/5}",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
                     positive = false,
                     stat = "Reload Time",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.04f, stacks) -1f) * 100f),
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.1f, stacks) -1f) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
@@ -230,13 +223,6 @@ namespace WWC.MonoBehaviours
                     positive = true,
                     stat = "Regeneration",
                     amount = $"+{stacks} hp/s",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Gravity",
-                    amount = string.Format("-{0:F0}%",(1f - (float) Math.Pow(.96f, stacks)) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
@@ -271,14 +257,14 @@ namespace WWC.MonoBehaviours
                 {
                     positive = true,
                     stat = "Lifesteal",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.04f, stacks) -1f) * 100f),
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.02f, stacks) -1f) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = false,
                     stat = "Block CD",
-                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.04f, stacks) -1f) * 100f),
+                    amount = string.Format("+{0:F0}%",((float) Math.Pow(1.1f, stacks) -1f) * 100f),
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

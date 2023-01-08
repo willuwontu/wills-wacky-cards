@@ -7,61 +7,75 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
-using WWC.Interfaces;
 using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using WillsWackyManagers.UnityTools;
+using WWC.Interfaces;
 
 namespace WWC.Cards.Curses
 {
-    class ErodingDarkness : CustomCard, IConditionalCard
+    class SpeedLimit : CustomCard, ICurseCard, IConditionalCard
     {
         private static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public bool Condition(Player player, CardInfo card)
         {
-            if (card != ErodingDarkness.card)
+            if (card != SpeedLimit.card)
             {
                 return true;
             }
 
-            if (!player)
+            if (!player || !player.data || !player.data.block || (player.data.currentCards == null))
             {
                 return true;
             }
 
-            if (CurseManager.instance.GetAllCursesOnPlayer(player).Length < 3)
+            if (player.data.currentCards.Select(c => c.cardName.ToLower()).Intersect(new string[] { 
+                "refresh", 
+                "blood magic", 
+                "shields up", 
+                "hungry block", 
+                "abyssal countdown", 
+                "octablock" 
+            }).Count() > 0)
+            {
+                return true;
+            }
+
+            if (player.data.block.BlocksPerSecond() < 3f)
             {
                 return false;
             }
 
             return true;
         }
+
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
+            cardInfo.allowMultiple = false;
             cardInfo.categories = new CardCategory[] { CurseManager.instance.curseCategory };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            player.gameObject.AddComponent<ErodingDarkness_Mono>();
+            player.gameObject.AddComponent<SpeedLimitMono>();
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var mono = player.gameObject.GetComponent<ErodingDarkness_Mono>();
+            var mono = player.gameObject.GetOrAddComponent<SpeedLimitMono>();
             UnityEngine.GameObject.Destroy(mono);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Eroding Darkness";
+            return "Slow Reflexes";
         }
         protected override string GetDescription()
         {
-            return "Sometimes you come back with more than you left with.";
+            return "Constantly defending yourself takes its toll.";
         }
         protected override GameObject GetCardArt()
         {
@@ -69,24 +83,18 @@ namespace WWC.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return Rarities.Mythical;
+            return Rarities.Trinket;
         }
         protected override CardInfoStat[] GetStats()
         {
             return new CardInfoStat[]
             {
-                new CardInfoStat()
-                {
-                    positive = false,
-                    stat = "Every Round",
-                    amount = "+1 Curse",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                }
+
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CurseManager.instance.CurseGray;
+            return CurseManager.instance.FrozenBlue;
         }
         public override string GetModName()
         {
@@ -97,37 +105,67 @@ namespace WWC.Cards.Curses
             return true;
         }
     }
+}
 
-    class ErodingDarkness_Mono : MonoBehaviour, IRoundStartHookHandler
+namespace WWC.MonoBehaviours
+{
+    public class SpeedLimitMono : MonoBehaviour
     {
-        private CharacterData data;
-        private Player player;
+        Player player;
 
-        private void Start()
+        private void Awake()
+        {
+            this.player = GetComponentInParent<Player>();
+            this.player.data.block.BlockAction += OnBlock;
+        }
+
+        private void OnBlock(BlockTrigger.BlockTriggerType blockTrigger)
+        {
+            this.player.gameObject.AddComponent<SpeedLimitTimeScaleMono>().duration += 10f;
+        }
+
+        private void OnDestroy()
+        {
+            this.player.data.block.BlockAction -= OnBlock;
+        }
+    }
+
+    public class SpeedLimitTimeScaleMono : PlayerTimeScale.PlayerTimeScale, IPointEndHookHandler, IPointStartHookHandler, IGameStartHookHandler
+    {
+        public float duration;
+
+        private void Awake()
         {
             InterfaceGameModeHooksManager.instance.RegisterHooks(this);
-            data = GetComponentInParent<CharacterData>();
+            this.Scale = 0.9f;
         }
 
         private void Update()
         {
-            if (!player)
+            if (duration < 0) 
             {
-                if (!(data is null))
-                {
-                    player = data.player;
-                }
+                UnityEngine.GameObject.Destroy(this);
             }
-        }
 
-        public void OnRoundStart()
-        {
-            CurseManager.instance.CursePlayer(player);
+            duration -= TimeHandler.deltaTime;
         }
 
         private void OnDestroy()
         {
             InterfaceGameModeHooksManager.instance.RemoveHooks(this);
+        }
+
+        public void OnPointEnd()
+        {
+            UnityEngine.GameObject.Destroy(this);
+        }
+        public void OnPointStart()
+        {
+            UnityEngine.GameObject.Destroy(this);
+        }
+        public void OnGameStart()
+        {
+            UnityEngine.GameObject.Destroy(this);
         }
     }
 }
