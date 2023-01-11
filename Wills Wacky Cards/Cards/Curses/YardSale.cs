@@ -38,7 +38,7 @@ namespace WWC.Cards.Curses
                 return false;
             }
 
-            Dictionary<CardInfo, bool> allowedCards = player.data.currentCards.ToDictionary(c => c, c => false);
+            Dictionary<CardInfo, int> allowedCards = player.data.currentCards.ToDictionary(c => c, c => 0);
 
             Player[] enemies = PlayerManager.instance.players.Where(person => person.teamID != player.teamID).ToArray();
 
@@ -48,12 +48,12 @@ namespace WWC.Cards.Curses
                 {
                     if (ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(enemy, kvp.Key))
                     {
-                        allowedCards[kvp.Key] = true;
+                        allowedCards[kvp.Key] += 1;
                     }
                 }
             }
 
-            if ((allowedCards.Count() < enemies.Length) || (allowedCards.Values.Where(c => c).Count() < enemies.Length))
+            if ((allowedCards.Count() < enemies.Length) || (allowedCards.Values.Where(c => c >= enemies.Length).Count() < enemies.Length))
             {
                 return false;
             }
@@ -138,7 +138,6 @@ namespace WWC.Cards.Curses
 
                 if (cardsToRemove.TryGetValue(player.playerID, out var cards))
                 {
-                    cards.Insert(0, YardSale.card);
                     ModdingUtils.Utils.Cards.instance.RemoveCardsFromPlayer(player, cards.ToArray(), ModdingUtils.Utils.Cards.SelectionType.Random);
                     cardsToRemove.Remove(player.playerID);
                 }
@@ -148,6 +147,13 @@ namespace WWC.Cards.Curses
                 yield return new WaitForSecondsRealtime(0.1f);
 
                 DrawNCards.DrawNCards.SetPickerDraws(enemy.playerID, currentPicksAllowed);
+            }
+
+            if (cardsToRemove.TryGetValue(player.playerID, out var cards2))
+            {
+                cards2.Insert(0, YardSale.card);
+                ModdingUtils.Utils.Cards.instance.RemoveCardsFromPlayer(player, cards2.ToArray(), ModdingUtils.Utils.Cards.SelectionType.Random);
+                cardsToRemove.Remove(player.playerID);
             }
 
             yardSalePlayer = null;

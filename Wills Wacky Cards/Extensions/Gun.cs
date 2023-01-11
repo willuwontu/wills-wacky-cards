@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
 using HarmonyLib;
+using UnityEngine;
 using WWC.MonoBehaviours;
 
 namespace WWC.Extensions
@@ -61,6 +62,38 @@ namespace WWC.Extensions
                 data.Add(gun, value);
             }
             catch (Exception) { }
+        }
+
+        public static float BulletsPerSecond(this Gun gun, GunAmmo gunAmmo = null)
+        {
+            int proj = gun.numberOfProjectiles;
+            int bursts = gun.bursts > 0 ? gun.bursts : 1;
+            int bulletsPerAttack = proj * bursts;
+            float timeForAttack = (bursts - 1) * gun.timeBetweenBullets;
+
+            float reloadTime = 0f;
+            GunAmmo ammo = gunAmmo != null ? gunAmmo : (GunAmmo)Traverse.Create(gun).Field("gunAmmo").GetValue();
+            if (ammo != null)
+            {
+                reloadTime = (ammo.reloadTime + ammo.reloadTimeAdd) * ammo.reloadTimeMultiplier;
+            }
+
+            float bulletsPerSecond = bulletsPerAttack / Time.deltaTime;
+
+            if (gun.attackSpeed == 0f && reloadTime == 0f && gun.timeBetweenBullets == 0f)
+            {
+                return bulletsPerSecond;
+            }
+            else if (gun.timeBetweenBullets > reloadTime || gun.attackSpeed > reloadTime)
+            {
+                bulletsPerSecond = Mathf.Min(bulletsPerAttack / (timeForAttack + gun.attackSpeed), bulletsPerSecond);
+            }
+            else 
+            {
+                bulletsPerSecond = Mathf.Min(bulletsPerAttack / (timeForAttack + gun.attackSpeed + reloadTime), bulletsPerSecond);
+            }
+
+            return bulletsPerSecond;
         }
     }
     // reset extra gun attributes when resetstats is called

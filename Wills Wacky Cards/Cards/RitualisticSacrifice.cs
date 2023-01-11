@@ -10,6 +10,8 @@ using ModdingUtils.Extensions;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using WillsWackyManagers.Utils;
 using UnityEngine;
+using System.Collections;
+using static UnityEngine.EventSystems.EventTrigger;
 
 namespace WWC.Cards
 {
@@ -23,20 +25,44 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            WillsWackyCards.instance.ExecuteAfterFrames(40, () => 
-                {
-                    var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
-                    CurseManager.instance.RemoveAllCurses(player);
-                    foreach (var curse in curses)
-                    {
-                        var enemies = PlayerManager.instance.players.Where((person) => person.teamID != player.teamID).ToArray();
-
-                        var enemy = enemies[UnityEngine.Random.Range(0, enemies.Count())];
-
-                        ModdingUtils.Utils.Cards.instance.AddCardToPlayer(enemy, curse, false, "", 2f, 2f, true);
-                    }
-                });
+            WillsWackyCards.instance.StartCoroutine(ReassignCurses(player));
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+        }
+
+        public IEnumerator ReassignCurses(Player player)
+        {
+            for (int i = 0; i < 40; i++)
+            {
+                yield return null;
+            }
+
+            var curses = CurseManager.instance.GetAllCursesOnPlayer(player);
+            CurseManager.instance.RemoveAllCurses(player);
+
+            var enemies = PlayerManager.instance.players.Where((person) => person.teamID != player.teamID).ToArray();
+
+            foreach (var curse in curses)
+            {
+                List<Player> validPlayers = new List<Player>();
+                foreach (var enemy in enemies) 
+                {
+                    if (CurseManager.instance.PlayerIsAllowedCurse(enemy, curse))
+                    {
+                        validPlayers.Add(enemy);
+                    }
+                }
+
+                if (validPlayers.Count > 0) 
+                {
+                    validPlayers.Shuffle();
+                    ModdingUtils.Utils.Cards.instance.AddCardToPlayer(validPlayers.First(), curse, false, "", 2f, 2f, true);
+                }
+                yield return null;
+                yield return null;
+                yield return null;
+            }
+
+            yield break;
         }
 
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
