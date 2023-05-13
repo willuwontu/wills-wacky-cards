@@ -19,7 +19,7 @@ namespace WWC.Cards
         {
             statModifiers.health = 1.2f;
             statModifiers.movementSpeed = 1.25f;
-
+            cardInfo.categories = new CardCategory[] { TRTCardCategories.TRT_CanSpawnNaturally };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

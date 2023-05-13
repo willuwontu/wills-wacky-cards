@@ -66,8 +66,8 @@ namespace WWC.Patches
                 gun.reloadTime = 1f;
                 gun.reloadTimeAdd = 0.0f;
                 gunAmmo.reloadTimeMultiplier = 1.0f;
-                gunAmmo.reloadTimeAdd = 0f;
-                gunAmmo.reloadTime = gun.GetAdditionalData().minimumReloadSpeed;
+                gunAmmo.reloadTime = 2f;
+                gunAmmo.reloadTimeAdd = gun.GetAdditionalData().minimumReloadSpeed - gunAmmo.reloadTime;
             }
 
             if (gun.GetAdditionalData().useForcedAttackSpeed)

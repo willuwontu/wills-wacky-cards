@@ -24,7 +24,7 @@ namespace WWC.Cards
             gun.damage = 1.7f;
 
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CharacterCurse") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CharacterCurse"), TRTCardCategories.TRT_Zombie, TRTCardCategories.CannotDiscard, TRTCardCategories.IgnoreMaxCardsCategory };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("CharacterCurse") };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }

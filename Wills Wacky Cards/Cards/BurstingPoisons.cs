@@ -19,6 +19,7 @@ namespace WWC.Cards
         {
             gun.damage = 1.2f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+            cardInfo.categories = new CardCategory[] { TRTCardCategories.TRT_CanSpawnNaturally };
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

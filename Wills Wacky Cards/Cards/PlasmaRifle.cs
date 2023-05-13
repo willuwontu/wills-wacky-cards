@@ -10,11 +10,38 @@ using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using UnityEngine.UI;
+using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards
 {
-    class PlasmaRifle : CustomCard
+    class PlasmaRifle : CustomCard, IConditionalCard
     {
+        private static CardInfo card;
+        public CardInfo Card { get => card; set { if (!card) { card = value; } } }
+
+        public bool Condition(Player player, CardInfo card)
+        {
+            // Make sure that card exists and is plasma rifle
+            if (!card || card != PlasmaRifle.card)
+            {
+                return true;
+            }
+
+            // Make sure that palyer exists, and that our path to our gun exists.
+            if (!player || !player.data || !player.data.weaponHandler || !player.data.weaponHandler.gun)
+            {
+                return true;
+            }
+
+            // We're not allowed to take a plasma weapon if we're already a charged weapon.
+            if (player.data.weaponHandler.gun.useCharge)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             gun.reloadTimeAdd = 0.25f;
@@ -22,7 +49,9 @@ namespace WWC.Cards
             gun.projectileColor = Color.cyan;
 
             cardInfo.allowMultiple = false;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType"), CustomCardCategories.instance.CardCategory("WWC Gun Type") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType"), CustomCardCategories.instance.CardCategory("WWC Gun Type"), 
+                //TRTCardCategories.TRT_Traitor, TRTCardCategories.IgnoreMaxCardsCategory, TRTCardCategories.CannotDiscard, TRTCardCategories.TRT_DoNotDropOnDeath 
+            };
             cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("GunType") };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
@@ -47,8 +76,6 @@ namespace WWC.Cards
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            gun.chargeDamageMultiplier /= 3.5f;
-            UnityEngine.GameObject.Destroy(player.gameObject.GetOrAddComponent<PlasmaWeapon_Mono>());
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
         }
 

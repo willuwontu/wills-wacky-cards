@@ -18,7 +18,7 @@ namespace WWC.Cards
             gun.reloadTime = 0.9f;
             statModifiers.movementSpeed = 1f/1.25f;
 
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("TRT_Enabled") };
+            cardInfo.categories = new CardCategory[] { TRTCardCategories.TRT_CanSpawnNaturally };
 
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }

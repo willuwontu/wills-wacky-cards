@@ -307,7 +307,7 @@ namespace WWC.MonoBehaviours
 		[Range(0f, 1f)]
 		public float counter;
 
-		private float upgradeTime = 4f;
+		private float upgradeTime = 5f;
 
 		public float upgradeTimeAdd;
 
@@ -329,7 +329,7 @@ namespace WWC.MonoBehaviours
 			}
 		}
 
-		public float timeToEmpty = 1f;
+		public float timeToEmpty = 0.75f;
 
 		private float upgradeCooldown = 8f;
 

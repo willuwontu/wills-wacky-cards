@@ -10,12 +10,28 @@ using System.Collections.Generic;
 using System;
 using WWC.Cards.Curses;
 using Photon.Pun;
+using System.Linq;
 
 namespace WWC.Patches
 {
     [HarmonyPatch(typeof(CardChoice))] 
     class CardChoice_Patch
     {
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(CardChoice.StartPick))]
+        static void FutureSightNulls(int pickerIDToSet)
+        {
+            Player player = PlayerManager.instance.GetPlayerWithID(pickerIDToSet);
+
+            if (player != null)
+            {
+                if (player.data.currentCards.Contains(WWC.Cards.FutureSight.card))
+                {
+                    Nullmanager.CharacterStatModifiersExtension.AjustNulls(player.data.stats, 10 * player.data.currentCards.Where(c => c == WWC.Cards.FutureSight.card).Count());
+                }
+            }
+        }
+
         class SimpleEnumerator : IEnumerable
         {
             public IEnumerator enumerator;

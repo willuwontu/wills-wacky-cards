@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using Sonigon;
 using Photon.Pun;
+using BepInEx.Bootstrap;
+using System.Linq;
 
 namespace WWC.MonoBehaviours
 {
@@ -76,21 +78,26 @@ namespace WWC.MonoBehaviours
                 this.chargeImage.SetAlpha(1);
                 Destroy(nameLabel);
                 Destroy(crown);
+
+                if (Chainloader.PluginInfos.Keys.Contains("com.bosssloth.rounds.LocalZoom"))
+                {
+                    LocalZoom.LocalZoom.MakeObjectHidden(this.chargeBarObj.transform);
+                    LocalZoom.Extensions.CharacterDataExtension.GetData(this.data).allWobbleImages.AddRange(chargeBarObj.GetComponentsInChildren<Image>());
+                }
             }
 
             player.GetComponentInChildren<ChildRPC>().childRPCsInt.Add("ChargeSync", RPCA_SyncCurrent);
-        }
 
-        private void Update()
-        {
             player = data.player;
             weaponHandler = data.weaponHandler;
             gun = weaponHandler.gun;
             gunAmmo = gun.GetComponentInChildren<GunAmmo>();
-            gun.ShootPojectileAction += OnShootProjectileAction;
             input = data.input;
             view = player.data.view;
+        }
 
+        private void Update()
+        {
             if (!(player is null) && player.gameObject.activeInHierarchy && (!(syncRoutine != null)))
             {
                 syncRoutine = WillsWackyCards.instance.StartCoroutine(PeriodicSync());
@@ -144,20 +151,60 @@ namespace WWC.MonoBehaviours
             chargeImage.color = new Color(Mathf.Clamp(0.5f - chargeTarget, 0f, 1f), 1f - (chargeTarget) * 0.85f, chargeTarget, 1f);
         }
 
-        private void OnShootProjectileAction(GameObject obj)
-        {
-            ProjectileHit bullet = obj.GetComponent<ProjectileHit>();
-            MoveTransform move = obj.GetComponent<MoveTransform>();
-        }
-
         private void OnDestroy()
         {
-            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
-            gun.useCharge = false;
-            gun.ShootPojectileAction -= OnShootProjectileAction;
-            player.GetComponentInChildren<ChildRPC>().childRPCsInt.Remove("ChargeSync");
-            Destroy(chargeBarObj);
-        }
+            try
+            {
+                InterfaceGameModeHooksManager.instance.RemoveHooks(this);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError($"Error thrown when removing hooks.");
+                UnityEngine.Debug.LogException(e);
+            }
+            try
+            {
+                gun.useCharge = false;
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError($"Error thrown when setting use charge to false.");
+                UnityEngine.Debug.LogException(e);
+            }
+            try
+            {
+                player.GetComponentInChildren<ChildRPC>().childRPCsInt.Remove("ChargeSync");
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError($"Error thrown when removing charge sync rpc.");
+                UnityEngine.Debug.LogException(e);
+            }
+            try
+            {
+                if (Chainloader.PluginInfos.Keys.Contains("com.bosssloth.rounds.LocalZoom"))
+                {
+                    foreach (var image in chargeBarObj.GetComponentsInChildren<Image>())
+                    {
+                        LocalZoom.Extensions.CharacterDataExtension.GetData(this.data).allWobbleImages.RemoveAll(img => img == image);
+                    }
+                } 
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError($"Error thrown when removing images from local zoom images.");
+                UnityEngine.Debug.LogException(e);
+            }
+            try
+            {
+                UnityEngine.GameObject.Destroy(chargeBarObj);
+            }
+            catch (Exception e)
+            {
+                UnityEngine.Debug.LogError($"Error thrown when destroying charge bar obj.");
+                UnityEngine.Debug.LogException(e);
+            }
+}
 
         public void Destroy()
         {

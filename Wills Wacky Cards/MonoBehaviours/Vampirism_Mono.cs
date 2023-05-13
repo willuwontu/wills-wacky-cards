@@ -1,17 +1,17 @@
-﻿using UnityEngine;
+﻿using ModdingUtils.Utils;
+using UnityEngine;
 using WWC.Extensions;
 using WWC.Interfaces;
 
 namespace WWC.MonoBehaviours
 {
     [DisallowMultipleComponent]
-    public class Vampirism_Mono : MonoBehaviour, IBattleStartHookHandler, IPointEndHookHandler, IGameStartHookHandler
+    public class Vampirism_Mono : MonoBehaviour, IGameStartHookHandler
     {
         public float percentLifeDrain = 1f/16.5f;
         private float damage;
         private CharacterData data;
         private Player target;
-        private bool battleStarted = false;
         private float lastTriggered = 0f;
 
         private void Start()
@@ -30,16 +30,6 @@ namespace WWC.MonoBehaviours
             }
         }
 
-        public void OnPointEnd()
-        {
-            battleStarted = false;
-        }
-
-        public void OnBattleStart()
-        {
-            battleStarted = true;
-        }
-
         public void OnGameStart()
         {
             UnityEngine.GameObject.Destroy(this.gameObject);
@@ -47,7 +37,7 @@ namespace WWC.MonoBehaviours
 
         public void Damage()
         {
-            if (!battleStarted)
+            if (!PlayerStatus.PlayerAliveAndSimulated(this.target))
             {
                 return;
             }

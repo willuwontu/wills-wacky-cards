@@ -43,13 +43,14 @@ namespace WWC
     [BepInDependency("com.rounds.willuwontu.ActionHelper", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("pykess.rounds.plugins.pickncards", BepInDependency.DependencyFlags.HardDependency)]
     [BepInDependency("com.root.player.time", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("com.Root.Null", BepInDependency.DependencyFlags.HardDependency)]
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
     public class WillsWackyCards : BaseUnityPlugin
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.11.9"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.11.15"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -77,6 +78,13 @@ namespace WWC
 
             //UnityEngine.Debug.Log("WWC Awake");
 
+            Unbound.RegisterCredits(ModName, new string[] { "willuwontu" }, new string[] { "github", "Ko-Fi" }, new string[] { "https://github.com/willuwontu/wills-wacky-cards", "https://ko-fi.com/willuwontu" });
+
+            remover = gameObject.AddComponent<CardRemover>();
+            gameObject.AddComponent<InterfaceGameModeHooksManager>();
+        }
+        void Start()
+        {
             { // Build the cards
                 Mechanic.cardBase = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("MechanicCardBase");
                 GameObject cardLoader = WWCAssets.LoadAsset<GameObject>("WWC CardManager");
@@ -89,14 +97,6 @@ namespace WWC
                 //    cardManager.BuildCards();
                 //}
             }
-
-        }
-        void Start()
-        {
-            Unbound.RegisterCredits(ModName, new string[] { "willuwontu" }, new string[] { "github", "Ko-Fi" }, new string[] { "https://github.com/willuwontu/wills-wacky-cards", "https://ko-fi.com/willuwontu" });
-
-            remover = gameObject.AddComponent<CardRemover>();
-            gameObject.AddComponent<InterfaceGameModeHooksManager>();
 
             //try
             //{
@@ -448,32 +448,6 @@ namespace WWC
             RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, 0.25f, 0f);
             MomentumTracker.rarityBuff += 0.25f;
 
-            foreach (var player in PlayerManager.instance.players)
-            {
-                if (!ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Contains(SiphonCurses.siphonCard))
-                {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(SiphonCurses.siphonCard);
-                }
-                int otherCurses = 0;
-
-                foreach (var person in PlayerManager.instance.players.Where((pl) => pl.playerID != player.playerID).ToArray())
-                {
-                    var curses = CurseManager.instance.GetAllCursesOnPlayer(person);
-
-                    otherCurses += curses.Count();
-
-                    if (otherCurses > 2)
-                    {
-                        break;
-                    }
-                }
-
-                if (otherCurses > 2)
-                {
-                    ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.RemoveAll(category => category == SiphonCurses.siphonCard);
-                    WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}] Player {player.playerID} can siphon cards");
-                }
-            }
             yield break;
         }
 
@@ -514,6 +488,7 @@ namespace WWC
         IEnumerator GameStart(IGameModeHandler gm)
         {
             MomentumTracker.stacks = 0;
+            MomentumTracker.rarityBuff = 0;
 
             MissedOpportunities.cardsSeen = new Dictionary<int, List<CardInfo>>();
 
@@ -528,6 +503,7 @@ namespace WWC
                     ModdingUtils.Extensions.CharacterStatModifiersExtension.GetAdditionalData(player.data.stats).blacklistedCategories.Add(TestCardCategory);
                 }
             }
+
             yield break;
         }
 

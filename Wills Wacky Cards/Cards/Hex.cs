@@ -67,7 +67,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return Rarities.Scarce;
         }
         protected override CardInfoStat[] GetStats()
         {

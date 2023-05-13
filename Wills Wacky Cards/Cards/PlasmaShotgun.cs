@@ -10,11 +10,39 @@ using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using UnityEngine.UI;
+using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards
 {
-    class PlasmaShotgun : CustomCard
+    class PlasmaShotgun : CustomCard, IConditionalCard
     {
+        private static CardInfo card;
+
+        public CardInfo Card { get => card; set { if (!card) { card = value; } } }
+
+        public bool Condition(Player player, CardInfo card)
+        {
+            // Make sure that card exists and is plasma shotgun
+            if (!card || card != PlasmaShotgun.card)
+            {
+                return true;
+            }
+
+            // Make sure that palyer exists, and that our path to our gun exists.
+            if (!player || !player.data || !player.data.weaponHandler || !player.data.weaponHandler.gun)
+            {
+                return true;
+            }
+
+            // We're not allowed to take a plasma weapon if we're already a charged weapon.
+            if (player.data.weaponHandler.gun.useCharge)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
             gun.reloadTimeAdd = 0.5f;

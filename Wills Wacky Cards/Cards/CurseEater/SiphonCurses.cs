@@ -10,14 +10,54 @@ using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using ClassesManagerReborn.Util;
+using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards
 {
-    class SiphonCurses : CustomClassCard
+    class SiphonCurses : CustomClassCard, IConditionalCard
     {
         public override CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public static CardInfo card = null;
         internal static CardCategory siphonCard = CustomCardCategories.instance.CardCategory("Siphon Curse");
+
+        public bool Condition(Player player, CardInfo card)
+        {
+            if (card != SiphonCurses.card)
+            {
+                return true;
+            }
+
+            if (!player)
+            {
+                return true;
+            }
+
+            int otherCurses = 0;
+
+            foreach (Player person in PlayerManager.instance.players.Where(p => p != player))
+            {
+                if ((!person.data) || (!(person.data.currentCards != null)) || !(person.data.currentCards.Count > 0))
+                {
+                    continue;
+                }
+
+                foreach (CardInfo c in person.data.currentCards)
+                {
+                    if (CurseManager.instance.IsCurse(c) && CurseManager.instance.PlayerIsAllowedCurse(player, c)) 
+                    { 
+                        otherCurses++;
+                    }
+                }
+            }
+
+            if (otherCurses < 3)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
         public override void Callback()
         {
             gameObject.GetOrAddComponent<ClassNameMono>().className = CurseEaterClass.name;
@@ -42,7 +82,7 @@ namespace WWC.Cards
 
                 foreach (var person in otherPlayers.OrderBy((pl) => { if (allyPlayers.Contains(pl)) { return 0; } return 1; }).ToArray())
                 {
-                    curseIndeces.Add(person, (from index in Enumerable.Range(0, person.data.currentCards.Count()) where CurseManager.instance.IsCurse(person.data.currentCards[index]) select index).ToList());
+                    curseIndeces.Add(person, (from index in Enumerable.Range(0, person.data.currentCards.Count()) where CurseManager.instance.IsCurse(person.data.currentCards[index]) && CurseManager.instance.PlayerIsAllowedCurse(player, person.data.currentCards[index]) select index).ToList());
                     cursesFound += curseIndeces[person].Count;
                     if (cursesFound >= cursesToFind)
                     {

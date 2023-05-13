@@ -12,12 +12,14 @@ using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using TMPro;
 using RarityLib.Utils;
+using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards
 {
-    class WheelOfFortune : CustomCard
+    class WheelOfFortune : CustomCard, ISaveableCard
     {
-        public static CardInfo card;
+        internal static CardInfo card;
+        public CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public override void Callback()
         {
             var mono = gameObject.AddComponent<WheelOfFortune_Mono>();

@@ -10,6 +10,7 @@ using WillsWackyManagers.Utils;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using ClassesManagerReborn.Util;
+using System.Collections;
 
 namespace WWC.Cards
 {
@@ -32,14 +33,25 @@ namespace WWC.Cards
             player.data.maxHealth *= 2f;
             player.data.health *= 2f;
             WillsWackyCards.instance.ExecuteAfterFrames(20, () => {
-                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowAtEndOfPhase(player, curse); });
-                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowAtEndOfPhase(player, curse); });
-                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowAtEndOfPhase(player, curse); });
-                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowAtEndOfPhase(player, curse); });
-                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowAtEndOfPhase(player, curse); });
+                WillsWackyCards.instance.StartCoroutine(GiveCurses(player, 5));
             });
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
+
+        public IEnumerator GiveCurses(Player player, int amount)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f); });
+                for (int j = 0; j < 10; j++)
+                {
+                    yield return null;
+                }
+            }
+
+            yield break;
+        }
+
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
             //Drives me crazy

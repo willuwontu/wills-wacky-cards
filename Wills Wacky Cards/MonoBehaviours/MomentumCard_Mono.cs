@@ -125,8 +125,8 @@ namespace WWC.MonoBehaviours
         {
             if (rarityBuff > 0)
             {
-                RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, (-1 * rarityBuff), 1);
-                RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, (-1 * rarityBuff), 1);
+                RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.ImmovableObject.card, (-1 * rarityBuff), 0);
+                RarityLib.Utils.RarityUtils.AjustCardRarityModifier(WWC.Cards.UnstoppableForce.card, (-1 * rarityBuff), 0);
                 rarityBuff = 0;
             }
         }

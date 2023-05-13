@@ -30,25 +30,23 @@ namespace WWC.Cards
                 WillsWackyCards.instance.ExecuteAfterFrames(20, () => {
                     foreach (var item in PlayerManager.instance.players.Where(other => other.teamID != player.teamID).ToList())
                     {
-                        WillsWackyCards.instance.StartCoroutine(GiveCurses(item, player));
-                    } 
-                    for (int i = 0; i < PlayerManager.instance.players.Where(other => other.teamID != player.teamID).Count()/2; i++)
-                    {
-                        CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f); });
+                        WillsWackyCards.instance.StartCoroutine(GiveCurses(item, 3));
                     }
+                    WillsWackyCards.instance.StartCoroutine(GiveCurses(player, PlayerManager.instance.players.Where(other => other.teamID != player.teamID).Count() / 2));
                 });
             }
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
         }
 
-        public IEnumerator GiveCurses(Player player, Player originator)
+        public IEnumerator GiveCurses(Player player, int amount)
         {
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < amount; i++)
             {
                 CurseManager.instance.CursePlayer(player, (curse) => { ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f); });
-                yield return null;
-                yield return null;
-                yield return null;
+                for (int j = 0; j < 20; j++)
+                {
+                    yield return null;
+                }
             }
 
             yield break;
@@ -85,7 +83,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Rare;
+            return Rarities.Exotic;
         }
         protected override CardInfoStat[] GetStats()
         {

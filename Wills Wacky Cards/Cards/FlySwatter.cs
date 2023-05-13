@@ -20,7 +20,7 @@ namespace WWC.Cards
             gun.damage = 1.2f;
             statModifiers.gravity = 1.2f;
             gun.reloadTimeAdd = 0.25f;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Fly_Swatter") };
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Fly_Swatter"), TRTCardCategories.TRT_CanSpawnNaturally };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)

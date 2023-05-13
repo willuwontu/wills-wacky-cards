@@ -18,8 +18,7 @@ namespace WWC.Cards
             gun.spread = 0.1f;
 
             cardInfo.allowMultiple = true;
-            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Running Shoes") };
-            cardInfo.blacklistedCategories = new CardCategory[] { CustomCardCategories.instance.CardCategory("Jumping Shoes") };
+            cardInfo.categories = new CardCategory[] { TRTCardCategories.TRT_Zombie, TRTCardCategories.CannotDiscard, TRTCardCategories.IgnoreMaxCardsCategory };
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
