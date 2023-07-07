@@ -6,71 +6,80 @@ using System.Threading.Tasks;
 using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
+using WWC.MonoBehaviours;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
+using Nullmanager;
 using UnityEngine;
 
 namespace WWC.Cards
 {
-    class Resolute : CustomCard
+    class ReforgeArmor : CustomCard
     {
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            statModifiers.health = 1.5f;
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
-
-            cardInfo.categories = new CardCategory[] { TRTCardCategories.TRT_CanSpawnNaturally };
+            cardInfo.NeedsNull();
+            cardInfo.MarkUnNullable();
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            characterStats.GetAdditionalData().willpower += 1f;
-            characterStats.GetAdditionalData().MassModifier *= 2000f;
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            int nullcount = player.GetNullCount();
+            int epicNullcount = 0;
+            RarityLib.Utils.RarityUtils.Rarities.Values.ToList().ForEach(r => {
+                if (r.relativeRarity <= RarityLib.Utils.RarityUtils.GetRarityData(Rarities.Epic).relativeRarity)
+                {
+                    epicNullcount += player.GetNullCount(r.value);
+                }
+            });
+
+            var nullData = characterStats.GetAdditionalData().nullData;
+
+            nullData.damageRedCards += 1;
+
+            characterStats.GetAdditionalData().DamageReduction += ((0.5f * Mathf.Log10(nullData.damageRedCards * nullcount + 1)) - (0.5f * Mathf.Log10((nullData.damageRedCards - 1) * nullcount + 1)));
+            WillsWackyCards.UpdateNullStatsForPlayer(player);
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            //Drives me crazy
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
+            
         }
 
         protected override string GetTitle()
         {
-            return "Resolute";
+            return "Reforge Resistance";
         }
         protected override string GetDescription()
         {
-            return "Stuns and silences are less effective on you.";
+            return "Nulled cards you have now provide damage reduction.";
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("C_Reforgeresistance");
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Uncommon;
+            return Rarities.Trinket;
         }
         protected override CardInfoStat[] GetStats()
         {
             return new CardInfoStat[]
             {
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "Willpower",
-                    amount = "+100%",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                },
-                new CardInfoStat()
-                {
-                    positive = true,
-                    stat = "HP",
-                    amount = "+50%",
-                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
-                }
+
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.EvilPurple;
+            return CardThemeColor.CardThemeColorType.DefensiveBlue;
         }
         public override string GetModName()
         {

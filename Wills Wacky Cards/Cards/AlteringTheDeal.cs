@@ -7,21 +7,20 @@ using UnboundLib;
 using UnboundLib.Cards;
 using WWC.Extensions;
 using WWC.MonoBehaviours;
-using WWC.Interfaces;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using WillsWackyManagers.UnityTools;
-using WWC.Cards.Curses;
+using Nullmanager;
 
 namespace WWC.Cards
 {
-    class FutureSight : CustomCard, IConditionalCard
+    class AlteringTheDeal : CustomCard, IConditionalCard
     {
         internal static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public bool Condition(Player player, CardInfo card)
         {
-            if (card != FutureSight.card)
+            if (card != AlteringTheDeal.card)
             {
                 return true;
             }
@@ -31,7 +30,7 @@ namespace WWC.Cards
                 return true;
             }
 
-            if (DrawNCards.DrawNCards.GetPickerDraws(player.playerID) > 25)
+            if (PlayerManager.instance.players.Where(p=> p.teamID != player.teamID).Any(p=> DrawNCards.DrawNCards.GetPickerDraws(p.playerID) < 2))
             {
                 return false;
             }
@@ -40,36 +39,50 @@ namespace WWC.Cards
         }
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-            cardInfo.allowMultiple = true;
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Built");
+
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            DrawNCards.DrawNCards.SetPickerDraws(player.playerID, DrawNCards.DrawNCards.GetPickerDraws(player.playerID) + 5);
-
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} Added to Player {player.playerID}");
+            characterStats.AjustNulls(5*PlayerManager.instance.players.Where(p=>p.teamID != player.teamID).Count());
+            foreach (Player opponent in PlayerManager.instance.players.Where(p => player.teamID != p.teamID)) 
+            {
+                DrawNCards.DrawNCards.SetPickerDraws(opponent.playerID, DrawNCards.DrawNCards.GetPickerDraws(opponent.playerID) - 1);
+            }
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            DrawNCards.DrawNCards.SetPickerDraws(player.playerID, DrawNCards.DrawNCards.GetPickerDraws(player.playerID) - 5);
-            WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Card] {GetTitle()} removed from Player {player.playerID}");
+            foreach (Player opponent in PlayerManager.instance.players.Where(p => player.teamID != p.teamID))
+            {
+                DrawNCards.DrawNCards.SetPickerDraws(opponent.playerID, DrawNCards.DrawNCards.GetPickerDraws(opponent.playerID) + 1);
+            }
         }
 
         protected override string GetTitle()
         {
-            return "Future Sight";
+            return "Altering the Deal";
         }
         protected override string GetDescription()
         {
-            return "The possiblities are endless, but your power is not.";
+            return "Pray I do not alter it any further.";
         }
         protected override GameObject GetCardArt()
         {
-            return null;
+            GameObject art;
+
+            try
+            {
+                art = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("C_AlteringTheDeal");
+            }
+            catch
+            {
+                art = null;
+            }
+
+            return art;
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return CardInfo.Rarity.Rare;
+            return Rarities.Exotic;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -78,22 +91,22 @@ namespace WWC.Cards
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Hand Size",
-                    amount = "+5",
+                    stat = "Hand Size for Foes",
+                    amount = "-1",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Nulls per pick",
-                    amount = "+7",
+                    stat = "Nulls per Foe",
+                    amount = "+5",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CardThemeColor.CardThemeColorType.MagicPink;
+            return CardThemeColor.CardThemeColorType.EvilPurple;
         }
         public override string GetModName()
         {

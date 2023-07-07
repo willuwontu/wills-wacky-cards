@@ -13,6 +13,7 @@ using UnityEngine;
 using TMPro;
 using RarityLib.Utils;
 using WillsWackyManagers.UnityTools;
+using WWC.Cards;
 
 namespace WWC.Cards
 {
@@ -138,7 +139,7 @@ namespace WWC.MonoBehaviours
 
             if (!this.locked)
             {
-                CardInfo.Rarity[] availableRarities = UnboundLib.Utils.CardManager.cards.Values.Where(card => card.enabled).Select(card => card.cardInfo).Where(cardInfo => ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(player, cardInfo)).Select(cardInfo => cardInfo.rarity).Distinct().OrderByDescending(rarity => RarityUtils.GetRarityData(rarity).relativeRarity).ToArray();
+                CardInfo.Rarity[] availableRarities = UnboundLib.Utils.CardManager.cards.Values.Where(card => card.enabled && card.cardInfo != WheelOfFortune.card).Select(card => card.cardInfo).Where(cardInfo => ModdingUtils.Utils.Cards.instance.PlayerIsAllowedCard(player, cardInfo)).Select(cardInfo => cardInfo.rarity).Distinct().OrderByDescending(rarity => RarityUtils.GetRarityData(rarity).relativeRarity).ToArray();
 
                 if (!(availableRarities.Length > 0))
                 {

@@ -27,7 +27,7 @@ namespace WWC.Patches
             {
                 if (player.data.currentCards.Contains(WWC.Cards.FutureSight.card))
                 {
-                    Nullmanager.CharacterStatModifiersExtension.AjustNulls(player.data.stats, 10 * player.data.currentCards.Where(c => c == WWC.Cards.FutureSight.card).Count());
+                    Nullmanager.CharacterStatModifiersExtension.AjustNulls(player.data.stats, 7 * player.data.currentCards.Where(c => c == WWC.Cards.FutureSight.card).Count());
                 }
             }
         }

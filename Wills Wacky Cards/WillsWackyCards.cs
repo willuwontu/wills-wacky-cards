@@ -30,6 +30,7 @@ using Photon.Pun;
 using TMPro;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine.UI;
+using Nullmanager;
 
 namespace WWC
 {
@@ -50,7 +51,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.11.15"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.11.16"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -97,6 +98,8 @@ namespace WWC
                 //    cardManager.BuildCards();
                 //}
             }
+
+            NullManager.instance.RegesterOnAddCallback(OnNullAdd);
 
             //try
             //{
@@ -277,6 +280,69 @@ namespace WWC
             //    activeCards.Add(card);
             //}
         }
+
+        #region NullCardHandling
+
+        private void OnNullAdd(NullCardInfo card, Player player)
+        {
+            UnityEngine.Debug.Log($"Null Added, {player.GetNullCount()} null cards");
+
+            CharacterStatModifiers stats = player.data.stats;
+            var nullData = stats.GetAdditionalData().nullData;
+            int nullcount = player.GetNullCount();
+
+            if (nullData.damageRedCards > 0)
+            {
+                stats.GetAdditionalData().DamageReduction += ((0.5f * Mathf.Log10(nullData.damageRedCards * nullcount + 1)) - (0.5f * Mathf.Log10(nullData.damageRedCards * (nullcount -1) + 1)));
+            }
+            
+            stats.GetAdditionalData().poisonResistance *= nullData.poisonResMult;
+            stats.GetAdditionalData().willpower += nullData.willPowerAdd - 1f;
+
+            UpdateNullStatsForPlayer(player);
+        }
+
+        public static void UpdateNullStatsForPlayer(Player player)
+        {
+            var nullData = player.data.stats.GetAdditionalData().nullData;
+            int nullcount = player.GetNullCount();
+            List<CardInfoStat> stats = new List<CardInfoStat>();
+
+            if (nullData.damageRedCards > 0)
+            {
+                stats.Add(new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Damage Reduction",
+                    amount = $"+{(int)(((0.5f * Mathf.Log10(nullData.damageRedCards * (nullcount + 1) + 1)) - (0.5f * Mathf.Log10(nullData.damageRedCards * nullcount + 1))) * 100)}%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                });
+            }
+            if (nullData.poisonResMult != 1f)
+            {
+                stats.Add(new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Poison Resistance",
+                    amount = $"+{(int)((1f - nullData.poisonResMult) * 100)}%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                });
+            }
+            if (nullData.willPowerAdd != 1f)
+            {
+                stats.Add(new CardInfoStat()
+                {
+                    positive = true,
+                    stat = "Willpower",
+                    amount = $"+{(int)((nullData.willPowerAdd - 1f) * 100)}%",
+                    simepleAmount = CardInfoStat.SimpleAmount.notAssigned
+                });
+            }
+
+            NullManager.instance.SetAdditionalNullStats(player, "WWC", stats.ToArray());
+        }
+
+        #endregion
 
         private bool OnlyUnstoppableOrImmovable(Player player, CardInfo card)
         {

@@ -436,7 +436,7 @@ namespace WWC.MonoBehaviours
 		}
     }
 
-	public class ClonedWeakness : ReversibleEffect, IPointStartHookHandler, IGameStartHookHandler, IBattleStartHookHandler
+	public class ClonedWeakness : ReversibleEffect, IPointStartHookHandler, IGameStartHookHandler, IBattleStartHookHandler, IPointEndHookHandler
     {
 		public override void OnStart()
 		{
@@ -459,8 +459,12 @@ namespace WWC.MonoBehaviours
 		{
 			UnityEngine.GameObject.Destroy(this);
 		}
+        public void OnPointEnd()
+        {
+            UnityEngine.GameObject.Destroy(this);
+        }
 
-		public override void OnOnDestroy()
+        public override void OnOnDestroy()
 		{
 			InterfaceGameModeHooksManager.instance.RemoveHooks(this);
 		}

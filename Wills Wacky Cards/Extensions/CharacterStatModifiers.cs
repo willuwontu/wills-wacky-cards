@@ -21,6 +21,7 @@ namespace WWC.Extensions
         public float poisonDurationModifier;
         public float poisonBurstModifier;
         public float dealtDoTBurstModifier;
+        public WWCNullData nullData;
 
         public CharacterStatModifiersAdditionalData()
         {
@@ -37,6 +38,7 @@ namespace WWC.Extensions
             poisonBurstModifier = 1f;
             dealtDoTBurstModifier = 1f;
             poisonDurationModifier = 1f;
+            nullData = new WWCNullData();
         }
     }
     public static class CharacterStatModifiersExtension
@@ -58,6 +60,14 @@ namespace WWC.Extensions
             catch (Exception) { }
         }
     }
+
+    public class WWCNullData
+    {
+        public float willPowerAdd = 1f;
+        public float poisonResMult = 1f;
+        public int damageRedCards = 0;
+    }
+
     [HarmonyPatch(typeof(CharacterStatModifiers), "ResetStats")]
     class CharacterStatModifiersPatchResetStats
     {
@@ -76,6 +86,7 @@ namespace WWC.Extensions
             __instance.GetAdditionalData().poisonBurstModifier = 1f;
             __instance.GetAdditionalData().dealtDoTBurstModifier = 1f;
             __instance.GetAdditionalData().poisonDurationModifier = 1f;
+            __instance.GetAdditionalData().nullData = new WWCNullData();
         }
     }
 }
