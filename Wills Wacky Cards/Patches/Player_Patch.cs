@@ -5,6 +5,7 @@ using WWC.MonoBehaviours;
 using Sonigon;
 using UnboundLib;
 using WWC.UI;
+using WWC.Cards;
 
 namespace WWC.Patches
 {
@@ -20,6 +21,16 @@ namespace WWC.Patches
                 PlayerSpotlight.AddSpotToPlayer(__instance);
             }
         }
+
+        //[HarmonyPostfix]
+        //[HarmonyPatch("FullReset")]
+        //static void ResetCardsDrawAdjustment(Player __instance)
+        //{
+        //    if (AlteringTheDeal.cardsTaken.ContainsKey(__instance))
+        //    {
+        //        AlteringTheDeal.cardsTaken.Remove(__instance);
+        //    }
+        //}
 
         //[HarmonyPrefix]
         //[HarmonyPatch("SomeMethod")]

@@ -11,6 +11,7 @@ using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using WillsWackyManagers.UnityTools;
 using Nullmanager;
+using WillsWackyManagers.Utils;
 
 namespace WWC.Cards
 {
@@ -30,30 +31,78 @@ namespace WWC.Cards
                 return true;
             }
 
-            if (PlayerManager.instance.players.Where(p=> p.teamID != player.teamID).Any(p=> DrawNCards.DrawNCards.GetPickerDraws(p.playerID) < 2))
+            if (PlayerManager.instance.players.Where(p=> p.teamID != player.teamID).Any(p=> DrawNCards.DrawNCards.GetPickerDraws(p.playerID) > 1))
             {
                 return false;
             }
 
             return true;
         }
+
+        //public static Dictionary<Player, int> cardsTaken = new Dictionary<Player, int>();
+
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
-
+            cardInfo.categories = new CardCategory[] { CustomCardCategories.instance.CardCategory("cantEternity") };
+            ModdingUtils.Extensions.CardInfoExtension.GetAdditionalData(cardInfo).canBeReassigned = false;
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            characterStats.AjustNulls(5*PlayerManager.instance.players.Where(p=>p.teamID != player.teamID).Count());
+            characterStats.AjustNulls(8*PlayerManager.instance.players.Where(p=>p.teamID != player.teamID).Count());
+
             foreach (Player opponent in PlayerManager.instance.players.Where(p => player.teamID != p.teamID)) 
             {
-                DrawNCards.DrawNCards.SetPickerDraws(opponent.playerID, DrawNCards.DrawNCards.GetPickerDraws(opponent.playerID) - 1);
+                var currentDraw = DrawNCards.DrawNCards.GetPickerDraws(opponent.playerID);
+
+                if (currentDraw == 1)
+                {
+                    continue;
+                }
+
+                int drawRemoved = Mathf.CeilToInt(currentDraw * 0.75f);
+
+                //if (AlteringTheDeal.cardsTaken.ContainsKey(opponent))
+                //{
+                //    AlteringTheDeal.cardsTaken[opponent] += currentDraw;
+                //}
+                //else
+                //{
+                //    AlteringTheDeal.cardsTaken[opponent] = currentDraw;
+                //}
+
+                DrawNCards.DrawNCards.SetPickerDraws(opponent.playerID, currentDraw - drawRemoved);
             }
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
+            //foreach (Player opponent in PlayerManager.instance.players.Where(p => player.teamID != p.teamID))
+            //{
+            //    DrawNCards.DrawNCards.SetPickerDraws(opponent.playerID, DrawNCards.DrawNCards.GetPickerDraws(opponent.playerID) + 1);
+            //}
+        }
+        public override void OnReassignCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
+        {
             foreach (Player opponent in PlayerManager.instance.players.Where(p => player.teamID != p.teamID))
             {
-                DrawNCards.DrawNCards.SetPickerDraws(opponent.playerID, DrawNCards.DrawNCards.GetPickerDraws(opponent.playerID) + 1);
+                var currentDraw = DrawNCards.DrawNCards.GetPickerDraws(opponent.playerID);
+
+                if (currentDraw == 1)
+                {
+                    continue;
+                }
+
+                int drawRemoved = Mathf.CeilToInt(currentDraw * 0.75f);
+
+                //if (AlteringTheDeal.cardsTaken.ContainsKey(opponent))
+                //{
+                //    AlteringTheDeal.cardsTaken[opponent] += currentDraw;
+                //}
+                //else
+                //{
+                //    AlteringTheDeal.cardsTaken[opponent] = currentDraw;
+                //}
+
+                DrawNCards.DrawNCards.SetPickerDraws(opponent.playerID, currentDraw - drawRemoved);
             }
         }
 
@@ -82,7 +131,7 @@ namespace WWC.Cards
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return Rarities.Exotic;
+            return Rarities.Epic;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -92,14 +141,14 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Hand Size for Foes",
-                    amount = "-1",
+                    amount = "-20%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
                     stat = "Nulls per Foe",
-                    amount = "+5",
+                    amount = "+8",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

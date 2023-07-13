@@ -14,9 +14,18 @@ namespace WWC.Cards
 {
     class Bounce : CustomCard
     {
+        public static GameObject screenEdge = null;
+
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers, Block block)
         {
             gun.reflects = 1;
+
+            if (!screenEdge)
+            {
+                screenEdge = WillsWackyManagers.WillsWackyManagers.instance.WWMAssets.LoadAsset<GameObject>("A_ScreenEdge");
+            }
+
+            gun.objectsToSpawn = new ObjectsToSpawn[] { new ObjectsToSpawn { AddToProjectile = screenEdge } };
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {

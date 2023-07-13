@@ -45,7 +45,7 @@ namespace WWC.Cards
 
         protected override string GetTitle()
         {
-            return "Reforge Resistance";
+            return "Reforge Armor";
         }
         protected override string GetDescription()
         {

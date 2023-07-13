@@ -51,7 +51,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.11.16"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.11.18"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -557,6 +557,7 @@ namespace WWC
             MomentumTracker.rarityBuff = 0;
 
             MissedOpportunities.cardsSeen = new Dictionary<int, List<CardInfo>>();
+            //AlteringTheDeal.cardsTaken = new Dictionary<Player, int>();
 
             foreach (var player in PlayerManager.instance.players)
             {

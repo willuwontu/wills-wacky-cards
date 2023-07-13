@@ -93,9 +93,19 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Strong Body (Uncommon)
 - Bursting Poisons (Uncommon)
 - Wheel of Fortune (Scarce)
+- Future Sight (Rare)
+- Altering the Deal (Exotic)
+- Bounce (Trinket)
+- Reforge Resistance (Trinket)
+- Reforge Armor (Trinket)
 
 <details>
 <summary>Change Log</summary>
+
+## v 1.11.16
+----
+- Added 4 new cards (Altering the Deal, Bounce, Reforge Resistance, Reforge Armor)
+- Future Sight 
 
 ----
 ## v 1.11.0
