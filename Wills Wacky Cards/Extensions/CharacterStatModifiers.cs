@@ -30,7 +30,7 @@ namespace WWC.Extensions
             Bleed = 0f;
             DamageReduction = 0f;
             isBanished = false;
-            willpower = 0f;
+            willpower = 1f;
             extraBlockTime = 0f;
             useNewRespawnTime = false;
             newRespawnTime = 0f;
@@ -63,7 +63,7 @@ namespace WWC.Extensions
 
     public class WWCNullData
     {
-        public float willPowerAdd = 1f;
+        public float willPowerMult = 1f;
         public float poisonResMult = 1f;
         public int damageRedCards = 0;
     }
@@ -78,7 +78,7 @@ namespace WWC.Extensions
             __instance.GetAdditionalData().Bleed = 0f;
             __instance.GetAdditionalData().DamageReduction = 0f;
             __instance.GetAdditionalData().isBanished = false;
-            __instance.GetAdditionalData().willpower = 0f;
+            __instance.GetAdditionalData().willpower = 1f;
             __instance.GetAdditionalData().extraBlockTime = 0f;
             __instance.GetAdditionalData().useNewRespawnTime = false;
             __instance.GetAdditionalData().newRespawnTime = 0f;

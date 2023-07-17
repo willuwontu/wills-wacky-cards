@@ -102,10 +102,14 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <details>
 <summary>Change Log</summary>
 
+## v 1.11.19
+- Redid Willpower code
+
+
 ## v 1.11.16
 ----
 - Added 4 new cards (Altering the Deal, Bounce, Reforge Resistance, Reforge Armor)
-- Future Sight 
+- Future Sight now only gives 7 nulls per pick.
 
 ----
 ## v 1.11.0

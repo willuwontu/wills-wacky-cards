@@ -11,13 +11,38 @@ namespace WWC.Patches
     class StunHandler_Patch
     {
         [HarmonyPrefix]
-        [HarmonyPatch("Update")]
-        static void WillpowerSpeedUp(StunHandler __instance, CharacterData ___data)
+        [HarmonyPatch("AddStun")]
+        static void WillpowerSpeedUp(StunHandler __instance, CharacterData ___data, ref float f)
         {
             var data = ___data;
-            if (data.stats.GetAdditionalData().willpower != 0f && data.stunTime > 0f)
+            if (f == 0f)
             {
-                data.stunTime -= TimeHandler.deltaTime * data.stats.GetAdditionalData().willpower;
+                return;
+            }
+            if (!(data.stats.GetAdditionalData().willpower != 1f))
+            {
+                return;
+            }
+
+            if (data.stats.GetAdditionalData().willpower < 1f)
+            {
+                f *= (Mathf.Abs(data.stats.GetAdditionalData().willpower - 1f) + 1f);
+            }
+            else
+            {
+                f /= data.stats.GetAdditionalData().willpower;
+            }
+
+            if (data.stats.GetAdditionalData().willpower < 1f && data.block.IsBlocking())
+            {
+                if (f > data.stunTime)
+                {
+                    data.stunTime = f;
+                }
+                if (!data.isStunned)
+                {
+                    __instance.InvokeMethod("StartStun", new object[] { });
+                }
             }
         }
 

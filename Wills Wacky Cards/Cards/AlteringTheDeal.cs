@@ -48,8 +48,6 @@ namespace WWC.Cards
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            characterStats.AjustNulls(8*PlayerManager.instance.players.Where(p=>p.teamID != player.teamID).Count());
-
             foreach (Player opponent in PlayerManager.instance.players.Where(p => player.teamID != p.teamID)) 
             {
                 var currentDraw = DrawNCards.DrawNCards.GetPickerDraws(opponent.playerID);
@@ -60,6 +58,8 @@ namespace WWC.Cards
                 }
 
                 int drawRemoved = Mathf.CeilToInt(currentDraw * 0.75f);
+
+                characterStats.AjustNulls(5 * drawRemoved);
 
                 //if (AlteringTheDeal.cardsTaken.ContainsKey(opponent))
                 //{
@@ -141,14 +141,14 @@ namespace WWC.Cards
                 {
                     positive = true,
                     stat = "Hand Size for Foes",
-                    amount = "-20%",
+                    amount = "-25%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 },
                 new CardInfoStat()
                 {
                     positive = true,
-                    stat = "Nulls per Foe",
-                    amount = "+8",
+                    stat = "Nulls per Card",
+                    amount = "+5",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 }
             };

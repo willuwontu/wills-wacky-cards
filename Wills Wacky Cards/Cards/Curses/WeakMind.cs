@@ -22,7 +22,7 @@ namespace WWC.Cards.Curses
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            characterStats.GetAdditionalData().willpower -= 1f;
+            characterStats.GetAdditionalData().willpower *= 0.5f;
             characterStats.GetAdditionalData().MassModifier *= 0.1f;
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }

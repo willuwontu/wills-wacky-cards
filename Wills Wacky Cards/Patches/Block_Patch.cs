@@ -23,6 +23,43 @@ namespace WWC.Patches
             __result = __result || __instance.sinceBlock < (0.3 + ___data.stats.GetAdditionalData().extraBlockTime);
         }
 
+        [HarmonyPrefix]
+        [HarmonyPriority(int.MaxValue)]
+        [HarmonyPatch("RPCA_DoBlock")]
+        static bool StoppedByStunAndSilence(Block __instance, CharacterData ___data)
+        {
+            if (___data.view.IsMine && (___data.isStunned || ___data.isSilenced))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPriority(int.MaxValue)]
+        [HarmonyPatch("TryBlock")]
+        static bool TryStoppedByStunAndSilence(Block __instance, CharacterData ___data)
+        {
+            if (___data.view.IsMine && (___data.isStunned || ___data.isSilenced))
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPriority(int.MinValue)]
+        [HarmonyPatch("Cooldown")]
+        static void OnCooldownWhileSilencedAndStunned(Block __instance, CharacterData ___data, ref float __result)
+        {
+            if (___data.view.IsMine && (___data.isStunned || ___data.isSilenced))
+            {
+                __result = float.MaxValue;
+            }
+        }
+
         //[HarmonyPrefix]
         //[HarmonyPatch("SomeMethod")]
         //static void MyMethodName()

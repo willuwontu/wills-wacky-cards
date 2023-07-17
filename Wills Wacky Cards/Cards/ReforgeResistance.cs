@@ -31,7 +31,7 @@ namespace WWC.Cards
                 }
             });
 
-            characterStats.GetAdditionalData().nullData.willPowerAdd *= 1.1f;
+            characterStats.GetAdditionalData().nullData.willPowerMult *= 1.1f;
             characterStats.GetAdditionalData().nullData.poisonResMult *= 0.95f;
             characterStats.GetAdditionalData().willpower *= Mathf.Pow(1.1f, nullcount);
             characterStats.GetAdditionalData().poisonResistance *= Mathf.Pow(0.95f, nullcount);

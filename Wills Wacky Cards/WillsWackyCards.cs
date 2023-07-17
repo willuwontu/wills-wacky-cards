@@ -51,7 +51,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.11.18"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.11.19"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -297,7 +297,7 @@ namespace WWC
             }
             
             stats.GetAdditionalData().poisonResistance *= nullData.poisonResMult;
-            stats.GetAdditionalData().willpower += nullData.willPowerAdd - 1f;
+            stats.GetAdditionalData().willpower *= nullData.willPowerMult;
 
             UpdateNullStatsForPlayer(player);
         }
@@ -328,13 +328,13 @@ namespace WWC
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 });
             }
-            if (nullData.willPowerAdd != 1f)
+            if (nullData.willPowerMult != 1f)
             {
                 stats.Add(new CardInfoStat()
                 {
                     positive = true,
                     stat = "Willpower",
-                    amount = $"+{(int)((nullData.willPowerAdd - 1f) * 100)}%",
+                    amount = $"+{(int)((nullData.willPowerMult - 1f) * 100)}%",
                     simepleAmount = CardInfoStat.SimpleAmount.notAssigned
                 });
             }
