@@ -11,13 +11,26 @@ namespace WWC.Patches
     class SilenceHandler_Patch
     {
         [HarmonyPrefix]
-        [HarmonyPatch("Update")]
-        static void WillpowerSpeedUp(SilenceHandler __instance, CharacterData ___data)
+        [HarmonyPatch("RPCA_AddSilence")]
+        static void WillpowerSpeedUp(SilenceHandler __instance, CharacterData ___data, ref float f)
         {
             var data = ___data;
-            if (data.stats.GetAdditionalData().willpower != 0f && data.silenceTime > 0f)
+            if (f == 0f)
             {
-                data.silenceTime -= TimeHandler.deltaTime * data.stats.GetAdditionalData().willpower;
+                return;
+            }
+            if (!(data.stats.GetAdditionalData().willpower != 1f))
+            {
+                return;
+            }
+
+            if (data.stats.GetAdditionalData().willpower < 1f)
+            {
+                f *= (Mathf.Abs(data.stats.GetAdditionalData().willpower - 1f) + 1f);
+            }
+            else
+            {
+                f /= data.stats.GetAdditionalData().willpower;
             }
         }
 
