@@ -31,6 +31,7 @@ using TMPro;
 using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine.UI;
 using Nullmanager;
+using InControl;
 
 namespace WWC
 {
@@ -51,7 +52,7 @@ namespace WWC
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.11.20"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.11.21"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -83,6 +84,8 @@ namespace WWC
 
             remover = gameObject.AddComponent<CardRemover>();
             gameObject.AddComponent<InterfaceGameModeHooksManager>();
+
+            //PlayerActionsHelper.PlayerActionManager.RegisterPlayerAction(new PlayerActionsHelper.ActionInfo("ToggleFlight", new KeyBindingSource(Key.Key1), new DeviceBindingSource(InputControlType.Action3)));
         }
         void Start()
         {

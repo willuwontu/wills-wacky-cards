@@ -31,7 +31,7 @@ namespace WWC.Cards
                 return true;
             }
 
-            if (PlayerManager.instance.players.Where(p=> p.teamID != player.teamID).Any(p=> DrawNCards.DrawNCards.GetPickerDraws(p.playerID) > 1))
+            if (!(PlayerManager.instance.players.Where(p=> p.teamID != player.teamID).Any(p=> DrawNCards.DrawNCards.GetPickerDraws(p.playerID) > 1)))
             {
                 return false;
             }
@@ -57,7 +57,7 @@ namespace WWC.Cards
                     continue;
                 }
 
-                int drawRemoved = Mathf.CeilToInt(currentDraw * 0.75f);
+                int drawRemoved = Mathf.CeilToInt(currentDraw * 0.25f);
 
                 characterStats.AjustNulls(5 * drawRemoved);
 
@@ -91,7 +91,7 @@ namespace WWC.Cards
                     continue;
                 }
 
-                int drawRemoved = Mathf.CeilToInt(currentDraw * 0.75f);
+                int drawRemoved = Mathf.CeilToInt(currentDraw * 0.25f);
 
                 //if (AlteringTheDeal.cardsTaken.ContainsKey(opponent))
                 //{

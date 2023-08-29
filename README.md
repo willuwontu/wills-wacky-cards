@@ -94,10 +94,8 @@ This is a mod containing a few cards I came up with while fiddling around with t
 - Bursting Poisons (Uncommon)
 - Wheel of Fortune (Scarce)
 - Future Sight (Rare)
-- Altering the Deal (Exotic)
 - Bounce (Trinket)
 - Reforge Resistance (Trinket)
-- Reforge Armor (Trinket)
 
 <details>
 <summary>Change Log</summary>
