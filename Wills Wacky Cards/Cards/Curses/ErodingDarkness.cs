@@ -15,7 +15,7 @@ using WillsWackyManagers.UnityTools;
 
 namespace WWC.Cards.Curses
 {
-    class ErodingDarkness : CustomCard, IConditionalCard
+    class ErodingDarkness : CustomCard, IConditionalCard, ICurseCard
     {
         private static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }

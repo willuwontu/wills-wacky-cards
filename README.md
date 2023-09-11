@@ -100,6 +100,9 @@ This is a mod containing a few cards I came up with while fiddling around with t
 <details>
 <summary>Change Log</summary>
 
+## v 1.11.22
+- Fixed a bug where eroding darkness wasn't marked properly marked as a curse.
+
 ## v 1.11.19
 - Redid Willpower code
 
