@@ -12,16 +12,17 @@ using CardChoiceSpawnUniqueCardPatch.CustomCategories;
 using UnityEngine;
 using WillsWackyManagers.UnityTools;
 using WWC.Interfaces;
+using ModdingUtils.Extensions;
 
 namespace WWC.Cards.Curses
 {
-    class SpeedLimit : CustomCard, ICurseCard, IConditionalCard
+    class FairPlay : CustomCard, ICurseCard, IConditionalCard
     {
         private static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }
         public bool Condition(Player player, CardInfo card)
         {
-            if (card != SpeedLimit.card)
+            if (card != FairPlay.card)
             {
                 return true;
             }
@@ -48,7 +49,7 @@ namespace WWC.Cards.Curses
                 return true;
             }
 
-            if (player.data.block.BlocksPerSecond() < 3f)
+            if (player.data.block.BlocksPerSecond() > 3f)
             {
                 return false;
             }
@@ -64,23 +65,23 @@ namespace WWC.Cards.Curses
         }
         public override void OnAddCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            player.gameObject.AddComponent<SpeedLimitMono>();
+            player.gameObject.AddComponent<FairPlayMono>();
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} added to Player {player.playerID}");
         }
         public override void OnRemoveCard(Player player, Gun gun, GunAmmo gunAmmo, CharacterData data, HealthHandler health, Gravity gravity, Block block, CharacterStatModifiers characterStats)
         {
-            var mono = player.gameObject.GetOrAddComponent<SpeedLimitMono>();
+            var mono = player.gameObject.GetOrAddComponent<FairPlayMono>();
             UnityEngine.GameObject.Destroy(mono);
             WillsWackyCards.instance.DebugLog($"[{WillsWackyCards.ModInitials}][Curse] {GetTitle()} removed from Player {player.playerID}");
         }
 
         protected override string GetTitle()
         {
-            return "Slow Reflexes";
+            return "Fair Play";
         }
         protected override string GetDescription()
         {
-            return "Constantly defending yourself takes its toll.";
+            return "C'mon you gotta play fair.";
         }
         protected override GameObject GetCardArt()
         {
@@ -88,7 +89,7 @@ namespace WWC.Cards.Curses
         }
         protected override CardInfo.Rarity GetRarity()
         {
-            return Rarities.Trinket;
+            return Rarities.Scarce;
         }
         protected override CardInfoStat[] GetStats()
         {
@@ -99,7 +100,7 @@ namespace WWC.Cards.Curses
         }
         protected override CardThemeColor.CardThemeColorType GetTheme()
         {
-            return CurseManager.instance.FrozenBlue;
+            return CurseManager.instance.FracturedBlue;
         }
         public override string GetModName()
         {
@@ -114,63 +115,38 @@ namespace WWC.Cards.Curses
 
 namespace WWC.MonoBehaviours
 {
-    public class SpeedLimitMono : MonoBehaviour
+    public class FairPlayMono : MonoBehaviour
     {
         Player player;
+        float lastVulnerable = 0f;
 
         private void Awake()
         {
             this.player = GetComponentInParent<Player>();
-            this.player.data.block.BlockAction += OnBlock;
-        }
-
-        private void OnBlock(BlockTrigger.BlockTriggerType blockTrigger)
-        {
-            this.player.gameObject.AddComponent<SpeedLimitTimeScaleMono>().duration += 10f;
-        }
-
-        private void OnDestroy()
-        {
-            this.player.data.block.BlockAction -= OnBlock;
-        }
-    }
-
-    public class SpeedLimitTimeScaleMono : PlayerTimeScale.PlayerTimeScale, IPointEndHookHandler, IPointStartHookHandler, IGameStartHookHandler
-    {
-        public float duration;
-
-        private void Awake()
-        {
-            InterfaceGameModeHooksManager.instance.RegisterHooks(this);
-            this.Scale = 0.9f;
         }
 
         private void Update()
         {
-            if (duration < 0) 
+            if (ModdingUtils.Utils.PlayerStatus.PlayerAliveAndSimulated(player))
             {
-                UnityEngine.GameObject.Destroy(this);
+                if (player.data.block.IsBlocking())
+                {
+                    lastVulnerable += Time.deltaTime;
+                }
+                else
+                {
+                    lastVulnerable = 0f;
+                }
+            }
+            else
+            {
+                lastVulnerable = 0f;
             }
 
-            duration -= TimeHandler.deltaTime;
-        }
-
-        private void OnDestroy()
-        {
-            InterfaceGameModeHooksManager.instance.RemoveHooks(this);
-        }
-
-        public void OnPointEnd()
-        {
-            UnityEngine.GameObject.Destroy(this);
-        }
-        public void OnPointStart()
-        {
-            UnityEngine.GameObject.Destroy(this);
-        }
-        public void OnGameStart()
-        {
-            UnityEngine.GameObject.Destroy(this);
+            if (lastVulnerable > 5f)
+            {
+                player.data.view.RPC("RPCA_Die", Photon.Pun.RpcTarget.All, new object[] { Vector2.up });
+            }
         }
     }
 }

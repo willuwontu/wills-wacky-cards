@@ -35,24 +35,25 @@ using InControl;
 
 namespace WWC
 {
-    [BepInDependency("com.willis.rounds.unbound", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("com.willuwontu.rounds.managers", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("pykess.rounds.plugins.moddingutils", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("pykess.rounds.plugins.cardchoicespawnuniquecardpatch", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("root.classes.manager.reborn", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("root.rarity.lib", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("com.rounds.willuwontu.gunchargepatch", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("com.rounds.willuwontu.ActionHelper", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("pykess.rounds.plugins.pickncards", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("com.root.player.time", BepInDependency.DependencyFlags.HardDependency)]
-    [BepInDependency("com.Root.Null", BepInDependency.DependencyFlags.HardDependency)]
+    [BepInDependency("com.willis.rounds.unbound")]
+    [BepInDependency("com.willuwontu.rounds.managers")]
+    [BepInDependency("pykess.rounds.plugins.moddingutils")]
+    [BepInDependency("pykess.rounds.plugins.cardchoicespawnuniquecardpatch")]
+    [BepInDependency("root.classes.manager.reborn")]
+    [BepInDependency("root.rarity.lib")]
+    [BepInDependency("root.cardtheme.lib")]
+    [BepInDependency("com.rounds.willuwontu.gunchargepatch")]
+    [BepInDependency("com.rounds.willuwontu.ActionHelper")]
+    [BepInDependency("pykess.rounds.plugins.pickncards")]
+    [BepInDependency("com.root.player.time")]
+    [BepInDependency("com.Root.Null")]
     [BepInPlugin(ModId, ModName, Version)]
     [BepInProcess("Rounds.exe")]
     public class WillsWackyCards : BaseUnityPlugin
     {
         private const string ModId = "com.willuwontu.rounds.cards";
         private const string ModName = "Will's Wacky Cards";
-        public const string Version = "1.11.22"; // What version are we on (major.minor.patch)?
+        public const string Version = "1.11.23"; // What version are we on (major.minor.patch)?
 
         public const string ModInitials = "WWC";
         public const string CurseInitials = "Curse";
@@ -283,6 +284,9 @@ namespace WWC
             //    activeCards.Add(card);
             //}
         }
+
+        public CardThemeColor.CardThemeColorType PumpkinOrange => CardThemeLib.CardThemeLib.instance.CreateOrGetType("Pumpkin Orange", new CardThemeColor() { bgColor = new Color32(229, 127, 0, 200), targetColor = new Color32(229 * 3/4, 127 * 3 / 4, 0, 200) });
+        public CardThemeColor.CardThemeColorType FieryOrange => CardThemeLib.CardThemeLib.instance.CreateOrGetType("Fiery Orange", new CardThemeColor() { bgColor = new Color32(229, 74, 0, 200), targetColor = new Color32(229 * 3 / 4, 74 * 2 / 4, 0, 200) });
 
         #region NullCardHandling
 

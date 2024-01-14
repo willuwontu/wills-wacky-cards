@@ -146,7 +146,7 @@ namespace WWC.Cards
 
 namespace WWC.MonoBehaviours
 {
-    public class TargetingSensors_Mono : MonoBehaviour, IPointStartHookHandler
+    public class TargetingSensors_Mono : MonoBehaviour, IPointEndHookHandler
     {
         private void Start()
         {
@@ -163,7 +163,7 @@ namespace WWC.MonoBehaviours
             }
             InterfaceGameModeHooksManager.instance.RemoveHooks(this);
         }
-        public void OnPointStart()
+        public void OnPointEnd()
         {
             UnityEngine.GameObject.Destroy(this);
         }

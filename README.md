@@ -99,6 +99,10 @@ This is a mod containing a few cards I came up with while fiddling around with t
 
 <details>
 <summary>Change Log</summary>
+## v 1.11.23
+- This will be the final update for WWC unless things change.
+- Mechanic should no longer break when cards are added mid-round.
+- Block cooldown should look normal now.
 
 ## v 1.11.22
 - Fixed a bug where eroding darkness wasn't marked properly marked as a curse.

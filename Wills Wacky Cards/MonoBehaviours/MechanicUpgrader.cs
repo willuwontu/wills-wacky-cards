@@ -83,7 +83,24 @@ namespace WWC.MonoBehaviours
 			this.ResetStuff();
         }
 
-		private void ResetStuff()
+        public void OnPointStart()
+        {
+			for (int i = 0; i < this.upgradeLevel; i++)
+			{
+                this.data.player.gameObject.AddComponent<MechanicUpgrade>();
+
+                if (upgradeAction != null)
+                {
+                    upgradeAction(upgradeLevel);
+                }
+            }
+
+            this.remainingDuration = 0;
+            this.isUpgrading = true;
+            this.counter = 0.1f;
+        }
+
+        private void ResetStuff()
 		{
 			this.remainingDuration = 0f;
 			this.counter = 0.1f;
@@ -120,13 +137,6 @@ namespace WWC.MonoBehaviours
         {
 			base.GetComponentInParent<ChildRPC>().CallFunction("MechanicUpgrade");
 			this.counter = 1f;
-		}
-
-		public void OnPointStart()
-        {
-			this.remainingDuration = 0;
-			this.isUpgrading = true;
-			this.counter = 0.1f;
 		}
 
 		private void Update()
@@ -394,7 +404,7 @@ namespace WWC.MonoBehaviours
 		public Action<int> upgradeAction;
 	}
 
-	public class MechanicUpgrade : ReversibleEffect, IRoundEndHookHandler
+	public class MechanicUpgrade : ReversibleEffect, IPointEndHookHandler
     {
 		private float extraBlockTime = 0f;
 		private float extraRegen = 0f;
@@ -421,7 +431,7 @@ namespace WWC.MonoBehaviours
 			data.currentJumps += extraJumps;
 		}
 
-		public void OnRoundEnd()
+		public void OnPointEnd()
         {
 			UnityEngine.GameObject.Destroy(this);
         }

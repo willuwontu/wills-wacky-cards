@@ -49,16 +49,16 @@ namespace WWC.Patches
             return true;
         }
 
-        [HarmonyPostfix]
-        [HarmonyPriority(int.MinValue)]
-        [HarmonyPatch("Cooldown")]
-        static void OnCooldownWhileSilencedAndStunned(Block __instance, CharacterData ___data, ref float __result)
-        {
-            if (___data.view.IsMine && (___data.isStunned || ___data.isSilenced))
-            {
-                __result = float.MaxValue;
-            }
-        }
+        //[HarmonyPostfix]
+        //[HarmonyPriority(int.MinValue)]
+        //[HarmonyPatch("Cooldown")]
+        //static void OnCooldownWhileSilencedAndStunned(Block __instance, CharacterData ___data, ref float __result)
+        //{
+        //    if (___data.view.IsMine && (___data.isStunned || ___data.isSilenced))
+        //    {
+        //        __result = float.MaxValue;
+        //    }
+        //}
 
         //[HarmonyPrefix]
         //[HarmonyPatch("SomeMethod")]
