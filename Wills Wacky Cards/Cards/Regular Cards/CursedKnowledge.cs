@@ -25,10 +25,11 @@ namespace WWC.Cards
         {
             WillsWackyCards.instance.ExecuteAfterFrames(20, () => {
                 var rare = ModdingUtils.Utils.Cards.instance.GetRandomCardWithCondition(player, gun, gunAmmo, data, health, gravity, block, characterStats, RareCondition);
+                UnityEngine.Debug.Log($"Attempting to add {cardInfo.cardName} to player {player.playerID}.");
                 ModdingUtils.Utils.Cards.instance.AddCardToPlayer(player, rare, false, "", 2f, 2f, true);
                 ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, rare, 3f);
                 CurseManager.instance.CursePlayer(player, (curse) => { 
-                    ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f); 
+                    ModdingUtils.Utils.CardBarUtils.instance.ShowImmediate(player, curse, 3f);
                 });
             });
 

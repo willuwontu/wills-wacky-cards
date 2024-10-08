@@ -41,6 +41,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Fumbled Mags (Curse)
   - Poisonous Trauma (Curse)
   - Severed Fate (Curse)
+  - Envy (Curse)
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
@@ -99,6 +100,12 @@ This is a mod containing a few cards I came up with while fiddling around with t
 
 <details>
 <summary>Change Log</summary>
+## v 1.11.25
+- Curse of Envy updated to properly build. 
+
+## v 1.11.24
+- Curse of Envy added. 
+
 ## v 1.11.23
 - This will be the final update for WWC unless things change.
 - Mechanic should no longer break when cards are added mid-round.

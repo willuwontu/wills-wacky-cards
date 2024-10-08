@@ -11,12 +11,50 @@ using System;
 using WWC.Cards.Curses;
 using Photon.Pun;
 using System.Linq;
+using WillsWackyManagers.Utils;
 
 namespace WWC.Patches
 {
     [HarmonyPatch(typeof(CardChoice))] 
     class CardChoice_Patch
     {
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(CardChoice.StartPick))]
+        static void GreedPicks(CardChoice __instance, int pickerIDToSet)
+        {
+            Player player = PlayerManager.instance.GetPlayerWithID(pickerIDToSet);
+
+            if (player != null && player.data.currentCards.Contains(Greed.card) && !CurseManager.instance.CursePick) 
+            {
+                CurseManager.instance.AddCursedPick(player);
+            }
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("DoPlayerSelect")]
+        [HarmonyPriority(Priority.Last)]
+        public static void SlothRightOnly(PickerType ___pickerType, int ___pickrID, int ___currentlySelectedCard, List<GameObject> ___spawnedCards)
+        {
+            switch (___pickerType)
+            {
+                case PickerType.Team:
+                    break;
+                case PickerType.Player:
+                    for (int i = 0; i < PlayerManager.instance.players.Count; i++)
+                    {
+                        Player player = PlayerManager.instance.players[i];
+                        if (player.playerID == ___pickrID &&
+                            player.data.currentCards.Contains(Sloth.card) &&
+                            player.data.playerActions.Left.Value > 0.7f)
+                        {
+                            ___currentlySelectedCard = Mathf.Clamp(___currentlySelectedCard + 1, 0, ___spawnedCards.Count - 1);
+                            CardChoiceVisuals.instance.InvokeMethod("SetCurrentSelected", ___currentlySelectedCard);
+                        }
+                    }
+                    break;
+            }
+        }
+
         [HarmonyPrefix]
         [HarmonyPatch(nameof(CardChoice.StartPick))]
         static void FutureSightNulls(int pickerIDToSet)

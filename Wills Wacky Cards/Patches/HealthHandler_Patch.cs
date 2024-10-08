@@ -6,10 +6,12 @@ using WillsWackyManagers.Utils;
 using WWC.Cards;
 using UnboundLib;
 using ModdingUtils.Utils;
+using WWC.Cards.Curses;
+using System;
 
 namespace WWC.Patches
 {
-    [HarmonyPatch(typeof(HealthHandler))] 
+    [HarmonyPatch(typeof(HealthHandler))]
     class HealthHandler_Patch
     {
         [HarmonyPrefix]
@@ -21,6 +23,18 @@ namespace WWC.Patches
             if (noHeal)
             {
                 healAmount = 0f;
+            }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPriority(Priority.Last)]
+        [HarmonyPatch(methodName:"DoDamage")]
+        [HarmonyPatch(methodName: "TakeDamage",argumentTypes: new Type[] { typeof(Vector2), typeof(Vector2), typeof(Color), typeof(GameObject), typeof(Player), typeof(bool), typeof(bool) })]
+        static void WrathEffect(HealthHandler __instance, ref bool ignoreBlock, Player ___player)
+        {
+            if (___player.data.currentCards.Contains(Wrath.card))
+            {
+                ignoreBlock = true;
             }
         }
 

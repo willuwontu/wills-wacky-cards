@@ -2,6 +2,7 @@
 using HarmonyLib;
 using WWC.Extensions;
 using UnboundLib;
+using WWC.Cards.Curses;
 
 namespace WWC.Patches
 {
@@ -10,6 +11,15 @@ namespace WWC.Patches
     {
         static void Prefix(Player ___playerToUpgrade, Gun ___myGunStats, CharacterStatModifiers ___myPlayerStats)
         {
+            if (___playerToUpgrade.data.currentCards.Contains(Gluttony.card))
+            {
+                if (___playerToUpgrade.data.stats.lifeSteal > 0f)
+                {
+                    ___playerToUpgrade.data.stats.lifeSteal = -Mathf.Abs(___playerToUpgrade.data.stats.lifeSteal);
+                }
+                ___playerToUpgrade.data.stats.lifeSteal -= 2f * Mathf.Abs(___myPlayerStats.lifeSteal);
+            }
+
             var gun = ___playerToUpgrade.GetComponent<Holding>().holdable.GetComponent<Gun>();
             var statModifiers = ___playerToUpgrade.GetComponent<CharacterStatModifiers>();
             if (___myGunStats)
