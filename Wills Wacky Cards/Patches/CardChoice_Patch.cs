@@ -24,33 +24,55 @@ namespace WWC.Patches
         {
             Player player = PlayerManager.instance.GetPlayerWithID(pickerIDToSet);
 
+            UnityEngine.Debug.Log($"Checking Player {player.playerID} for Greed. CursePick is {CurseManager.instance.CursePick}");
+
             if (player != null && player.data.currentCards.Contains(Greed.card) && !CurseManager.instance.CursePick) 
             {
                 CurseManager.instance.AddCursedPick(player);
             }
+            else
+            {
+                UnityEngine.Debug.Log($"In a cursed pick, not adding a pick.");
+            }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("DoPlayerSelect")]
+        [HarmonyPriority(Priority.Last)]
+        public static void SlothRightOnlyPre(CardChoice __instance, PickerType ___pickerType, int ___currentlySelectedCard, List<GameObject> ___spawnedCards, out int __state)
+        {
+            __state = ___currentlySelectedCard;
         }
 
         [HarmonyPostfix]
         [HarmonyPatch("DoPlayerSelect")]
         [HarmonyPriority(Priority.Last)]
-        public static void SlothRightOnly(PickerType ___pickerType, int ___pickrID, int ___currentlySelectedCard, List<GameObject> ___spawnedCards)
+        public static void SlothRightOnlyPost(CardChoice __instance, PickerType ___pickerType, int __state, ref int ___currentlySelectedCard, List<GameObject> ___spawnedCards)
         {
             switch (___pickerType)
             {
                 case PickerType.Team:
                     break;
                 case PickerType.Player:
-                    for (int i = 0; i < PlayerManager.instance.players.Count; i++)
+                    Player player = PlayerManager.instance.GetPlayerWithID(__instance.pickrID);
+
+                    if (!player.data.currentCards.Contains(Sloth.card))
                     {
-                        Player player = PlayerManager.instance.players[i];
-                        if (player.playerID == ___pickrID &&
-                            player.data.currentCards.Contains(Sloth.card) &&
-                            player.data.playerActions.Left.Value > 0.7f)
-                        {
-                            ___currentlySelectedCard = Mathf.Clamp(___currentlySelectedCard + 1, 0, ___spawnedCards.Count - 1);
-                            CardChoiceVisuals.instance.InvokeMethod("SetCurrentSelected", ___currentlySelectedCard);
-                        }
+                        break;
                     }
+
+                    if (!player.data.view.IsMine)
+                    {
+                        break;
+                    }
+
+                    if (___currentlySelectedCard < __state)
+                    {
+                        UnityEngine.Debug.Log($"Keeping Player {player.playerID} from moving backwards since they have sloth.");
+                        ___currentlySelectedCard = Mathf.Clamp(__state, 0, ___spawnedCards.Count - 1);
+                        CardChoiceVisuals.instance.InvokeMethod("SetCurrentSelected", ___currentlySelectedCard);
+                    }
+
                     break;
             }
         }

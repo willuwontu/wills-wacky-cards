@@ -42,6 +42,12 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Poisonous Trauma (Curse)
   - Severed Fate (Curse)
   - Envy (Curse)
+  - Lust (Curse)
+  - Greed (Curse)
+  - Gluttony (Curse)
+  - Pride (Curse)
+  - Wrath (Curse)
+  - Sloth (Curse)
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
@@ -100,6 +106,9 @@ This is a mod containing a few cards I came up with while fiddling around with t
 
 <details>
 <summary>Change Log</summary>
+## v 1.11.25
+- Added rest of sin curses
+
 ## v 1.11.25
 - Curse of Envy updated to properly build. 
 

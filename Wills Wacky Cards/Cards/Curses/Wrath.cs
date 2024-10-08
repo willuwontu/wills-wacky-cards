@@ -15,7 +15,7 @@ using UnboundLib.Utils;
 
 namespace WWC.Cards.Curses
 {
-    class Wrath : CustomCard, ICurseCard
+    class Wrath : CustomCard, ICurseCard, ISaveableCard
     {
         internal static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }
@@ -41,7 +41,7 @@ namespace WWC.Cards.Curses
         }
         protected override string GetDescription()
         {
-            return "This world shall <color=Red><size=30>BURN!!!</size></color>";
+            return "This world shall <color=\"red\"><size=200>BURN!!!</size></color>";
         }
         protected override GameObject GetCardArt()
         {

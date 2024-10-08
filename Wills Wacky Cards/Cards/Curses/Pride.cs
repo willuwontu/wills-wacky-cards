@@ -15,7 +15,7 @@ using UnboundLib.Utils;
 
 namespace WWC.Cards.Curses
 {
-    class Pride : CustomCard, ICurseCard
+    class Pride : CustomCard, ICurseCard, ISaveableCard
     {
         private static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }

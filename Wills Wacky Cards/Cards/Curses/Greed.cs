@@ -17,7 +17,7 @@ using UnboundLib.GameModes;
 
 namespace WWC.Cards.Curses
 {
-    class Greed : CustomCard, ICurseCard
+    class Greed : CustomCard, ICurseCard, ISaveableCard
     {
         internal static CardInfo card;
 

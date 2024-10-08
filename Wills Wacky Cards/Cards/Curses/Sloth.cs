@@ -15,47 +15,10 @@ using UnboundLib.Utils;
 
 namespace WWC.Cards.Curses
 {
-    class Sloth : CustomCard, ICurseCard, IConditionalCard
+    class Sloth : CustomCard, ICurseCard, ISaveableCard
     {
         internal static CardInfo card;
         public CardInfo Card { get => card; set { if (!card) { card = value; } } }
-
-
-        public bool Condition(Player player, CardInfo card)
-        {
-            if (card == null) 
-            { 
-                return true; 
-            }
-            if (!player || !player.data || player.data.currentCards == null)
-            {
-                return true;
-            }
-
-            if (!(player.data.currentCards.Contains(Sloth.card)))
-            {
-                return true;
-            }
-
-            List<CardInfo> cards = new List<CardInfo>();
-
-            foreach (Player person in PlayerManager.instance.players)
-            {
-                if (person != player)
-                {
-                    cards.AddRange(person.data.currentCards);
-                }
-            }
-
-            cards = cards.Distinct().ToList();
-
-            if (!cards.Contains(card))
-            {
-                return false;
-            }
-
-            return true;
-        }
 
         public override void SetupCard(CardInfo cardInfo, Gun gun, ApplyCardStats cardStats, CharacterStatModifiers statModifiers)
         {
