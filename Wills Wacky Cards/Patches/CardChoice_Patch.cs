@@ -39,9 +39,29 @@ namespace WWC.Patches
         [HarmonyPrefix]
         [HarmonyPatch("DoPlayerSelect")]
         [HarmonyPriority(Priority.Last)]
-        public static void SlothRightOnlyPre(CardChoice __instance, PickerType ___pickerType, int ___currentlySelectedCard, List<GameObject> ___spawnedCards, out int __state)
+        public static void SlothRightOnlyPre(CardChoice __instance, PickerType ___pickerType, int ___currentlySelectedCard, out int __state)
         {
-            __state = ___currentlySelectedCard;
+            __state = 0;
+
+            switch (___pickerType)
+            {
+                case PickerType.Team:
+                    break;
+                case PickerType.Player:
+                    Player player = PlayerManager.instance.GetPlayerWithID(__instance.pickrID);
+
+                    if (!(player != null))
+                    {
+                        break;
+                    }
+
+                    if (!player.data.currentCards.Contains(Sloth.card))
+                    {
+                        __state = ___currentlySelectedCard;
+                    }
+
+                    break;
+            }
         }
 
         [HarmonyPostfix]
@@ -55,6 +75,11 @@ namespace WWC.Patches
                     break;
                 case PickerType.Player:
                     Player player = PlayerManager.instance.GetPlayerWithID(__instance.pickrID);
+
+                    if (!(player != null))
+                    {
+                        break;
+                    }
 
                     if (!player.data.currentCards.Contains(Sloth.card))
                     {
