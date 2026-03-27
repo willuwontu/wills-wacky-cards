@@ -78,19 +78,19 @@ namespace WWC.Extensions
                 reloadTime = (ammo.reloadTime + ammo.reloadTimeAdd) * ammo.reloadTimeMultiplier;
             }
 
-            float bulletsPerSecond = bulletsPerAttack / Time.deltaTime;
+            float bulletsPerSecond;
 
             if (gun.attackSpeed == 0f && reloadTime == 0f && gun.timeBetweenBullets == 0f)
             {
-                return bulletsPerSecond;
+                bulletsPerSecond = bulletsPerAttack / Time.deltaTime;
             }
             else if (gun.timeBetweenBullets > reloadTime || gun.attackSpeed > reloadTime)
             {
-                bulletsPerSecond = Mathf.Min(bulletsPerAttack / (timeForAttack + gun.attackSpeed), bulletsPerSecond);
+                bulletsPerSecond = bulletsPerAttack / (timeForAttack + gun.attackSpeed);
             }
             else 
             {
-                bulletsPerSecond = Mathf.Min(bulletsPerAttack / (timeForAttack + gun.attackSpeed + reloadTime), bulletsPerSecond);
+                bulletsPerSecond = bulletsPerAttack / (timeForAttack + gun.attackSpeed + reloadTime);
             }
 
             return bulletsPerSecond;
