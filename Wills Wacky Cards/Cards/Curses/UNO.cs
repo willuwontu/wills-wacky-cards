@@ -34,7 +34,7 @@ namespace WWC.Cards.Curses
             bool letterMatch = false;
             bool themeMatch = false;
 
-            if (String.IsNullOrEmpty(card.cardName) && String.IsNullOrEmpty(player.data.currentCards.Last().cardName) && (card.cardName[0] == player.data.currentCards.Last().cardName[0]))
+            if (!String.IsNullOrEmpty(card.cardName) && !String.IsNullOrEmpty(player.data.currentCards.Last().cardName) && (card.cardName[0] == player.data.currentCards.Last().cardName[0]))
             {
                 letterMatch = true;
             }
