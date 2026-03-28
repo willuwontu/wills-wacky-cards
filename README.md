@@ -48,6 +48,7 @@ This is a mod containing a few cards I came up with while fiddling around with t
   - Pride (Curse)
   - Wrath (Curse)
   - Sloth (Curse)
+  - UNO (Curse)
 - Gatling Gun (Rare)
 - Plasma Rifle (Rare)
 - Plasma Shotgun (Rare)
